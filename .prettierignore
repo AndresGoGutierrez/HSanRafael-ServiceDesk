@@ -1,0 +1,13 @@
+dist
+node_modules
+prisma
+*.md
+docker-compose.yml
+Docerfile
+.prettierrc
+eslint.config.cjs
+eslint.config.js
+package.json
+package-lock.json
+tsconfig.json
+tsconfig.build.json

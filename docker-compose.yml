@@ -1,0 +1,55 @@
+version: "3.9"   # Versión de sintaxis de Docker Compose
+
+services:
+  # ==============================
+  # Servicio de Base de Datos (PostgreSQL)
+  # ==============================
+  db:
+    container_name: hospital-desk-db      # Nombre del contenedor
+    image: postgres:15.1-alpine           # Imagen oficial de PostgreSQL (versión 15.1, ligera con Alpine)
+    
+    environment:                          # Variables de entorno para configurar PostgreSQL
+      POSTGRES_DB: ${DB_DATABASE}         # Nombre de la base de datos (definido en .env)
+      POSTGRES_USER: ${DB_USER}           # Usuario administrador (definido en .env)
+      POSTGRES_PASSWORD: ${DB_PASSWORD}   # Contraseña del usuario administrador (definido en .env)
+    
+    ports:
+      - ${DB_PORT}:5432                   # Expone el puerto de la DB: host=${DB_PORT}, contenedor=5432
+    
+    healthcheck:                          # Comprueba que PostgreSQL está disponible
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]  
+      interval: 5s                        # Revisa cada 5 segundos
+      timeout: 3s                         # Espera máximo 3 segundos por respuesta
+      retries: 10                         # Reintenta 10 veces antes de marcar como fallido
+    
+    volumes:                              # Persistencia de datos y scripts de inicialización
+      - db_data:/var/lib/postgres/data    # Almacena datos de PostgreSQL fuera del contenedor
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql  
+        # Script SQL de inicialización que se ejecuta la primera vez
+
+  # ==============================
+  # Servicio de Administración (pgAdmin4)
+  # ==============================
+  pgadmin:
+    container_name: hospital-desk-pgadmin  # Nombre del contenedor
+    image: dpage/pgadmin4:7.7              # Imagen oficial de pgAdmin4 (versión fija recomendada)
+    
+    environment:                           # Credenciales para acceder a pgAdmin
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}       # Usuario administrador (correo)
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD} # Contraseña del administrador
+    
+    ports:
+      - "5050:80"                          # Acceso desde navegador en http://localhost:5050
+    
+    depends_on:                            # Asegura que la base de datos esté levantada primero
+      - db
+    
+    volumes:                               # Persistencia de configuración de pgAdmin
+      - pgadmin_data:/var/lib/pgadmin
+
+# ==============================
+# Volúmenes persistentes
+# ==============================
+volumes:
+  db_data:        # Datos de PostgreSQL (tablas, registros, etc.)
+  pgadmin_data:   # Configuraciones de pgAdmin (conexiones guardadas, usuarios, etc.)

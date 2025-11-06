@@ -1,0 +1,46 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String
+  email String @unique
+  tickets Ticket[] @relation("UserTickets")
+}
+
+model Area {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String @unique
+  tickets Ticket[] @relation("AreaTickets")
+}
+
+model Ticket {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title String
+  status String
+  priority String
+  createdAt DateTime @default(now())
+  userId String @db.Uuid
+  areaId String @db.Uuid
+
+  user User @relation("UserTickets", fields: [userId], references: [id])
+  area Area @relation("AreaTickets", fields: [areaId], references: [id])
+
+  @@index([status])
+  @@index([priority])
+  @@index([userId])
+  @@index([areaId])
+}
