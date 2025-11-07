@@ -15,6 +15,9 @@ export class TicketsRouter extends BaseRouter<TicketController, BaseMiddleware> 
                 req, res
             )
         )
+
+        this.router.get("/", (req: Request, res: Response) => this.controller.list(req, res))
+
         // FALLLLLLLLLLLLLLLLLLLLLLLLLLLLTAAAAAAAAAAAAAA el ListTicket
     }
 }

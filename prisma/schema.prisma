@@ -15,26 +15,32 @@ datasource db {
 }
 
 model User {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name String
-  email String @unique
+  id      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name    String
+  email   String   @unique
   tickets Ticket[] @relation("UserTickets")
 }
 
 model Area {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name String @unique
-  tickets Ticket[] @relation("AreaTickets")
+  id                   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                 String   @unique
+  tickets              Ticket[] @relation("AreaTickets")
+  description          String?
+  isActive             Boolean  @default(true)
+  slaResponseMinutes   Int?
+  slaResolutionMinutes Int?
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
 }
 
 model Ticket {
-  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title String
-  status String
-  priority String
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title     String
+  status    String
+  priority  String
   createdAt DateTime @default(now())
-  userId String @db.Uuid
-  areaId String @db.Uuid
+  userId    String   @db.Uuid
+  areaId    String   @db.Uuid
 
   user User @relation("UserTickets", fields: [userId], references: [id])
   area Area @relation("AreaTickets", fields: [areaId], references: [id])

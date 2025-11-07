@@ -1,7 +1,7 @@
 export const TicketStatus = [
     "OPEN",
     "ASSIGNED",
-    "IN_PROGESS",
+    "IN_PROGRESS",
     "RESOLVED",
     "CLOSED",
     "CANCELLED",

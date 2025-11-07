@@ -36,3 +36,5 @@ TicketsController actúa como punto de entrada HTTP, validando entrada con Zod, 
 
 10. Dependency Injection
 Los módulos reciben dependencias (repositorio, event bus, clock) en el constructor y las inyectan en casos de uso y controladores. README.md:1458-1475 ServerBootstrap ensambla todas las dependencias. README.md:1490-1496
+
+
