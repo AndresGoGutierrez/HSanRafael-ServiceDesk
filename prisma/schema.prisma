@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "./generated/prisma"
@@ -15,38 +9,127 @@ datasource db {
 }
 
 model User {
-  id      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name    String
-  email   String   @unique
-  tickets Ticket[] @relation("UserTickets")
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String
+  email     String   @unique
+  password  String
+  role      String
+  areaId    String?  @db.Uuid
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  area            Area?        @relation("UserArea", fields: [areaId], references: [id])
+  tickets         Ticket[]     @relation("UserTickets")
+  assignedTickets Ticket[]     @relation("AssignedTickets")
+  comments        Comment[]    @relation("CommentAuthor")
+  attachments     Attachment[] @relation("AttachmentUploader")
+  auditLogs       AuditTrail[] @relation("AuditActor")
+
+  @@index([email])
+  @@index([areaId])
 }
 
 model Area {
   id                   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name                 String   @unique
-  tickets              Ticket[] @relation("AreaTickets")
   description          String?
   isActive             Boolean  @default(true)
   slaResponseMinutes   Int?
   slaResolutionMinutes Int?
+  workflowConfig       Json?
   createdAt            DateTime @default(now())
-  updatedAt            DateTime @updatedAt
+
+  tickets Ticket[] @relation("AreaTickets")
+  users   User[]   @relation("UserArea")
+
+  @@index([name])
 }
 
 model Ticket {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  title     String
-  status    String
-  priority  String
-  createdAt DateTime @default(now())
-  userId    String   @db.Uuid
-  areaId    String   @db.Uuid
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title             String
+  description       String?   @db.Text
+  status            String
+  priority          String
+  requesterId       String    @db.Uuid
+  assigneeId        String?   @db.Uuid
+  areaId            String    @db.Uuid
+  slaTargetAt       DateTime?
+  slaBreached       Boolean   @default(false)
+  firstResponseAt   DateTime?
+  resolvedAt        DateTime?
+  closedAt          DateTime?
+  resolutionSummary String?   @db.Text
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
-  user User @relation("UserTickets", fields: [userId], references: [id])
-  area Area @relation("AreaTickets", fields: [areaId], references: [id])
+  requester   User         @relation("UserTickets", fields: [requesterId], references: [id])
+  assignee    User?        @relation("AssignedTickets", fields: [assigneeId], references: [id])
+  area        Area         @relation("AreaTickets", fields: [areaId], references: [id])
+  comments    Comment[]    @relation("TicketComments")
+  attachments Attachment[] @relation("TicketAttachments")
+  auditLogs   AuditTrail[] @relation("TicketAudit")
 
   @@index([status])
   @@index([priority])
-  @@index([userId])
+  @@index([requesterId])
+  @@index([assigneeId])
   @@index([areaId])
+  @@index([slaTargetAt])
+  @@index([createdAt])
+}
+
+model Comment {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ticketId   String   @db.Uuid
+  authorId   String   @db.Uuid
+  body       String   @db.Text
+  isInternal Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  ticket Ticket @relation("TicketComments", fields: [ticketId], references: [id], onDelete: Cascade)
+  author User   @relation("CommentAuthor", fields: [authorId], references: [id])
+
+  @@index([ticketId])
+  @@index([authorId])
+}
+
+model Attachment {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ticketId    String   @db.Uuid
+  uploaderId  String   @db.Uuid
+  filename    String
+  contentType String
+  size        Int
+  url         String
+  createdAt   DateTime @default(now())
+
+  ticket   Ticket @relation("TicketAttachments", fields: [ticketId], references: [id], onDelete: Cascade)
+  uploader User   @relation("AttachmentUploader", fields: [uploaderId], references: [id])
+
+  @@index([ticketId])
+  @@index([uploaderId])
+}
+
+model AuditTrail {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ticketId   String?  @db.Uuid
+  actorId    String   @db.Uuid
+  action     String
+  entityType String
+  entityId   String   @db.Uuid
+  changes    Json?
+  metadata   Json?
+  ipAddress  String?
+  userAgent  String?
+  occurredAt DateTime @default(now())
+
+  ticket Ticket? @relation("TicketAudit", fields: [ticketId], references: [id], onDelete: Cascade)
+  actor  User    @relation("AuditActor", fields: [actorId], references: [id])
+
+  @@index([ticketId])
+  @@index([actorId])
+  @@index([action])
+  @@index([entityType])
+  @@index([occurredAt])
 }
