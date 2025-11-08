@@ -9,21 +9,20 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name      String
-  email     String   @unique
-  password  String
-  role      String
-  areaId    String?  @db.Uuid
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
-
-  area            Area?        @relation("UserArea", fields: [areaId], references: [id])
-  tickets         Ticket[]     @relation("UserTickets")
-  assignedTickets Ticket[]     @relation("AssignedTickets")
-  comments        Comment[]    @relation("CommentAuthor")
+  id              String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name            String
+  email           String       @unique
+  areaId          String?      @db.Uuid
+  createdAt       DateTime     @default(now())
+  isActive        Boolean      @default(true)
+  password        String
+  role            String
   attachments     Attachment[] @relation("AttachmentUploader")
   auditLogs       AuditTrail[] @relation("AuditActor")
+  comments        Comment[]    @relation("CommentAuthor")
+  assignedTickets Ticket[]     @relation("AssignedTickets")
+  tickets         Ticket[]     @relation("UserTickets")
+  area            Area?        @relation("UserArea", fields: [areaId], references: [id])
 
   @@index([email])
   @@index([areaId])
@@ -32,43 +31,41 @@ model User {
 model Area {
   id                   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name                 String   @unique
+  createdAt            DateTime @default(now())
   description          String?
   isActive             Boolean  @default(true)
-  slaResponseMinutes   Int?
   slaResolutionMinutes Int?
+  slaResponseMinutes   Int?
   workflowConfig       Json?
-  createdAt            DateTime @default(now())
-
-  tickets Ticket[] @relation("AreaTickets")
-  users   User[]   @relation("UserArea")
+  tickets              Ticket[] @relation("AreaTickets")
+  users                User[]   @relation("UserArea")
 
   @@index([name])
 }
 
 model Ticket {
-  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id                String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   title             String
-  description       String?   @db.Text
   status            String
   priority          String
-  requesterId       String    @db.Uuid
-  assigneeId        String?   @db.Uuid
-  areaId            String    @db.Uuid
-  slaTargetAt       DateTime?
-  slaBreached       Boolean   @default(false)
-  firstResponseAt   DateTime?
-  resolvedAt        DateTime?
+  areaId            String       @db.Uuid
+  assigneeId        String?      @db.Uuid
   closedAt          DateTime?
-  resolutionSummary String?   @db.Text
-  createdAt         DateTime  @default(now())
-  updatedAt         DateTime  @updatedAt
-
-  requester   User         @relation("UserTickets", fields: [requesterId], references: [id])
-  assignee    User?        @relation("AssignedTickets", fields: [assigneeId], references: [id])
-  area        Area         @relation("AreaTickets", fields: [areaId], references: [id])
-  comments    Comment[]    @relation("TicketComments")
-  attachments Attachment[] @relation("TicketAttachments")
-  auditLogs   AuditTrail[] @relation("TicketAudit")
+  createdAt         DateTime     @default(now())
+  description       String?
+  firstResponseAt   DateTime?
+  requesterId       String       @db.Uuid
+  resolutionSummary String?
+  resolvedAt        DateTime?
+  slaBreached       Boolean      @default(false)
+  slaTargetAt       DateTime?
+  updatedAt         DateTime     @updatedAt
+  attachments       Attachment[] @relation("TicketAttachments")
+  auditLogs         AuditTrail[] @relation("TicketAudit")
+  comments          Comment[]    @relation("TicketComments")
+  area              Area         @relation("AreaTickets", fields: [areaId], references: [id])
+  assignee          User?        @relation("AssignedTickets", fields: [assigneeId], references: [id])
+  requester         User         @relation("UserTickets", fields: [requesterId], references: [id])
 
   @@index([status])
   @@index([priority])
@@ -83,12 +80,11 @@ model Comment {
   id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   ticketId   String   @db.Uuid
   authorId   String   @db.Uuid
-  body       String   @db.Text
+  body       String
   isInternal Boolean  @default(false)
   createdAt  DateTime @default(now())
-
-  ticket Ticket @relation("TicketComments", fields: [ticketId], references: [id], onDelete: Cascade)
-  author User   @relation("CommentAuthor", fields: [authorId], references: [id])
+  author     User     @relation("CommentAuthor", fields: [authorId], references: [id])
+  ticket     Ticket   @relation("TicketComments", fields: [ticketId], references: [id], onDelete: Cascade)
 
   @@index([ticketId])
   @@index([authorId])
@@ -103,9 +99,8 @@ model Attachment {
   size        Int
   url         String
   createdAt   DateTime @default(now())
-
-  ticket   Ticket @relation("TicketAttachments", fields: [ticketId], references: [id], onDelete: Cascade)
-  uploader User   @relation("AttachmentUploader", fields: [uploaderId], references: [id])
+  ticket      Ticket   @relation("TicketAttachments", fields: [ticketId], references: [id], onDelete: Cascade)
+  uploader    User     @relation("AttachmentUploader", fields: [uploaderId], references: [id])
 
   @@index([ticketId])
   @@index([uploaderId])
@@ -123,9 +118,8 @@ model AuditTrail {
   ipAddress  String?
   userAgent  String?
   occurredAt DateTime @default(now())
-
-  ticket Ticket? @relation("TicketAudit", fields: [ticketId], references: [id], onDelete: Cascade)
-  actor  User    @relation("AuditActor", fields: [actorId], references: [id])
+  actor      User     @relation("AuditActor", fields: [actorId], references: [id])
+  ticket     Ticket?  @relation("TicketAudit", fields: [ticketId], references: [id], onDelete: Cascade)
 
   @@index([ticketId])
   @@index([actorId])

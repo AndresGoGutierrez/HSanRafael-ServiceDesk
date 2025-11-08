@@ -14,7 +14,7 @@ export class AreaController {
     private readonly updateArea: UpdateArea,
     private readonly configureSLA: ConfigureSLA,
     private readonly listAreas: ListAreas,
-  ) {}
+  ) { }
 
   /**
    * Maneja la creación de una nueva área.

@@ -4,16 +4,12 @@ import { Area } from "../../domain/entities/Area"
 import { prismaClient } from "../db/prisma"
 
 /**
- * Implementación del repositorio de áreas usando Prisma ORM.
- * Se encarga de la persistencia y rehidratación de entidades del dominio.
+ * Mapper entre la entidad de dominio `Area` y el modelo Prisma.
+ * Mantiene aislada la lógica de transformación.
  */
-export class PrismaAreaRepository implements AreaRepository {
-  /**
-   * Crea o actualiza una entidad `Area` en la base de datos.
-   * Usa `upsert` para garantizar idempotencia.
-   */
-  async save(area: Area): Promise<void> {
-    const data = {
+class AreaMapper {
+  static toPrisma(area: Area) {
+    return {
       id: area.id.toString(),
       name: area.name,
       description: area.description,
@@ -22,6 +18,20 @@ export class PrismaAreaRepository implements AreaRepository {
       slaResolutionMinutes: area.slaResolutionMinutes,
       createdAt: area.createdAt,
     }
+  }
+
+  static toDomain(record: RehydrateAreaDto): Area {
+    return Area.rehydrate(record)
+  }
+}
+
+/**
+ * Implementación del repositorio de áreas usando Prisma ORM.
+ * Responsable de la persistencia y rehidratación de entidades `Area`.
+ */
+export class PrismaAreaRepository implements AreaRepository {
+  async save(area: Area): Promise<void> {
+    const data = AreaMapper.toPrisma(area)
 
     await prismaClient.area.upsert({
       where: { id: data.id },
@@ -36,41 +46,20 @@ export class PrismaAreaRepository implements AreaRepository {
     })
   }
 
-  /**
-   * Busca un área por su ID único.
-   * @param id Identificador único del área.
-   * @returns La entidad `Area` rehidratada o `null` si no existe.
-   */
   async findById(id: string): Promise<Area | null> {
     const row = await prismaClient.area.findUnique({ where: { id } })
-    return row ? this.toDomain(row) : null
+    return row ? AreaMapper.toDomain(row as RehydrateAreaDto) : null
   }
 
-  /**
-   * Busca un área por su nombre.
-   * @param name Nombre del área.
-   * @returns La entidad `Area` rehidratada o `null` si no existe.
-   */
   async findByName(name: string): Promise<Area | null> {
     const row = await prismaClient.area.findUnique({ where: { name } })
-    return row ? this.toDomain(row) : null
+    return row ? AreaMapper.toDomain(row as RehydrateAreaDto) : null
   }
 
-  /**
-   * Lista todas las áreas ordenadas por fecha de creación descendente.
-   */
   async list(): Promise<Area[]> {
     const rows = await prismaClient.area.findMany({
       orderBy: { createdAt: "desc" },
     })
-    return rows.map(this.toDomain)
-  }
-
-  /**
-   * Convierte un registro de base de datos en una entidad de dominio `Area`.
-   * Aísla la lógica de rehidratación y facilita futuras transformaciones.
-   */
-  private toDomain(row: unknown): Area {
-    return Area.rehydrate(row as RehydrateAreaDto)
+    return rows.map((row) => AreaMapper.toDomain(row as RehydrateAreaDto))
   }
 }

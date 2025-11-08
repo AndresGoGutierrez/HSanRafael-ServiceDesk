@@ -52,3 +52,16 @@ export const RehydrateUserSchema = z.object({
 })
 
 export type RehydrateUserDto = z.infer<typeof RehydrateUserSchema>
+
+export const UserResponseSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  email: z.string().email(),
+  role: ZUserRole,
+  areaId: z.string().uuid().nullable().optional(),
+  isActive: z.boolean().optional(),
+  createdAt: z.date().or(z.string()),
+  updatedAt: z.date().or(z.string()).optional(),
+})
+
+export type UserResponseDto = z.infer<typeof UserResponseSchema>

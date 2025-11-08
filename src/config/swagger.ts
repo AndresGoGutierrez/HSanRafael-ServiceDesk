@@ -106,6 +106,35 @@ const swaggerOptions: Options = {
                         createdAt: { type: "string", format: "date-time" },
                     },
                 },
+                CreateArea: {
+                    type: "object",
+                    required: ["name"],
+                    properties: {
+                        name: {
+                            type: "string",
+                            example: "Soporte Técnico",
+                        },
+                        description: {
+                            type: "string",
+                            example: "Área encargada de los procesos de soporte",
+                            nullable: true,
+                        },
+                    },
+                },
+                UpdateArea: {
+                    type: "object",
+                    properties: {
+                        name: {
+                            type: "string",
+                            example: "Infraestructura",
+                        },
+                        description: {
+                            type: "string",
+                            example: "Área relacionada con servidores y redes",
+                            nullable: true,
+                        },
+                    },
+                },
                 Area: {
                     type: "object",
                     required: ["id", "name", "isActive"],
@@ -137,12 +166,73 @@ const swaggerOptions: Options = {
                         isActive: { type: "boolean", example: true },
                     },
                 },
+                CreateUser: {
+                    type: "object",
+                    required: ["name", "email", "password", "role"],
+                    properties: {
+                        name: {
+                            type: "string",
+                            example: "Andrés Gómez",
+                            description: "Nombre completo del usuario",
+                        },
+                        email: {
+                            type: "string",
+                            format: "email",
+                            example: "andres.gomez@example.com",
+                        },
+                        password: {
+                            type: "string",
+                            format: "password",
+                            example: "MiClaveSegura123",
+                        },
+                        role: {
+                            type: "string",
+                            enum: ["REQUESTER", "AGENT", "TECH", "ADMIN"],
+                            example: "ADMIN",
+                        },
+                        areaId: {
+                            type: "string",
+                            format: "uuid",
+                            nullable: true,
+                            example: "c2b4e0f4-8d12-4c0f-94fb-8a81db7c8b75",
+                        },
+                    },
+                },
+                UpdateUser: {
+                    type: "object",
+                    properties: {
+                        name: { type: "string", example: "Juan Pérez" },
+                        email: {
+                            type: "string",
+                            format: "email",
+                            example: "juan.perez@hospital.com",
+                        },
+                        password: {
+                            type: "string",
+                            format: "password",
+                            example: "NuevaClave123",
+                        },
+                        role: {
+                            type: "string",
+                            enum: ["REQUESTER", "AGENT", "TECH", "ADMIN"],
+                            example: "AGENT",
+                        },
+                        areaId: {
+                            type: "string",
+                            format: "uuid",
+                            nullable: true,
+                            example: "b81d6c91-84a2-4d43-b611-3ef77b2a6a9f",
+                        },
+                    },
+                },
+                
             },
         },
+
         security: [{ bearerAuth: [] }],
     },
     // Escanea todos los routers donde se definen endpoints
-    apis: ["./interfaces/http/routes/*.ts"],
+    apis: ["./src/interfaces/http/routes/**/*.ts"],
 }
 
 /**

@@ -10,14 +10,14 @@ services:
     
     environment:                          # Variables de entorno para configurar PostgreSQL
       POSTGRES_DB: ${DB_DATABASE}         # Nombre de la base de datos (definido en .env)
-      POSTGRES_USER: ${DB_USER}           # Usuario administrador (definido en .env)
+      POSTGRES_USER: ${DB_USERNAME}           # Usuario administrador (definido en .env)
       POSTGRES_PASSWORD: ${DB_PASSWORD}   # Contraseña del usuario administrador (definido en .env)
     
     ports:
       - ${DB_PORT}:5432                   # Expone el puerto de la DB: host=${DB_PORT}, contenedor=5432
     
     healthcheck:                          # Comprueba que PostgreSQL está disponible
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]  
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME}"]  
       interval: 5s                        # Revisa cada 5 segundos
       timeout: 3s                         # Espera máximo 3 segundos por respuesta
       retries: 10                         # Reintenta 10 veces antes de marcar como fallido

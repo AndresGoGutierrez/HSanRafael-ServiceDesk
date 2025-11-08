@@ -1,14 +1,24 @@
 import { EnvVariables, loadEnv } from "./env.config";
 import * as dotenv from "dotenv";
+import path from "path";
 
 export abstract class ConfigServer {
     public readonly env: EnvVariables;
 
     constructor() {
-        const nodeNameEnv: string = this.createPathEnv(this.nodeEnv);
-        dotenv.config({
-            path: nodeNameEnv,
-        });
+        // Determina el entorno
+        const nodeEnv = this.nodeEnv;
+
+        // Usa .env por defecto en desarrollo
+        const envFile =
+            nodeEnv && nodeEnv !== "production"
+                ? path.resolve(process.cwd(), ".env")
+                : path.resolve(process.cwd(), `.${nodeEnv}.env`);
+
+        // Carga las variables de entorno
+        dotenv.config({ path: envFile });
+
+        // Carga tipada de variables
         this.env = loadEnv();
     }
 

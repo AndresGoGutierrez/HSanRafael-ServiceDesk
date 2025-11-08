@@ -1,0 +1,14 @@
+import type { User } from "../../domain/entities/User";
+
+export class UserMapper {
+  static toHttp(user: User) {
+    return {
+      id: user.id.toString(),
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      createdAt: user.createdAt
+      // no se incluye password ni campos internos
+    };
+  }
+}

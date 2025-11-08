@@ -25,7 +25,7 @@ export interface RehydrateUserDto {
     id: string
     name: string
     email: string
-    password: string
+    password?: string
     role: UserRole
     areaId?: string | null
     isActive: boolean
@@ -118,7 +118,7 @@ export class User extends BaseEntity<UserId> {
             UserId.from(row.id),
             row.name.trim(),
             Email.create(row.email),
-            row.password,
+            row.password ?? "",
             row.role,
             row.areaId ?? null,
             row.isActive,

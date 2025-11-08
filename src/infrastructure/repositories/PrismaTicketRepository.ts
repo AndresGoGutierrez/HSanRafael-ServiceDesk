@@ -92,7 +92,7 @@ export class PrismaTicketRepository implements TicketRepository {
 
     const records = await prismaClient.ticket.findMany({ where })
 
-    // ✅ Convertir los registros crudos en entidades de dominio
+    // Convertir los registros crudos en entidades de dominio
     return records.map((row) =>
       Ticket.rehydrate({
         id: row.id,
