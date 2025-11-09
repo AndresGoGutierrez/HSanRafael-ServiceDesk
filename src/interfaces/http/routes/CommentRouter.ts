@@ -17,6 +17,7 @@ export class CommentRouter extends BaseRouter<CommentController, BaseMiddleware>
         private authMiddleware: AuthMiddleware,
     ) {
         super(controller, middleware)
+        this.routes()
     }
 
     /**

@@ -79,10 +79,18 @@ export class AreaController {
    * - Registra la acción en la auditoría.
    */
   async deactivate(req: Request, res: Response): Promise<void> {
-    await this.handle(res, async () => {
+    try {
       const { id } = req.params
-      const actorId = (req as any).user?.id || "system"
       const { reason } = req.body
+      const actorId = (req as any).user?.userId
+
+      if (!actorId) {
+        res.status(401).json({
+          success: false,
+          error: "No se encontró el usuario autenticado",
+        })
+        return
+      }
 
       await this.deactivateArea.execute(id, actorId, reason)
 
@@ -90,7 +98,13 @@ export class AreaController {
         success: true,
         message: "Área desactivada exitosamente",
       })
-    })
+    } catch (error) {
+      console.error("[AreaController] Error:", error)
+      res.status(400).json({
+        success: false,
+        error: error instanceof Error ? error.message : "Error al desactivar el área",
+      })
+    }
   }
 
   /** Configura el workflow de un área. (PATCH /areas/:id/workflow) */
@@ -98,7 +112,15 @@ export class AreaController {
     try {
       const { id } = req.params
       const config = req.body as WorkflowConfig
-      const actorId = (req as any).user?.id || "system"
+      const actorId = (req as any).user?.userId // <- igual que en deactivate
+
+      if (!actorId) {
+        res.status(401).json({
+          success: false,
+          error: "No se encontró el usuario autenticado",
+        })
+        return
+      }
 
       await this.configureWorkflowUseCase.execute(id, config, actorId)
 
@@ -108,6 +130,7 @@ export class AreaController {
         data: config,
       })
     } catch (error) {
+      console.error("[AreaController] Error al configurar workflow:", error)
       res.status(400).json({
         success: false,
         error:

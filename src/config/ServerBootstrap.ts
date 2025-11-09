@@ -161,7 +161,7 @@ export class ServerBootstrap extends ConfigServer {
             new AddComment(commentRepo, clock, eventBus),
             new ListCommentsByTicket(commentRepo),
         )
-        router.use("/comments", new CommentRouter(commentController, middleware, authMiddleware).getRouter())
+        router.use("/", new CommentRouter(commentController, middleware, authMiddleware).getRouter())
 
         // Attachments
         const attachmentController = new AttachmentController(

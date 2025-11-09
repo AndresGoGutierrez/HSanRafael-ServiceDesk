@@ -7,7 +7,7 @@ import { prismaClient } from "../db/prisma"
  * Mapper entre la entidad de dominio `Area` y el modelo Prisma.
  * Mantiene aislada la lógica de transformación.
  */
-class AreaMapper {
+export class AreaMapper {
   static toPrisma(area: Area) {
     return {
       id: area.id.toString(),
@@ -23,7 +23,31 @@ class AreaMapper {
   static toDomain(record: RehydrateAreaDto): Area {
     return Area.rehydrate(record)
   }
+
+  static toResponse(area: Area) {
+    return {
+      id: area.id.toString(),
+      name: area.name,
+      description: area.description,
+      isActive: area.isActive,
+      createdAt: area.createdAt,
+      slaResponseMinutes: area.slaResponseMinutes,
+      slaResolutionMinutes: area.slaResolutionMinutes,
+      workflowConfig: area.workflowConfig ?? null,
+    }
+  }
+
+  static toResponseList(areas: Area[]) {
+    return areas.map((a) => this.toResponse(a))
+  }
+
+  
+
+
 }
+
+
+
 
 /**
  * Implementación del repositorio de áreas usando Prisma ORM.
