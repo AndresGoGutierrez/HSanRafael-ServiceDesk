@@ -17,7 +17,7 @@ class TicketMapper {
       status: ticket.status,
       priority: ticket.priority,
       requesterId: ticket.requesterId.toString(),
-      assigneeId: ticket.assigneeId ? ticket.assigneeId.toString() : null,
+      assigneeId: ticket.assigneeId ? ticket.assigneeId.toString() : undefined, 
       areaId: ticket.areaId,
       slaTargetAt: ticket.slaTargetAt,
       slaBreached: ticket.slaBreached,

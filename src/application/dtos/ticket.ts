@@ -6,6 +6,9 @@ import { ZTicketPriority, ZTicketStatus } from "../../domain/value-objects/statu
  */
 export const CreateTicketSchema = z.object({
     title: z.string().trim().min(3, "El título debe tener al menos 3 caracteres"),
+    description: z
+        .string()
+        .min(5, "la descripción es obligatoria"),
     priority: ZTicketPriority,
     userId: z.string().uuid("El userId debe ser un UUID válido"),
     areaId: z.string().uuid("El areaId debe ser un UUID válido"),
@@ -39,7 +42,9 @@ export type TicketDto = z.infer<typeof TicketSchema>
 export const RehydrateTicketSchema = z.object({
     id: z.string().uuid(),
     title: z.string().trim(),
-    description: z.string().nullable().optional(),
+    description: z
+        .string()
+        .min(5, "la descripción es obligatoria"),
     status: ZTicketStatus,
     priority: ZTicketPriority,
     userId: z.string().uuid(),

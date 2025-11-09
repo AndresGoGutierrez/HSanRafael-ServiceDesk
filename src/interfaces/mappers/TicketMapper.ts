@@ -5,6 +5,7 @@ export class TicketMapper {
     return {
       id: ticket.id.toString(),
       title: ticket.title,
+      description: ticket.description,
       status: ticket.status,
       priority: ticket.priority,
       userId: ticket.requesterId.toString(),

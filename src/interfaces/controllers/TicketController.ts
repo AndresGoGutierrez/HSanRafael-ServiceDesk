@@ -113,7 +113,15 @@ export class TicketController {
         try {
             const { id } = req.params
             const { resolutionSummary, notifyRequester } = req.body
-            const actorId = (req as any).user?.id || "system"
+            const actorId = (req as any).user?.userId
+
+            if (!actorId) {
+                res.status(401).json({
+                    success: false,
+                    error: "No se encontró el usuario autenticado",
+                })
+                return
+            }
 
             await this.closeTicketUseCase.execute({
                 ticketId: id,

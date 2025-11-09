@@ -5,6 +5,10 @@ import type { EventBus } from "../ports/EventBus";
 import { CreateTicketSchema, type CreateTicketInput } from "../dtos/ticket";
 import { Ticket } from "../../domain/entities/Ticket";
 
+import type { AuditRepository } from "../ports/AuditRepository";
+import { AuditTrail } from "../../domain/entities/AuditTrail";
+import { UserId } from "../../domain/value-objects/UserId";
+
 /**
  * Caso de uso: Crear un nuevo Ticket.
  * 
@@ -20,6 +24,7 @@ export class CreateTicket {
         private readonly areaRepo: AreaRepository,
         private readonly clock: Clock,
         private readonly eventBus: EventBus,
+        private readonly auditRepo: AuditRepository,
     ) { }
 
     async execute(input: CreateTicketInput): Promise<Ticket> {
@@ -40,6 +45,28 @@ export class CreateTicket {
 
         // Persistir el ticket
         await this.ticketRepo.save(ticket);
+
+        const audit = AuditTrail.create(
+            {
+                ticketId: ticket.id.toString(), // 👈 clave para asociar el registro
+                actorId: UserId.from(validatedInput.userId), // el usuario que creó el ticket
+                action: "CREATE_TICKET",
+                entityType: "Ticket",
+                entityId: ticket.id.toString(),
+                changes: {
+                    title: validatedInput.title,
+                    description: validatedInput.description,
+                    priority: validatedInput.priority,
+                    areaId: validatedInput.areaId,
+                },
+                metadata: {
+                    source: "API",
+                },
+            },
+            this.clock.now(),
+        );
+
+        await this.auditRepo.save(audit);
 
         // Publicar eventos de dominio
         const events = ticket.pullDomainEvents();

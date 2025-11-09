@@ -52,7 +52,7 @@ model Ticket {
   assigneeId        String?      @db.Uuid
   closedAt          DateTime?
   createdAt         DateTime     @default(now())
-  description       String?
+  description       String
   firstResponseAt   DateTime?
   requesterId       String       @db.Uuid
   resolutionSummary String?

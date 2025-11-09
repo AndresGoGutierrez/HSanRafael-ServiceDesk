@@ -16,7 +16,7 @@ export class AuditRouter {
 
     constructor(
         private readonly controller: AuditController,
-        private readonly authMiddleware: AuthMiddleware,
+        private authMiddleware: AuthMiddleware,
     ) {
         this.router = Router()
         this.initializeRoutes()
@@ -27,7 +27,7 @@ export class AuditRouter {
      */
     private initializeRoutes(): void {
 
-        const { authorize } = this.authMiddleware
+        const { authenticate, authorize } = this.authMiddleware
         /**
          * GET /tickets/:ticketId/audit
          * Obtiene el historial de auditoría asociado a un ticket.
@@ -55,8 +55,8 @@ export class AuditRouter {
          */
         this.router.get(
             "/tickets/:ticketId/audit",
+            authenticate,
             authorize("ADMIN", "AGENT", "TECH"),
-            this.authMiddleware.authenticate,
             this.safeHandler((req, res) => this.controller.getTicketAudit(req, res)),
         )
     }

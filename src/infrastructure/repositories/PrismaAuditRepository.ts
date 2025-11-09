@@ -13,10 +13,18 @@ import type { InputJsonValue } from "@prisma/client/runtime/library"
  */
 class AuditMapper {
     static toPersistence(audit: AuditTrail) {
+        const actorIdStr = audit.actorId?.toString();
+
+        // Validar que sea un UUID válido
+        const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+        if (!actorIdStr || !uuidRegex.test(actorIdStr)) {
+            throw new Error(`AuditMapper: actorId inválido o ausente (${actorIdStr})`);
+        }
+
         return {
             id: audit.id.toString(),
             ticketId: audit.ticketId ?? null,
-            actorId: audit.actorId?.toString() ?? null,
+            actorId: actorIdStr,
             action: audit.action,
             entityType: audit.entityType,
             entityId: audit.entityId,

@@ -13,7 +13,7 @@ export class Ticket extends BaseEntity<TicketId> {
     public constructor(
         id: TicketId,
         public title: string,
-        public description: string | null,
+        public description: string,
         public status: TicketStatus,
         public priority: TicketPriority,
         readonly requesterId: UserId,
@@ -40,7 +40,7 @@ export class Ticket extends BaseEntity<TicketId> {
         const ticket = new Ticket(
             TicketId.new(),
             dto.title.trim(),
-            null,
+            dto.description.trim(),
             "OPEN",
             dto.priority,
             UserId.from(dto.userId),
@@ -77,7 +77,7 @@ export class Ticket extends BaseEntity<TicketId> {
         return new Ticket(
             TicketId.from(row.id),
             row.title.trim(),
-            row.description ?? null,
+            row.description,
             row.status,
             row.priority,
             UserId.from(row.userId),

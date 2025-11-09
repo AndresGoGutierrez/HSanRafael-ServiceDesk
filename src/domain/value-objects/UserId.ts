@@ -21,6 +21,11 @@ export class UserId {
             throw new Error("Invalid UserId: value must be a non-empty string")
         }
 
+        // ✅ Excepción permitida para procesos automáticos o del sistema
+        if (value === "system") {
+            return new UserId(value)
+        }
+
         // Validación simple de UUID v4 (puedes cambiarla si usas otra versión)
         const uuidRegex =
             /^[0-9a-f]{8}-[0-9a-f]{4}-[4][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i

@@ -39,40 +39,86 @@ export class TicketsRouter extends BaseRouter<TicketController, BaseMiddleware> 
          * @swagger
          * /tickets:
          *   post:
-         *     summary: Create a new ticket
+         *     summary: Crea un nuevo ticket de soporte
+         *     description: >
+         *       Permite registrar un **nuevo ticket** dentro del sistema para reportar incidentes o solicitudes.  
+         *       - Solo los usuarios **autenticados** pueden crear tickets.  
+         *       - El ticket queda asociado automáticamente al **usuario** y al **área** correspondiente.  
+         *       - Los administradores y agentes también pueden crear tickets en nombre de otros usuarios.
          *     tags: [Tickets]
          *     security:
          *       - bearerAuth: []
          *     requestBody:
          *       required: true
          *       content:
-         *         application/json:
+         *         application/x-www-form-urlencoded:
          *           schema:
          *             type: object
          *             required:
          *               - title
+         *               - description
          *               - priority
          *               - userId
          *               - areaId
          *             properties:
          *               title:
          *                 type: string
+         *                 description: Título o resumen breve del problema reportado
+         *                 example: ""     # vacío por defecto (evita "string" en Swagger UI)
+         *               description:
+         *                 type: string
+         *                 description: >
+         *                   Descripción detallada del incidente o solicitud.
+         *                 example: ""
          *               priority:
          *                 type: string
-         *                 enum: [LOW, MEDIUM, HIGH, CRITICAL]
+         *                 enum: [LOW, MEDIUM, HIGH, URGENT]
+         *                 description: Nivel de prioridad asignado al ticket
+         *                 default: "LOW"   # valor inicial por defecto
          *               userId:
          *                 type: string
          *                 format: uuid
+         *                 description: ID del usuario que crea el ticket
+         *                 example: ""      # sin valor por defecto
          *               areaId:
          *                 type: string
          *                 format: uuid
+         *                 description: ID del área a la que pertenece el usuario o en la que se reporta el incidente
+         *                 example: ""      # sin valor por defecto
          *     responses:
          *       201:
-         *         description: Ticket created successfully
+         *         description: Ticket creado correctamente
+         *         content:
+         *           application/json:
+         *             schema:
+         *               type: object
+         *               properties:
+         *                 id:
+         *                   type: string
+         *                   format: uuid
+         *                   example: "e91d7b8c-3b82-4c8a-9d1b-15f3e52e4579"
+         *                 title:
+         *                   type: string
+         *                   example: "El equipo de rayos X no enciende"
+         *                 description:
+         *                   type: string
+         *                   example: "No se proporcionó descripción"
+         *                 priority:
+         *                   type: string
+         *                   example: "HIGH"
+         *                 status:
+         *                   type: string
+         *                   example: "OPEN"
+         *                 createdAt:
+         *                   type: string
+         *                   format: date-time
+         *                   example: "2025-11-08T15:42:00Z"
          *       400:
-         *         description: Validation error
+         *         description: Error de validación o datos incompletos
          *       401:
-         *         description: Unauthorized
+         *         description: No autenticado
+         *       403:
+         *         description: No autorizado para crear tickets en nombre de otros usuarios
          */
         this.router.post(
             "/",

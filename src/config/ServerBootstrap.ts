@@ -126,7 +126,7 @@ export class ServerBootstrap extends ConfigServer {
 
         // Tickets
         const ticketController = new TicketController(
-            new CreateTicket(ticketRepo, areaRepo, clock, eventBus),
+            new CreateTicket(ticketRepo, areaRepo, clock, eventBus, auditRepo),
             new ListTickets(ticketRepo),
             new GetTicketById(ticketRepo),
             new AssignTicket(ticketRepo, clock, eventBus),
@@ -176,7 +176,8 @@ export class ServerBootstrap extends ConfigServer {
         router.use("/metrics", new MetricsRouter(metricsController, authMiddleware).getRouter())
 
         // Audit
-        router.use("/audit", new AuditRouter(new AuditController(new GetTicketAuditTrail(auditRepo)), authMiddleware).getRouter())
+        router.use("/", new AuditRouter(new AuditController(new GetTicketAuditTrail(auditRepo)), authMiddleware).getRouter())
+
 
         this._app.use("/api", router)
     }
