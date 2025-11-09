@@ -9,5 +9,6 @@ export interface TicketRepository {
         areaId?: string
         from?: Date
         to?: Date
-    }): Promise<Ticket[]>
+    }): Promise<Ticket[]>;
+    countByAreaAndStatus(areaId: string, statuses: string[]): Promise<number>
 }

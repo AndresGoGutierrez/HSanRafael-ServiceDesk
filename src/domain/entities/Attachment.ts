@@ -68,6 +68,9 @@ export interface RehydrateAttachmentDto {
  * Entidad de dominio que representa un adjunto (Attachment).
  */
 export class Attachment extends BaseEntity<AttachmentId> {
+
+    public deletedAt: Date | null = null
+
     private constructor(
         id: AttachmentId,
         public readonly ticketId: string,
@@ -125,5 +128,19 @@ export class Attachment extends BaseEntity<AttachmentId> {
             dto.url,
             dto.createdAt instanceof Date ? dto.createdAt : new Date(dto.createdAt),
         )
+    }
+
+    /**
+     * Marca el adjunto como eliminado lógicamente.
+     * Registra un evento de dominio que indica su eliminación.
+     */
+    public markAsDeleted(now: Date): void {
+        this.deletedAt = now
+
+        this.recordEvent({
+            type: "AttachmentDeleted",
+            occurredAt: now,
+            payload: { attachmentId: this.id.toString() },
+        })
     }
 }

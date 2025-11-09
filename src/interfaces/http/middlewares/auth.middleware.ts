@@ -21,7 +21,7 @@ export interface AuthenticatedRequest extends Request {
  * - Permite restringir el acceso por roles.
  */
 export class AuthMiddleware {
-    constructor(private readonly tokenService: TokenService) { }
+    constructor(private readonly tokenService: TokenService) { console.log("[AuthMiddleware] Instancia creada con TokenService:", tokenService.constructor.name) }
 
     /**
      * Middleware para autenticar una solicitud usando JWT.
@@ -29,31 +29,37 @@ export class AuthMiddleware {
      */
     authenticate = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         const authHeader = req.headers.authorization
+        console.log("[AuthMiddleware] Authorization header:", authHeader)
 
         if (!authHeader?.startsWith("Bearer ")) {
+            console.log("[AuthMiddleware] ❌ Header inválido o ausente")
             res.status(401).json({ success: false, error: "Missing or invalid Authorization header" })
             return
         }
 
         const token = authHeader.slice(7).trim()
+        console.log("[AuthMiddleware] Token recibido:", token)
 
         try {
             const payload = await this.tokenService.verify(token)
+            console.log("[AuthMiddleware] Token decodificado:", payload)
+
             if (!payload || typeof payload !== "object") {
+                console.log("[AuthMiddleware] ❌ Payload inválido")
                 res.status(401).json({ success: false, error: "Invalid token payload" })
                 return
             }
 
-            // Attach user info to the request
             req.user = {
                 userId: payload.userId,
                 email: payload.email,
                 role: payload.role,
             }
 
+            console.log("[AuthMiddleware] ✅ Usuario autenticado:", req.user)
             next()
         } catch (error) {
-            console.error("[AuthMiddleware] Token verification failed:", error)
+            console.error("[AuthMiddleware] ❌ Error verificando token:", error)
             res.status(401).json({ success: false, error: "Invalid or expired token" })
         }
     }
@@ -75,6 +81,7 @@ export class AuthMiddleware {
                     return
                 }
 
+                console.log("[AuthMiddleware] ✅ Autorización concedida para rol:", req.user.role)
                 next()
             }
 }

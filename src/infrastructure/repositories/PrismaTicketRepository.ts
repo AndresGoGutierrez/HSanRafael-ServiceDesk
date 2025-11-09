@@ -77,6 +77,8 @@ export class PrismaTicketRepository implements TicketRepository {
     })
     return records.map(TicketMapper.toDomain)
   }
+
+
   async findByFilters(filters: { areaId?: string; from?: Date; to?: Date }): Promise<Ticket[]> {
     const where: Record<string, any> = {}
 
@@ -113,4 +115,14 @@ export class PrismaTicketRepository implements TicketRepository {
       })
     )
   }
+
+  async countByAreaAndStatus(areaId: string, statuses: string[]): Promise<number> {
+    return prismaClient.ticket.count({
+      where: {
+        areaId,
+        status: { in: statuses },
+      },
+    })
+  }
+
 }

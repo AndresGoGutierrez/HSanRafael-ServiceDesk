@@ -46,6 +46,9 @@ import { ListAttachmentsByTicket } from "../application/use-cases/ListAttachment
 import { AuthenticateUser } from "../application/use-cases/AuthenticateUser"
 import { GetTicketAuditTrail } from "../application/use-cases/GetTicketAuditTrail"
 import { ComputeSLAMetrics } from "../application/use-cases/ComputeSLAMetrics"
+import { DeactivateUser } from "../application/use-cases/DeactivateUser"
+import { DeactivateArea } from "../application/use-cases/DeactivateArea"
+import { ConfigureWorkflow } from "../application/use-cases/ConfigureWorkflow"
 
 // Controllers
 import { TicketController } from "../interfaces/controllers/TicketController"
@@ -66,6 +69,8 @@ import { AttachmentRouter } from "../interfaces/http/routes/AttachmentRouter"
 import { AuthRouter } from "../interfaces/http/routes/AuthRouter"
 import { MetricsRouter } from "../interfaces/http/routes/MetricsRouter"
 import { AuditRouter } from "../interfaces/http/routes/AuditRouter"
+import { CloseTicket } from "../application/use-cases/CloseTicket"
+import { DeleteAttachment } from "../application/use-cases/DeleteAttachment"
 
 export class ServerBootstrap extends ConfigServer {
     private readonly _app: Application = express()
@@ -126,6 +131,7 @@ export class ServerBootstrap extends ConfigServer {
             new GetTicketById(ticketRepo),
             new AssignTicket(ticketRepo, clock, eventBus),
             new TransitionTicketStatus(ticketRepo, clock, eventBus),
+            new CloseTicket(ticketRepo, auditRepo, eventBus, clock)
         )
         router.use("/tickets", new TicketsRouter(ticketController, middleware, authMiddleware).getRouter())
 
@@ -135,30 +141,35 @@ export class ServerBootstrap extends ConfigServer {
             new UpdateArea(areaRepo, eventBus),
             new ConfigureSLA(areaRepo),
             new ListAreas(areaRepo),
+            new DeactivateArea(areaRepo, ticketRepo, auditRepo, clock),
+            new ConfigureWorkflow(areaRepo, auditRepo, clock)
         )
-        router.use("/areas", new AreaRouter(areaController, middleware).getRouter())
+        router.use("/areas", new AreaRouter(areaController, middleware, authMiddleware).getRouter())
 
         // Users
+
         const userController = new UserController(
             new CreateUser(userRepo, clock, eventBus, passwordHasher),
             new UpdateUser(userRepo),
             new ListUsers(userRepo),
+            new DeactivateUser(userRepo, auditRepo, clock)
         )
-        router.use("/users", new UserRouter(userController, middleware).getRouter())
+        router.use("/users", new UserRouter(userController, middleware, authMiddleware).getRouter())
 
         // Comments
         const commentController = new CommentController(
             new AddComment(commentRepo, clock, eventBus),
             new ListCommentsByTicket(commentRepo),
         )
-        router.use("/comments", new CommentRouter(commentController, middleware).getRouter())
+        router.use("/comments", new CommentRouter(commentController, middleware, authMiddleware).getRouter())
 
         // Attachments
         const attachmentController = new AttachmentController(
             new AddAttachment(attachmentRepo, clock, eventBus),
             new ListAttachmentsByTicket(attachmentRepo),
+            new DeleteAttachment(attachmentRepo, auditRepo, clock)
         )
-        router.use("/attachments", new AttachmentRouter(attachmentController, middleware).getRouter())
+        router.use("/attachments", new AttachmentRouter(attachmentController, middleware, authMiddleware).getRouter())
 
         // Metrics
         const metricsController = new MetricsController(new ComputeSLAMetrics(ticketRepo))

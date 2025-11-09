@@ -73,3 +73,12 @@ export const TransitionTicketSchema = z.object({
 })
 
 export type TransitionTicketInput = z.infer<typeof TransitionTicketSchema>
+
+export const CloseTicketSchema = z.object({
+    resolutionSummary: z
+        .string()
+        .min(10, "El resumen de resolución debe tener al menos 10 caracteres"),
+    notifyRequester: z.boolean().optional().default(true),
+})
+
+export type CloseTicketInput = z.infer<typeof CloseTicketSchema>

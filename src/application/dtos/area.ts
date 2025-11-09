@@ -60,3 +60,25 @@ export const RehydrateAreaSchema = z.object({
 })
 
 export type RehydrateAreaDto = z.infer<typeof RehydrateAreaSchema>
+
+export const DeactivateAreaSchema = z.object({
+    reason: z.string().optional(),
+})
+
+export type DeactivateAreaInput = z.infer<typeof DeactivateAreaSchema>
+
+export const WorkflowConfigSchema = z.object({
+    transitions: z.record(
+        z.enum(["OPEN", "IN_PROGRESS", "PENDING", "RESOLVED", "CLOSED"]),
+        z.array(z.enum(["OPEN", "IN_PROGRESS", "PENDING", "RESOLVED", "CLOSED"]))
+    ),
+    requiredFields: z
+        .record(
+            z.enum(["OPEN", "IN_PROGRESS", "PENDING", "RESOLVED", "CLOSED"]),
+            z.array(z.string())
+        )
+        .optional(),
+})
+
+export type WorkflowConfig = z.infer<typeof WorkflowConfigSchema>
+

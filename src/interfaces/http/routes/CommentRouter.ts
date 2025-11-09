@@ -3,6 +3,7 @@ import type { CommentController } from "../../controllers/CommentController"
 import type { BaseMiddleware } from "../middlewares/validate"
 import { BaseRouter } from "../base/BaseRouter"
 import { CreateCommentSchema } from "../../../application/dtos/comment"
+import type { AuthMiddleware } from "../middlewares/auth.middleware"
 
 /**
  * Router HTTP encargado de manejar las rutas relacionadas con los comentarios de tickets.
@@ -10,7 +11,11 @@ import { CreateCommentSchema } from "../../../application/dtos/comment"
  * Forma parte de la capa de infraestructura, actuando como adaptador de transporte.
  */
 export class CommentRouter extends BaseRouter<CommentController, BaseMiddleware> {
-    constructor(controller: CommentController, middleware: BaseMiddleware) {
+    constructor(
+        controller: CommentController, 
+        middleware: BaseMiddleware,
+        private authMiddleware: AuthMiddleware,
+    ) {
         super(controller, middleware)
     }
 
@@ -19,6 +24,7 @@ export class CommentRouter extends BaseRouter<CommentController, BaseMiddleware>
      * Aplica validación y delega la lógica de negocio al controlador.
      */
     protected routes(): void {
+        const { authenticate, authorize } = this.authMiddleware
         /**
          * @swagger
          * /tickets/{ticketId}/comments:
@@ -49,6 +55,7 @@ export class CommentRouter extends BaseRouter<CommentController, BaseMiddleware>
          */
         this.router.post(
             "/tickets/:ticketId/comments",
+            authenticate,
             this.middleware.validate("body", CreateCommentSchema),
             this.safeHandler((req, res) => this.controller.create(req, res)),
         )
@@ -77,6 +84,7 @@ export class CommentRouter extends BaseRouter<CommentController, BaseMiddleware>
          */
         this.router.get(
             "/tickets/:ticketId/comments",
+            authenticate,
             this.safeHandler((req, res) => this.controller.listByTicket(req, res)),
         )
     }

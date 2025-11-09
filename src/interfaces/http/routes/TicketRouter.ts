@@ -7,6 +7,7 @@ import {
     CreateTicketSchema,
     AssignTicketSchema,
     TransitionTicketSchema,
+    CloseTicketSchema
 } from "../../../application/dtos/ticket"
 
 /**
@@ -214,6 +215,58 @@ export class TicketsRouter extends BaseRouter<TicketController, BaseMiddleware> 
             this.middleware.validate("body", TransitionTicketSchema),
             this.safeHandler((req, res) => this.controller.transition(req, res)),
         )
+
+        /**
+         * @swagger
+         * /tickets/{id}/close:
+         *   post:
+         *     summary: Close a ticket with a resolution summary
+         *     tags: [Tickets]
+         *     security:
+         *       - bearerAuth: []
+         *     parameters:
+         *       - in: path
+         *         name: id
+         *         required: true
+         *         schema:
+         *           type: string
+         *           format: uuid
+         *     requestBody:
+         *       required: true
+         *       content:
+         *         application/json:
+         *           schema:
+         *             type: object
+         *             required:
+         *               - resolutionSummary
+         *             properties:
+         *               resolutionSummary:
+         *                 type: string
+         *                 description: Detailed resolution summary of the ticket
+         *                 example: "El problema fue solucionado actualizando el software del servidor."
+         *               notifyRequester:
+         *                 type: boolean
+         *                 description: Whether to notify the requester upon closure
+         *                 default: true
+         *     responses:
+         *       200:
+         *         description: Ticket closed successfully
+         *       400:
+         *         description: Validation error
+         *       401:
+         *         description: Unauthorized
+         *       403:
+         *         description: Forbidden
+         */
+        this.router.post(
+            "/:id/close",
+            authenticate,
+            authorize("ADMIN", "AGENT", "TECH"),
+            this.middleware.validate("body", CloseTicketSchema),
+            this.safeHandler((req, res) => this.controller.close(req, res)),
+        )
+
+
     }
 
     /**

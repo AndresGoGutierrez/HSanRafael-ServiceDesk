@@ -58,3 +58,175 @@
 {"level":30,"time":1762619028679,"pid":28040,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
 {"level":30,"time":1762619028721,"pid":28040,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
 {"level":30,"time":1762622057056,"pid":28040,"hostname":"LAPTOP-UR26325H","msg":"🧩 Prisma disconnected on SIGINT"}
+{"level":30,"time":1762624967835,"pid":27508,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762624967835,"pid":27508,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762624967850,"pid":27508,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762624984860,"pid":27508,"hostname":"LAPTOP-UR26325H","msg":"🧩 Prisma disconnected on SIGINT"}
+{"level":30,"time":1762626777419,"pid":37356,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762626777419,"pid":37356,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762626777431,"pid":37356,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762626833730,"pid":37356,"hostname":"LAPTOP-UR26325H","msg":"🧩 Prisma disconnected on SIGINT"}
+{"level":30,"time":1762632205984,"pid":17012,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762632205985,"pid":17012,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762632205999,"pid":17012,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762632389607,"pid":17012,"hostname":"LAPTOP-UR26325H","msg":"🧩 Prisma disconnected on SIGINT"}
+{"level":30,"time":1762633490151,"pid":36532,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762633490151,"pid":36532,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762633490179,"pid":36532,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762633525231,"pid":36532,"hostname":"LAPTOP-UR26325H","msg":"🧩 Prisma disconnected on SIGINT"}
+{"level":30,"time":1762635238885,"pid":14332,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762635238886,"pid":14332,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762635238905,"pid":14332,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762635321451,"pid":14332,"hostname":"LAPTOP-UR26325H","msg":"🧩 Prisma disconnected on SIGINT"}
+{"level":30,"time":1762635379846,"pid":4052,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762635379846,"pid":4052,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762635379858,"pid":4052,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762638592268,"pid":38596,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762638592268,"pid":38596,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762638592279,"pid":38596,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762638663545,"pid":14932,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762638663545,"pid":14932,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762638663554,"pid":14932,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762638810132,"pid":712,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762638810132,"pid":712,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762638810156,"pid":712,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762638850488,"pid":25752,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762638850488,"pid":25752,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762638850496,"pid":25752,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762638856115,"pid":36732,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762638856116,"pid":36732,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762638856126,"pid":36732,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762638870411,"pid":8184,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762638870412,"pid":8184,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762638870422,"pid":8184,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762638912203,"pid":34796,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762638912204,"pid":34796,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762638912213,"pid":34796,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762638924469,"pid":3456,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762638924469,"pid":3456,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762638924484,"pid":3456,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762639050576,"pid":32556,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762639050577,"pid":32556,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762639050586,"pid":32556,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762639159031,"pid":20180,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762639159032,"pid":20180,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762639159041,"pid":20180,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762639262092,"pid":15420,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762639262092,"pid":15420,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762639262102,"pid":15420,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762639314736,"pid":39044,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762639314736,"pid":39044,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762639314746,"pid":39044,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762639446686,"pid":3448,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762639446686,"pid":3448,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762639446707,"pid":3448,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762639466186,"pid":39112,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762639466186,"pid":39112,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762639466198,"pid":39112,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762639476177,"pid":27932,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762639476178,"pid":27932,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762639476188,"pid":27932,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762639489784,"pid":29480,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762639489784,"pid":29480,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762639489793,"pid":29480,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762639523029,"pid":39556,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762639523029,"pid":39556,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762639523040,"pid":39556,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762640280427,"pid":37508,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762640280427,"pid":37508,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762640280436,"pid":37508,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762640301077,"pid":13188,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762640301077,"pid":13188,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762640301087,"pid":13188,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762640329473,"pid":9140,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762640329473,"pid":9140,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762640329482,"pid":9140,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762640487697,"pid":36636,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762640487697,"pid":36636,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762640487706,"pid":36636,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762640510536,"pid":5512,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762640510536,"pid":5512,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762640510546,"pid":5512,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762640514711,"pid":13424,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762640514711,"pid":13424,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762640514721,"pid":13424,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762640644040,"pid":28868,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762640644040,"pid":28868,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762640644049,"pid":28868,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762640663868,"pid":32736,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762640663868,"pid":32736,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762640663877,"pid":32736,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762640682535,"pid":2916,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762640682535,"pid":2916,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762640682560,"pid":2916,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762641782120,"pid":26996,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762641782120,"pid":26996,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762641782137,"pid":26996,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762641962632,"pid":11876,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762641962632,"pid":11876,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762641962646,"pid":11876,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762641984675,"pid":35964,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762641984675,"pid":35964,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762641984688,"pid":35964,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762642100620,"pid":34064,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762642100620,"pid":34064,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762642100631,"pid":34064,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762642131826,"pid":36760,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762642131826,"pid":36760,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762642131846,"pid":36760,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762642297267,"pid":2448,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762642297267,"pid":2448,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762642297280,"pid":2448,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762642537348,"pid":38916,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762642537349,"pid":38916,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762642537363,"pid":38916,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762643312793,"pid":35876,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762643312793,"pid":35876,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762643312809,"pid":35876,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762643487873,"pid":15320,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762643487873,"pid":15320,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762643487888,"pid":15320,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762643959841,"pid":13468,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762643959841,"pid":13468,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762643959854,"pid":13468,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762644364540,"pid":19752,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762644364540,"pid":19752,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762644364557,"pid":19752,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762646149146,"pid":19752,"hostname":"LAPTOP-UR26325H","msg":"🧩 Prisma disconnected on SIGINT"}
+{"level":30,"time":1762655990463,"pid":44804,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762655990463,"pid":44804,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762655990484,"pid":44804,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762656326045,"pid":4624,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762656326045,"pid":4624,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762656326074,"pid":4624,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762656859387,"pid":37260,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762656859388,"pid":37260,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762656859408,"pid":37260,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762656904776,"pid":18884,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762656904776,"pid":18884,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762656904791,"pid":18884,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762657185112,"pid":8376,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762657185112,"pid":8376,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762657185128,"pid":8376,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762657807035,"pid":42996,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762657807035,"pid":42996,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762657807056,"pid":42996,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762658060518,"pid":32160,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762658060518,"pid":32160,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762658060537,"pid":32160,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762658100709,"pid":2956,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762658100710,"pid":2956,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762658100730,"pid":2956,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762658112209,"pid":39980,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762658112209,"pid":39980,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762658112227,"pid":39980,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762658154554,"pid":14332,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762658154554,"pid":14332,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762658154571,"pid":14332,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762658276661,"pid":21348,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762658276662,"pid":21348,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762658276684,"pid":21348,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762658376306,"pid":14340,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762658376306,"pid":14340,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762658376323,"pid":14340,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762658381401,"pid":14340,"hostname":"LAPTOP-UR26325H","msg":"🧩 Prisma disconnected on SIGINT"}

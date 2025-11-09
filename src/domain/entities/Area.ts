@@ -21,6 +21,19 @@ export interface SLAConfig {
     resolutionMinutes: number
 }
 
+export interface WorkflowConfig {
+    transitions: Record<
+        "OPEN" | "IN_PROGRESS" | "PENDING" | "RESOLVED" | "CLOSED",
+        ("OPEN" | "IN_PROGRESS" | "PENDING" | "RESOLVED" | "CLOSED")[]
+    >
+    requiredFields?: Record<
+        "OPEN" | "IN_PROGRESS" | "PENDING" | "RESOLVED" | "CLOSED",
+        string[]
+    >
+}
+
+
+
 /**
  * Representa un área dentro del dominio.
  * Contiene información de SLA, estado y eventos de creación.
@@ -31,6 +44,7 @@ export class Area extends BaseEntity<AreaId> {
     public isActive: boolean
     public slaResponseMinutes: number | null
     public slaResolutionMinutes: number | null
+    public workflowConfig: WorkflowConfig | null
 
     private constructor(
         id: AreaId,
@@ -40,6 +54,7 @@ export class Area extends BaseEntity<AreaId> {
         slaResponseMinutes: number | null,
         slaResolutionMinutes: number | null,
         createdAt: Date,
+        workflowConfig: WorkflowConfig | null = null,
     ) {
         super(id, createdAt)
         this.name = name.trim()
@@ -47,6 +62,7 @@ export class Area extends BaseEntity<AreaId> {
         this.isActive = isActive
         this.slaResponseMinutes = slaResponseMinutes
         this.slaResolutionMinutes = slaResolutionMinutes
+        this.workflowConfig = workflowConfig
     }
 
     /** Crea una nueva instancia de Area desde datos de entrada */
@@ -91,12 +107,16 @@ export class Area extends BaseEntity<AreaId> {
     }
 
     /** Desactiva el área (soft delete) */
-    public deactivate(): void {
-        if (!this.isActive) return
+    public deactivate(at: Date): void {
+        if (!this.isActive) {
+            throw new Error("Area is already deactivated")
+        }
+
         this.isActive = false
+
         this.recordEvent({
             type: "area.deactivated",
-            occurredAt: new Date(),
+            occurredAt: at,
             payload: { id: this.id.toString() },
         })
     }
@@ -141,4 +161,18 @@ export class Area extends BaseEntity<AreaId> {
             },
         })
     }
+
+    public setWorkflow(config: WorkflowConfig): void {
+        this.workflowConfig = config
+
+        this.recordEvent({
+            type: "area.workflow_changed",
+            occurredAt: new Date(),
+            payload: {
+                areaId: this.id.toString(),
+                config,
+            },
+        })
+    }
 }
+

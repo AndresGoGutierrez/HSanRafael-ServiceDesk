@@ -11,6 +11,7 @@ import {
 } from "../../application/dtos/ticket"
 import { TicketMapper } from "../mappers/TicketMapper"
 import { ZodError } from "zod"
+import { CloseTicket } from "../../application/use-cases/CloseTicket"
 
 /**
  * Controlador HTTP de Tickets
@@ -26,6 +27,7 @@ export class TicketController {
         private readonly getTicketById: GetTicketById,
         private readonly assignTicket: AssignTicket,
         private readonly transitionTicketStatus: TransitionTicketStatus,
+        private readonly closeTicketUseCase: CloseTicket,
     ) { }
 
     // ──────────────────────────────
@@ -104,6 +106,28 @@ export class TicketController {
             })
         } catch (error) {
             this.handleError(res, error, "Error al cambiar el estado del ticket")
+        }
+    }
+
+    async close(req: Request, res: Response): Promise<void> {
+        try {
+            const { id } = req.params
+            const { resolutionSummary, notifyRequester } = req.body
+            const actorId = (req as any).user?.id || "system"
+
+            await this.closeTicketUseCase.execute({
+                ticketId: id,
+                resolutionSummary,
+                notifyRequester,
+                actorId,
+            })
+
+            res.status(200).json({
+                success: true,
+                message: "Ticket cerrado exitosamente",
+            })
+        } catch (error) {
+            this.handleError(res, error, "Error al cerrar el ticket")
         }
     }
 

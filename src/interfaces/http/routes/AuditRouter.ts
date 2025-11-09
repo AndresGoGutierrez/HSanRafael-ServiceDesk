@@ -26,6 +26,8 @@ export class AuditRouter {
      * Inicializa las rutas de auditoría.
      */
     private initializeRoutes(): void {
+
+        const { authorize } = this.authMiddleware
         /**
          * GET /tickets/:ticketId/audit
          * Obtiene el historial de auditoría asociado a un ticket.
@@ -53,7 +55,8 @@ export class AuditRouter {
          */
         this.router.get(
             "/tickets/:ticketId/audit",
-            this.authMiddleware.authenticate, // ✅ Protección JWT
+            authorize("ADMIN", "AGENT", "TECH"),
+            this.authMiddleware.authenticate,
             this.safeHandler((req, res) => this.controller.getTicketAudit(req, res)),
         )
     }

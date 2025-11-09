@@ -99,11 +99,13 @@ model Attachment {
   size        Int
   url         String
   createdAt   DateTime @default(now())
+  deletedAt   DateTime?
   ticket      Ticket   @relation("TicketAttachments", fields: [ticketId], references: [id], onDelete: Cascade)
   uploader    User     @relation("AttachmentUploader", fields: [uploaderId], references: [id])
 
   @@index([ticketId])
   @@index([uploaderId])
+  @@index([deletedAt])
 }
 
 model AuditTrail {
