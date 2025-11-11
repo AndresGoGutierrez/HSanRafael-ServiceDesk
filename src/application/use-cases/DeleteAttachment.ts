@@ -38,8 +38,8 @@ export class DeleteAttachment {
 
         const occurredAt = this.clock.now()
         attachment.markAsDeleted(occurredAt)
+        await this.attachmentRepository.deleteById(attachmentId)
 
-        await this.attachmentRepository.save(attachment)
 
         const audit = AuditTrail.create({
             actorId: UserId.from(actorId),

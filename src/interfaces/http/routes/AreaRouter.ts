@@ -103,6 +103,7 @@ export class AreaRouter extends BaseRouter<AreaController, BaseMiddleware> {
          * /areas/{id}:
          *   put:
          *     summary: Actualiza una área existente
+         *     description: Permite actualizar el nombre o descripción de un área del hospital.
          *     tags: [Areas]
          *     parameters:
          *       - in: path
@@ -111,6 +112,19 @@ export class AreaRouter extends BaseRouter<AreaController, BaseMiddleware> {
          *         schema:
          *           type: string
          *           format: uuid
+         *     requestBody:
+         *       required: true
+         *       content:
+         *         application/json:
+         *           schema:
+         *             type: object
+         *             properties:
+         *               name:
+         *                 type: string
+         *                 example: "Radiología e Imagenología"
+         *               description:
+         *                 type: string
+         *                 example: "Área encargada de los equipos de diagnóstico por imagen."
          *     responses:
          *       200:
          *         description: Área actualizada correctamente
@@ -121,7 +135,7 @@ export class AreaRouter extends BaseRouter<AreaController, BaseMiddleware> {
             authorize("ADMIN"),
             this.middleware.validate("params", IdParamSchema),
             this.middleware.validate("body", UpdateAreaSchema),
-            (req: Request, res: Response) => this.controller.update(req, res),
+            (req: Request, res: Response) => this.controller.update(req, res)
         )
 
 

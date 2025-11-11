@@ -66,16 +66,35 @@ export class AttachmentController {
     async delete(req: Request, res: Response): Promise<void> {
         try {
             const { attachmentId } = req.params
-            const actorId = (req as any).user?.userId || "system"
+            const actorId = (req as any)?.user?.userId
+
+            if (!actorId) {
+                res.status(401).json({
+                    success: false,
+                    error: "Usuario no autenticado o token inválido.",
+                })
+                return
+            }
+
+            if (!attachmentId) {
+                res.status(400).json({
+                    success: false,
+                    error: "El parámetro 'attachmentId' es obligatorio.",
+                })
+                return
+            }
 
             await this.deleteAttachmentUseCase.execute(attachmentId, actorId)
 
             res.status(204).send()
         } catch (error) {
+            console.error("[AttachmentController] Error al eliminar adjunto:", error)
+
             res.status(400).json({
                 success: false,
-                error: error instanceof Error ? error.message : "Failed to delete attachment",
+                error: error instanceof Error ? error.message : "Error eliminando adjunto.",
             })
         }
     }
+
 }

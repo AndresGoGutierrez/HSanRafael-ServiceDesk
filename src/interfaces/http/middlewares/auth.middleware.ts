@@ -32,7 +32,7 @@ export class AuthMiddleware {
         console.log("[AuthMiddleware] Authorization header:", authHeader)
 
         if (!authHeader?.startsWith("Bearer ")) {
-            console.log("[AuthMiddleware] ❌ Header inválido o ausente")
+            console.log("[AuthMiddleware] Header inválido o ausente")
             res.status(401).json({ success: false, error: "Missing or invalid Authorization header" })
             return
         }
@@ -45,7 +45,7 @@ export class AuthMiddleware {
             console.log("[AuthMiddleware] Token decodificado:", payload)
 
             if (!payload || typeof payload !== "object") {
-                console.log("[AuthMiddleware] ❌ Payload inválido")
+                console.log("[AuthMiddleware] Payload inválido")
                 res.status(401).json({ success: false, error: "Invalid token payload" })
                 return
             }
@@ -56,10 +56,10 @@ export class AuthMiddleware {
                 role: payload.role,
             }
 
-            console.log("[AuthMiddleware] ✅ Usuario autenticado:", req.user)
+            console.log("[AuthMiddleware] Usuario autenticado:", req.user)
             next()
         } catch (error) {
-            console.error("[AuthMiddleware] ❌ Error verificando token:", error)
+            console.error("[AuthMiddleware] Error verificando token:", error)
             res.status(401).json({ success: false, error: "Invalid or expired token" })
         }
     }
@@ -81,7 +81,7 @@ export class AuthMiddleware {
                     return
                 }
 
-                console.log("[AuthMiddleware] ✅ Autorización concedida para rol:", req.user.role)
+                console.log("[AuthMiddleware] Autorización concedida para rol:", req.user.role)
                 next()
             }
 }

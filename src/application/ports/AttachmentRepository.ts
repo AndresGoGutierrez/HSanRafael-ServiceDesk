@@ -31,8 +31,8 @@ export interface AttachmentRepository {
   findByTicketId(ticketId: string): Promise<Attachment[]>
 
   /**
-   * Elimina un adjunto del sistema.
+   * Marca un adjunto como eliminado (soft delete).
    * @param id - UUID del adjunto a eliminar.
    */
-  delete?(id: string): Promise<void>
+  deleteById(id: string): Promise<void>
 }

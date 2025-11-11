@@ -18,6 +18,7 @@ class AttachmentMapper {
             size: attachment.size,
             url: attachment.url,
             createdAt: attachment.createdAt,
+            deletedAt: attachment.deletedAt ?? null,
         }
     }
 
@@ -46,8 +47,10 @@ export class PrismaAttachmentRepository implements AttachmentRepository {
                 contentType: data.contentType,
                 size: data.size,
                 url: data.url,
+                deletedAt: data.deletedAt, // ✅ mantiene consistencia
             },
         })
+
     }
 
     /**
@@ -67,9 +70,31 @@ export class PrismaAttachmentRepository implements AttachmentRepository {
      */
     async findByTicketId(ticketId: string): Promise<Attachment[]> {
         const records = await prismaClient.attachment.findMany({
-            where: { ticketId },
+            where: {
+                ticketId,
+                deletedAt: null, // ✅ solo activos
+            },
             orderBy: { createdAt: "asc" },
         })
         return records.map(AttachmentMapper.toDomain)
     }
+
+    /**
+     * Marca un adjunto como eliminado (soft delete).
+     */
+    async deleteById(id: string): Promise<void> {
+        try {
+            await prismaClient.attachment.update({
+                where: { id },
+                data: { deletedAt: new Date() },
+            })
+        } catch (error: any) {
+            if (error.code === "P2025") {
+                // Registro no encontrado, se ignora silenciosamente o logueas
+                return
+            }
+            throw new Error(`Error eliminando Attachment con id ${id}: ${error.message}`)
+        }
+    }
+
 }
