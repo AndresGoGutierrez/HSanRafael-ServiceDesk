@@ -14,8 +14,6 @@ export class AreaMapper {
       name: area.name,
       description: area.description,
       isActive: area.isActive,
-      slaResponseMinutes: area.slaResponseMinutes,
-      slaResolutionMinutes: area.slaResolutionMinutes,
       createdAt: area.createdAt,
     }
   }
@@ -31,9 +29,6 @@ export class AreaMapper {
       description: area.description,
       isActive: area.isActive,
       createdAt: area.createdAt,
-      slaResponseMinutes: area.slaResponseMinutes,
-      slaResolutionMinutes: area.slaResolutionMinutes,
-      workflowConfig: area.workflowConfig ?? null,
     }
   }
 
@@ -41,14 +36,7 @@ export class AreaMapper {
     return areas.map((a) => this.toResponse(a))
   }
 
-  
-
-
 }
-
-
-
-
 /**
  * Implementación del repositorio de áreas usando Prisma ORM.
  * Responsable de la persistencia y rehidratación de entidades `Area`.
@@ -64,8 +52,6 @@ export class PrismaAreaRepository implements AreaRepository {
         name: data.name,
         description: data.description,
         isActive: data.isActive,
-        slaResponseMinutes: data.slaResponseMinutes,
-        slaResolutionMinutes: data.slaResolutionMinutes,
       },
     })
   }

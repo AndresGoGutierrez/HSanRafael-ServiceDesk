@@ -135,6 +135,68 @@ const swaggerOptions: Options = {
                         },
                     },
                 },
+                SLA: {
+                    type: "object",
+                    required: ["id", "areaId", "responseTimeMinutes", "resolutionTimeMinutes"],
+                    properties: {
+                        id: { type: "string", format: "uuid" },
+                        areaId: { type: "string", format: "uuid" },
+                        responseTimeMinutes: {
+                            type: "integer",
+                            minimum: 0,
+                            example: 30,
+                            description: "Tiempo máximo de respuesta en minutos",
+                        },
+                        resolutionTimeMinutes: {
+                            type: "integer",
+                            minimum: 0,
+                            example: 240,
+                            description: "Tiempo máximo de resolución en minutos",
+                        },
+                        createdAt: { type: "string", format: "date-time" },
+                        updatedAt: { type: "string", format: "date-time" },
+                    },
+                },
+                Workflow: {
+                    type: "object",
+                    required: ["id", "areaId", "transitions", "requiredFields"],
+                    properties: {
+                        id: { type: "string", format: "uuid" },
+                        areaId: { type: "string", format: "uuid" },
+                        transitions: {
+                            type: "object",
+                            additionalProperties: {
+                                type: "array",
+                                items: {
+                                    type: "string",
+                                    enum: ["OPEN", "IN_PROGRESS", "PENDING", "RESOLVED", "CLOSED"],
+                                },
+                            },
+                            example: {
+                                OPEN: ["IN_PROGRESS"],
+                                IN_PROGRESS: ["PENDING", "RESOLVED"],
+                                PENDING: ["IN_PROGRESS", "RESOLVED"],
+                                RESOLVED: ["CLOSED"],
+                                CLOSED: [],
+                            },
+                            description: "Transiciones permitidas entre estados",
+                        },
+                        requiredFields: {
+                            type: "object",
+                            additionalProperties: {
+                                type: "array",
+                                items: { type: "string" },
+                            },
+                            example: {
+                                RESOLVED: ["resolutionSummary"],
+                                CLOSED: ["resolutionSummary"],
+                            },
+                            description: "Campos requeridos para cada estado",
+                        },
+                        createdAt: { type: "string", format: "date-time" },
+                        updatedAt: { type: "string", format: "date-time" },
+                    },
+                },
                 Area: {
                     type: "object",
                     required: ["id", "name", "isActive"],
@@ -225,7 +287,7 @@ const swaggerOptions: Options = {
                         },
                     },
                 },
-                
+
             },
         },
 

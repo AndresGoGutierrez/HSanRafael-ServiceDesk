@@ -1,11 +1,12 @@
 import type { Request, Response } from "express"
 import type { CreateArea } from "../../application/use-cases/CreateArea"
 import type { UpdateArea } from "../../application/use-cases/UpdateArea"
-import type { ConfigureSLA } from "../../application/use-cases/ConfigureSLA"
 import type { ListAreas } from "../../application/use-cases/ListArea"
 import type { DeactivateArea } from "../../application/use-cases/DeactivateArea"
-import type { ConfigureWorkflow } from "../../application/use-cases/ConfigureWorkflow"
-import { WorkflowConfig } from "../../application/dtos/area"
+import type { ListTicketsByAreaUseCase } from "../../application/use-cases/ListTicketsByAreaUseCase"
+
+import { TicketMapper } from "../mappers/TicketMapper"
+
 
 /**
  * Controlador HTTP para gestionar las áreas del sistema.
@@ -16,10 +17,9 @@ export class AreaController {
   constructor(
     private readonly createArea: CreateArea,
     private readonly updateArea: UpdateArea,
-    private readonly configureSLA: ConfigureSLA,
     private readonly listAreas: ListAreas,
     private readonly deactivateArea: DeactivateArea,
-    private readonly configureWorkflowUseCase: ConfigureWorkflow,
+    private readonly listTicketsByAreaUseCase?: ListTicketsByAreaUseCase,
   ) { }
 
   /** Crea una nueva área. (POST /areas) */
@@ -46,17 +46,6 @@ export class AreaController {
     })
   }
 
-  /** Configura los SLA de un área. (PATCH /areas/:id/sla) */
-  async updateSLA(req: Request, res: Response): Promise<void> {
-    await this.handle(res, async () => {
-      const area = await this.configureSLA.execute(req.params.id, req.body)
-      res.status(200).json({
-        success: true,
-        message: "SLA configurado correctamente",
-        data: area,
-      })
-    })
-  }
 
   /** Lista todas las áreas. (GET /areas) */
   async list(_: Request, res: Response): Promise<void> {
@@ -107,39 +96,40 @@ export class AreaController {
     }
   }
 
-  /** Configura el workflow de un área. (PATCH /areas/:id/workflow) */
-  async configureWorkflow(req: Request, res: Response): Promise<void> {
+  /**
+   * Lista los tickets asociados a un área específica. (GET /areas/:id/tickets)
+   */
+  async listByArea(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params
-      const config = req.body as WorkflowConfig
-      const actorId = (req as any).user?.userId // <- igual que en deactivate
-
-      if (!actorId) {
-        res.status(401).json({
+      if (!this.listTicketsByAreaUseCase) {
+        res.status(501).json({
           success: false,
-          error: "No se encontró el usuario autenticado",
+          error: "Feature not implemented",
         })
         return
       }
 
-      await this.configureWorkflowUseCase.execute(id, config, actorId)
+      const { id: areaId } = req.params
+      const { from, to } = req.query
+
+      const filters = {
+        from: from ? new Date(from as string) : undefined,
+        to: to ? new Date(to as string) : undefined,
+      }
+
+      const tickets = await this.listTicketsByAreaUseCase.execute(areaId, filters)
 
       res.status(200).json({
         success: true,
-        message: "Workflow configurado exitosamente",
-        data: config,
+        message: "Tickets del área obtenidos correctamente",
+        data: tickets.map(TicketMapper.toHttp),
+        count: tickets.length,
       })
     } catch (error) {
-      console.error("[AreaController] Error al configurar workflow:", error)
-      res.status(400).json({
-        success: false,
-        error:
-          error instanceof Error
-            ? error.message
-            : "Error al configurar el workflow",
-      })
+      this.handleError(res, error, "Error al obtener tickets")
     }
   }
+
 
   /** Manejo centralizado de errores. */
   private async handle(res: Response, action: () => Promise<void>): Promise<void> {
@@ -153,4 +143,14 @@ export class AreaController {
       })
     }
   }
+
+  /** Manejo directo de errores en métodos no basados en handle(). */
+  private handleError(res: Response, error: unknown, message: string): void {
+    console.error("[AreaController] Error:", error)
+    res.status(400).json({
+      success: false,
+      error: error instanceof Error ? error.message : message,
+    })
+  }
+
 }

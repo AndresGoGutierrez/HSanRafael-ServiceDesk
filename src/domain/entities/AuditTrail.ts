@@ -43,13 +43,14 @@ export interface RehydrateAuditTrailDto {
     metadata?: Record<string, unknown> | null
     ipAddress?: string | null
     userAgent?: string | null
-    createdAt: Date
+    occurredAt: Date
 }
 
 /**
  * Entidad de dominio que representa una acción registrada en el sistema.
  */
 export class AuditTrail extends BaseEntity<AuditTrailId> {
+    public readonly occurredAt!: Date 
     public constructor(
         id: AuditTrailId,
         public readonly ticketId: string | null,
@@ -61,9 +62,9 @@ export class AuditTrail extends BaseEntity<AuditTrailId> {
         public readonly metadata: Record<string, unknown> | null,
         public readonly ipAddress: string | null,
         public readonly userAgent: string | null,
-        createdAt: Date,
+        occurredAt: Date,
     ) {
-        super(id, createdAt)
+        super(id, occurredAt)
     }
 
     public static create(dto: CreateAuditTrailInput, now: Date): AuditTrail {
@@ -107,7 +108,7 @@ export class AuditTrail extends BaseEntity<AuditTrailId> {
             row.metadata ?? null,
             row.ipAddress ?? null,
             row.userAgent ?? null,
-            new Date(row.createdAt),
+            new Date(row.occurredAt),
         )
     }
 }

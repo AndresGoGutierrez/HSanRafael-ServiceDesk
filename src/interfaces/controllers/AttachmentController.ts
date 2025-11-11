@@ -13,14 +13,41 @@ export class AttachmentController {
 
     async create(req: Request, res: Response): Promise<void> {
         try {
-            const attachment = await this.addAttachment.execute({
-                ...req.body,
+            const file = req.file
+            if (!file) {
+                res.status(400).json({ error: "No se ha proporcionado ningún archivo" })
+                return
+            }
+
+            const uploaderId = (req as any).user?.userId
+            if (!uploaderId) {
+                res.status(401).json({ error: "Usuario no autenticado" })
+                return
+            }
+
+            const baseUrl = `${req.protocol}://${req.get("host")}`
+
+            const attachmentData = {
                 ticketId: req.params.ticketId,
+                uploaderId,
+                filename: file.originalname,
+                contentType: file.mimetype,
+                size: file.size,
+                url: `${baseUrl}/uploads/${file.filename}`, // o el path real si usas almacenamiento externo
+            }
+
+            const attachment = await this.addAttachment.execute(attachmentData)
+
+            res.status(201).json({
+                success: true,
+                message: "Archivo adjunto agregado correctamente",
+                data: attachment,
             })
-            res.status(201).json(attachment)
         } catch (error) {
+            console.error("[AttachmentController] Error en create:", error)
             res.status(400).json({
-                error: error instanceof Error ? error.message : "Unknown error",
+                success: false,
+                error: error instanceof Error ? error.message : "Error desconocido",
             })
         }
     }
@@ -39,7 +66,7 @@ export class AttachmentController {
     async delete(req: Request, res: Response): Promise<void> {
         try {
             const { attachmentId } = req.params
-            const actorId = (req as any).user?.id || "system"
+            const actorId = (req as any).user?.userId || "system"
 
             await this.deleteAttachmentUseCase.execute(attachmentId, actorId)
 

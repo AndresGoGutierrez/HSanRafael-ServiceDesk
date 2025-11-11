@@ -8,10 +8,17 @@ export class TicketId {
     }
 
     static from(value: string): TicketId {
+        if (!TicketId.isValidUUID(value)) {
+            throw new Error(`Invalid TicketId: ${value}`);
+        }
         return new TicketId(value);
     }
 
     toString(): string {
         return this.value;
+    }
+
+    private static isValidUUID(value: string): boolean {
+        return /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-5][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}$/.test(value);
     }
 }

@@ -1,3 +1,4 @@
+import multer from "multer"
 import type { Request, Response } from "express"
 import type { AttachmentController } from "../../controllers/AttachmentController"
 import type { BaseMiddleware } from "../middlewares/validate"
@@ -17,7 +18,7 @@ import type { AuthMiddleware } from "../middlewares/auth.middleware"
  */
 export class AttachmentRouter extends BaseRouter<AttachmentController, BaseMiddleware> {
     constructor(
-        controller: AttachmentController, 
+        controller: AttachmentController,
         middleware: BaseMiddleware,
         private authMiddleware: AuthMiddleware,
     ) {
@@ -26,7 +27,7 @@ export class AttachmentRouter extends BaseRouter<AttachmentController, BaseMiddl
     }
 
     protected routes(): void {
-
+        const upload = multer({ dest: "uploads/" })
         const { authenticate, authorize } = this.authMiddleware
 
         /**
@@ -48,9 +49,16 @@ export class AttachmentRouter extends BaseRouter<AttachmentController, BaseMiddl
          *     requestBody:
          *       required: true
          *       content:
-         *         application/json:
+         *         multipart/form-data:
          *           schema:
-         *             $ref: "#/components/schemas/CreateAttachment"
+         *             type: object
+         *             required:
+         *               - file
+         *             properties:
+         *               file:
+         *                 type: string
+         *                 format: binary
+         *                 description: Archivo a adjuntar
          *     responses:
          *       201:
          *         description: Archivo adjunto creado correctamente
@@ -64,7 +72,7 @@ export class AttachmentRouter extends BaseRouter<AttachmentController, BaseMiddl
         this.router.post(
             "/tickets/:ticketId/attachments",
             authenticate,
-            this.middleware.validate("body", CreateAttachmentSchema),
+            upload.single("file"),
             async (req: Request, res: Response) => {
                 try {
                     await this.controller.create(req, res)

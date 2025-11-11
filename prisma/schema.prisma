@@ -34,13 +34,36 @@ model Area {
   createdAt            DateTime @default(now())
   description          String?
   isActive             Boolean  @default(true)
-  slaResolutionMinutes Int?
-  slaResponseMinutes   Int?
-  workflowConfig       Json?
   tickets              Ticket[] @relation("AreaTickets")
   users                User[]   @relation("UserArea")
+  sla         SLA?       @relation("AreaSLA")
+  workflows   Workflow[] @relation("AreaWorkflows")
 
   @@index([name])
+}
+
+model SLA {
+  id                    String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  areaId                String   @unique @db.Uuid
+  responseTimeMinutes   Int
+  resolutionTimeMinutes Int
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+  area                  Area     @relation("AreaSLA", fields: [areaId], references: [id], onDelete: Cascade)
+
+  @@index([areaId])
+}
+
+model Workflow {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  areaId         String   @db.Uuid
+  transitions    Json
+  requiredFields Json
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  area           Area     @relation("AreaWorkflows", fields: [areaId], references: [id], onDelete: Cascade)
+
+  @@index([areaId])
 }
 
 model Ticket {

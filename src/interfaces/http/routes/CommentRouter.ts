@@ -31,6 +31,10 @@ export class CommentRouter extends BaseRouter<CommentController, BaseMiddleware>
          * /tickets/{ticketId}/comments:
          *   post:
          *     summary: Crea un nuevo comentario en un ticket
+         *     description: >
+         *       Permite registrar un **nuevo comentario** asociado a un ticket existente dentro del sistema.  
+         *       - Solo los usuarios **autenticados** pueden agregar comentarios.  
+         *       - El comentario puede ser **público** o **interno**, según el valor de `isInternal`.
          *     tags: [Comments]
          *     security:
          *       - bearerAuth: []
@@ -40,19 +44,56 @@ export class CommentRouter extends BaseRouter<CommentController, BaseMiddleware>
          *         required: true
          *         schema:
          *           type: string
+         *           format: uuid
+         *         description: Identificador único del ticket al cual se asocia el comentario.
          *     requestBody:
          *       required: true
          *       content:
-         *         application/json:
+         *         application/x-www-form-urlencoded:
          *           schema:
-         *             $ref: '#/components/schemas/CreateComment'
+         *             type: object
+         *             required:
+         *               - authorId
+         *               - body
+         *               - isInternal
+         *             properties:
+         *               authorId:
+         *                 type: string
+         *                 format: uuid
+         *                 description: Identificador único del usuario que crea el comentario.
+         *                 example: ""
+         *               body:
+         *                 type: string
+         *                 description: Contenido del comentario escrito por el usuario.
+         *                 example: ""
+         *               isInternal:
+         *                 type: boolean
+         *                 enum: [true, false]
+         *                 description: >
+         *                   Define si el comentario es **interno** (visible solo para el personal autorizado)  
+         *                   o **público** (visible para todos los usuarios relacionados con el ticket).
+         *                 example: false
          *     responses:
          *       201:
          *         description: Comentario creado correctamente
+         *         content:
+         *           application/json:
+         *             example:
+         *               success: true
+         *               message: "Comentario creado correctamente"
+         *               data:
+         *                 id: ""
+         *                 ticketId: ""
+         *                 authorId: ""
+         *                 body: ""
+         *                 isInternal: false
+         *                 createdAt: ""
          *       400:
-         *         description: Datos inválidos
+         *         description: Datos inválidos — el cuerpo del comentario o el ID del ticket no son válidos.
          *       401:
-         *         description: No autorizado
+         *         description: No autorizado — el usuario no tiene un token de acceso válido.
+         *       403:
+         *         description: Prohibido — el usuario no tiene permisos para comentar en este ticket.
          */
         this.router.post(
             "/tickets/:ticketId/comments",

@@ -27,23 +27,6 @@ export const UpdateAreaSchema = CreateAreaSchema.extend({
     // podrías incluir validaciones condicionales si aplica
 })
 export type UpdateAreaInput = z.infer<typeof UpdateAreaSchema>
-
-/**
- * Esquema para actualizar la configuración de SLA.
- */
-export const UpdateSLASchema = z.object({
-    responseMinutes: z
-        .number()
-        .int({ message: "El tiempo de respuesta debe ser un número entero." })
-        .positive({ message: "El tiempo de respuesta debe ser positivo." }),
-    resolutionMinutes: z
-        .number()
-        .int({ message: "El tiempo de resolución debe ser un número entero." })
-        .positive({ message: "El tiempo de resolución debe ser positivo." }),
-})
-
-export type UpdateSLAInput = z.infer<typeof UpdateSLASchema>
-
 /**
  * Esquema para rehidratar una entidad Area desde la persistencia.
  */
@@ -67,18 +50,4 @@ export const DeactivateAreaSchema = z.object({
 
 export type DeactivateAreaInput = z.infer<typeof DeactivateAreaSchema>
 
-export const WorkflowConfigSchema = z.object({
-    transitions: z.record(
-        z.enum(["OPEN", "IN_PROGRESS", "PENDING", "RESOLVED", "CLOSED"]),
-        z.array(z.enum(["OPEN", "IN_PROGRESS", "PENDING", "RESOLVED", "CLOSED"]))
-    ),
-    requiredFields: z
-        .record(
-            z.enum(["OPEN", "IN_PROGRESS", "PENDING", "RESOLVED", "CLOSED"]),
-            z.array(z.string())
-        )
-        .optional(),
-})
-
-export type WorkflowConfig = z.infer<typeof WorkflowConfigSchema>
 

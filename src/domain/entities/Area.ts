@@ -11,26 +11,10 @@ export interface RehydrateAreaDto {
     name: string
     description: string | null
     isActive: boolean
-    slaResponseMinutes: number | null
-    slaResolutionMinutes: number | null
     createdAt: string | Date // <-- más flexible para serialización
 }
 
-export interface SLAConfig {
-    responseMinutes: number
-    resolutionMinutes: number
-}
 
-export interface WorkflowConfig {
-    transitions: Record<
-        "OPEN" | "IN_PROGRESS" | "PENDING" | "RESOLVED" | "CLOSED",
-        ("OPEN" | "IN_PROGRESS" | "PENDING" | "RESOLVED" | "CLOSED")[]
-    >
-    requiredFields?: Record<
-        "OPEN" | "IN_PROGRESS" | "PENDING" | "RESOLVED" | "CLOSED",
-        string[]
-    >
-}
 
 
 
@@ -42,27 +26,19 @@ export class Area extends BaseEntity<AreaId> {
     public name: string
     public description: string | null
     public isActive: boolean
-    public slaResponseMinutes: number | null
-    public slaResolutionMinutes: number | null
-    public workflowConfig: WorkflowConfig | null
+
 
     private constructor(
         id: AreaId,
         name: string,
         description: string | null,
         isActive: boolean,
-        slaResponseMinutes: number | null,
-        slaResolutionMinutes: number | null,
         createdAt: Date,
-        workflowConfig: WorkflowConfig | null = null,
     ) {
         super(id, createdAt)
         this.name = name.trim()
         this.description = description
         this.isActive = isActive
-        this.slaResponseMinutes = slaResponseMinutes
-        this.slaResolutionMinutes = slaResolutionMinutes
-        this.workflowConfig = workflowConfig
     }
 
     /** Crea una nueva instancia de Area desde datos de entrada */
@@ -76,8 +52,6 @@ export class Area extends BaseEntity<AreaId> {
             dto.name.trim(),
             dto.description?.trim() || null,
             true,
-            null,
-            null,
             now,
         )
 
@@ -100,8 +74,6 @@ export class Area extends BaseEntity<AreaId> {
             row.name,
             row.description,
             row.isActive,
-            row.slaResponseMinutes,
-            row.slaResolutionMinutes,
             new Date(row.createdAt),
         )
     }
@@ -138,39 +110,6 @@ export class Area extends BaseEntity<AreaId> {
                 id: this.id.toString(),
                 name: this.name,
                 description: this.description,
-            },
-        })
-    }
-
-    /** Configura los parámetros de SLA */
-    public configureSLA(config: SLAConfig): void {
-        if (config.responseMinutes < 0 || config.resolutionMinutes < 0) {
-            throw new Error("Los valores de SLA no pueden ser negativos.")
-        }
-
-        this.slaResponseMinutes = config.responseMinutes
-        this.slaResolutionMinutes = config.resolutionMinutes
-
-        this.recordEvent({
-            type: "area.sla_configured",
-            occurredAt: new Date(),
-            payload: {
-                id: this.id.toString(),
-                responseMinutes: config.responseMinutes,
-                resolutionMinutes: config.resolutionMinutes,
-            },
-        })
-    }
-
-    public setWorkflow(config: WorkflowConfig): void {
-        this.workflowConfig = config
-
-        this.recordEvent({
-            type: "area.workflow_changed",
-            occurredAt: new Date(),
-            payload: {
-                areaId: this.id.toString(),
-                config,
             },
         })
     }

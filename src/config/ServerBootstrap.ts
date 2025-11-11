@@ -34,7 +34,6 @@ import { AssignTicket } from "../application/use-cases/AssignTicket"
 import { TransitionTicketStatus } from "../application/use-cases/TransitionTicketStatus"
 import { CreateArea } from "../application/use-cases/CreateArea"
 import { UpdateArea } from "../application/use-cases/UpdateArea"
-import { ConfigureSLA } from "../application/use-cases/ConfigureSLA"
 import { ListAreas } from "../application/use-cases/ListArea"
 import { CreateUser } from "../application/use-cases/CreateUser"
 import { UpdateUser } from "../application/use-cases/UpdateUser"
@@ -48,7 +47,9 @@ import { GetTicketAuditTrail } from "../application/use-cases/GetTicketAuditTrai
 import { ComputeSLAMetrics } from "../application/use-cases/ComputeSLAMetrics"
 import { DeactivateUser } from "../application/use-cases/DeactivateUser"
 import { DeactivateArea } from "../application/use-cases/DeactivateArea"
-import { ConfigureWorkflow } from "../application/use-cases/ConfigureWorkflow"
+
+
+
 
 // Controllers
 import { TicketController } from "../interfaces/controllers/TicketController"
@@ -71,6 +72,16 @@ import { MetricsRouter } from "../interfaces/http/routes/MetricsRouter"
 import { AuditRouter } from "../interfaces/http/routes/AuditRouter"
 import { CloseTicket } from "../application/use-cases/CloseTicket"
 import { DeleteAttachment } from "../application/use-cases/DeleteAttachment"
+import { SLAController } from "../interfaces/controllers/SLAController"
+import { ConfigureSLAUseCase } from "../application/use-cases/ConfigureSLAUseCase"
+import { PrismaSLARepository } from "../infrastructure/repositories/PrismaSLARepository"
+import { PrismaWorkflowRepository } from "../infrastructure/repositories/PrismaWorkflowRepository"
+import { SLARouter } from "../interfaces/http/routes/SLARouter"
+import { WorkflowController } from '../interfaces/controllers/WorkflowController';
+import { ConfigureWorkflowUseCase } from "../application/use-cases/ConfigureWorkflowUseCase"
+import { WorkflowRouter } from "../interfaces/http/routes/WorkflowRouter"
+import { ListTicketsByAreaUseCase } from "../application/use-cases/ListTicketsByAreaUseCase"
+import { ExportTicketHistoryUseCase } from "../application/use-cases/ExportTicketHistoryUseCase"
 
 export class ServerBootstrap extends ConfigServer {
     private readonly _app: Application = express()
@@ -118,6 +129,8 @@ export class ServerBootstrap extends ConfigServer {
         const commentRepo = new PrismaCommentRepository()
         const attachmentRepo = new PrismaAttachmentRepository()
         const auditRepo = new PrismaAuditRepository()
+        const slaRepo = new PrismaSLARepository()
+        const workflowRepo = new PrismaWorkflowRepository()
 
         // Auth
         const authenticateUser = new AuthenticateUser(userRepo, passwordHasher, tokenService)
@@ -131,7 +144,8 @@ export class ServerBootstrap extends ConfigServer {
             new GetTicketById(ticketRepo),
             new AssignTicket(ticketRepo, clock, eventBus),
             new TransitionTicketStatus(ticketRepo, clock, eventBus),
-            new CloseTicket(ticketRepo, auditRepo, eventBus, clock)
+            new CloseTicket(ticketRepo, auditRepo, eventBus, clock),
+            new ExportTicketHistoryUseCase(ticketRepo, commentRepo, auditRepo, attachmentRepo)
         )
         router.use("/tickets", new TicketsRouter(ticketController, middleware, authMiddleware).getRouter())
 
@@ -139,12 +153,26 @@ export class ServerBootstrap extends ConfigServer {
         const areaController = new AreaController(
             new CreateArea(areaRepo, clock, eventBus),
             new UpdateArea(areaRepo, eventBus),
-            new ConfigureSLA(areaRepo),
             new ListAreas(areaRepo),
             new DeactivateArea(areaRepo, ticketRepo, auditRepo, clock),
-            new ConfigureWorkflow(areaRepo, auditRepo, clock)
+            new ListTicketsByAreaUseCase(ticketRepo, areaRepo)
         )
         router.use("/areas", new AreaRouter(areaController, middleware, authMiddleware).getRouter())
+
+        // SLA
+
+        const slaController = new SLAController(
+            new ConfigureSLAUseCase(slaRepo, areaRepo, auditRepo, clock, eventBus)
+        )
+
+        router.use("/", new SLARouter(slaController, middleware, authMiddleware).getRouter())
+
+        // WORKFLOW
+        const workflowController = new WorkflowController(
+            new ConfigureWorkflowUseCase(workflowRepo, areaRepo, auditRepo, clock, eventBus)
+        )
+
+        router.use("/", new WorkflowRouter(workflowController, middleware, authMiddleware).getRouter())
 
         // Users
 
@@ -169,7 +197,7 @@ export class ServerBootstrap extends ConfigServer {
             new ListAttachmentsByTicket(attachmentRepo),
             new DeleteAttachment(attachmentRepo, auditRepo, clock)
         )
-        router.use("/attachments", new AttachmentRouter(attachmentController, middleware, authMiddleware).getRouter())
+        router.use("/", new AttachmentRouter(attachmentController, middleware, authMiddleware).getRouter())
 
         // Metrics
         const metricsController = new MetricsController(new ComputeSLAMetrics(ticketRepo))

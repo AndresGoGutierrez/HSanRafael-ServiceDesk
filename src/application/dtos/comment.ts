@@ -5,28 +5,17 @@ import { z } from "zod";
  * Define las reglas de validación de entrada desde la capa de infraestructura (HTTP, etc.)
  */
 export const CreateCommentSchema = z.object({
-    ticketId: z
-        .string()
-        .uuid({ message: "El ticketId debe ser un UUID válido" }),
+  body: z.string().trim().min(1, "El comentario no puede estar vacío"),
+  isInternal: z
+    .union([
+      z.boolean(),
+      z.enum(["true", "false"])
+    ])
+    .transform(val => val === true || val === "true") // 🔥 convierte string a boolean
+    .default(false)
+})
 
-    authorId: z
-        .string()
-        .uuid({ message: "El authorId debe ser un UUID válido" }),
-
-    body: z
-        .string()
-        .trim()
-        .min(1, { message: "El cuerpo del comentario no puede estar vacío" })
-        .max(1000, { message: "El comentario no puede superar los 1000 caracteres" }),
-
-    isInternal: z.boolean().default(false),
-});
-
-/**
- * Tipo derivado del esquema de creación.
- * Se utiliza en los casos de uso de aplicación.
- */
-export type CreateCommentInput = z.infer<typeof CreateCommentSchema>;
+export type CreateCommentInput = z.infer<typeof CreateCommentSchema>
 
 /**
  * Schema para rehidratar la entidad desde una fuente de datos (p. ej. base de datos).

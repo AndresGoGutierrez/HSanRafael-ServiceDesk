@@ -8,8 +8,6 @@ import { CreateCommentSchema, type CreateCommentInput } from "../dtos/comment"
 
 /**
  * Caso de uso: Agregar comentario a un ticket.
- * 
- * Aplica validación, conversión a objetos de dominio y publicación de eventos.
  */
 export class AddComment {
   constructor(
@@ -18,15 +16,15 @@ export class AddComment {
     private readonly eventBus: EventBus,
   ) {}
 
-  async execute(input: CreateCommentInput): Promise<Comment> {
-    // 1️⃣ Validar datos
+  async execute(input: CreateCommentInput & { ticketId: string; authorId: string }): Promise<Comment> {
+    // 1️⃣ Validar solo el body (body, isInternal)
     const validated = CreateCommentSchema.parse(input)
 
     // 2️⃣ Convertir a Value Objects del dominio
     const domainInput = {
       ...validated,
-      ticketId: TicketId.from(validated.ticketId),
-      authorId: UserId.from(validated.authorId),
+      ticketId: TicketId.from(input.ticketId),
+      authorId: UserId.from(input.authorId),
     }
 
     // 3️⃣ Crear la entidad de dominio

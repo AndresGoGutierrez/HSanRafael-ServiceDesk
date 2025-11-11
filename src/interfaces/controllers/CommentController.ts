@@ -21,14 +21,36 @@ export class CommentController {
     async create(req: Request, res: Response): Promise<void> {
         try {
             const { ticketId } = req.params
+            const { body, isInternal } = req.body
+            const authorId = (req as any).user?.userId
+
             if (!ticketId) {
                 res.status(400).json({ success: false, error: "El ID del ticket es obligatorio" })
                 return
             }
 
+            if (!authorId) {
+                res.status(401).json({ success: false, error: "Usuario no autenticado" })
+                return
+            }
+
+            const internalFlag =
+                isInternal === true || isInternal === "true"
+                    ? true
+                    : isInternal === false || isInternal === "false"
+                        ? false
+                        : undefined
+
+            if (internalFlag === undefined) {
+                res.status(400).json({ success: false, error: "El campo 'isInternal' debe ser true o false" })
+                return
+            }
+
             const comment = await this.addComment.execute({
-                ...req.body,
                 ticketId,
+                authorId,
+                body,
+                isInternal: internalFlag,
             })
 
             res.status(201).json({
@@ -38,7 +60,6 @@ export class CommentController {
             })
         } catch (error) {
             console.error("[CommentController] Error al crear comentario:", error)
-
             res.status(400).json({
                 success: false,
                 error: error instanceof Error ? error.message : "Error desconocido",

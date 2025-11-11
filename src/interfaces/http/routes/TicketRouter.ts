@@ -180,7 +180,11 @@ export class TicketsRouter extends BaseRouter<TicketController, BaseMiddleware> 
          * @swagger
          * /tickets/{id}/assign:
          *   post:
-         *     summary: Assign ticket to an agent
+         *     summary: Asigna un ticket a un agente de soporte
+         *     description: >
+         *       Permite **asignar un ticket existente** a un agente específico del sistema.  
+         *       - Solo los **usuarios autenticados** con permisos de gestión pueden realizar esta acción.  
+         *       - Al asignar un ticket, su estado puede cambiar automáticamente a `ASSIGNED`.
          *     tags: [Tickets]
          *     security:
          *       - bearerAuth: []
@@ -191,10 +195,11 @@ export class TicketsRouter extends BaseRouter<TicketController, BaseMiddleware> 
          *         schema:
          *           type: string
          *           format: uuid
+         *         description: Identificador único del ticket a asignar.
          *     requestBody:
          *       required: true
          *       content:
-         *         application/json:
+         *         application/x-www-form-urlencoded:
          *           schema:
          *             type: object
          *             required:
@@ -203,13 +208,50 @@ export class TicketsRouter extends BaseRouter<TicketController, BaseMiddleware> 
          *               assigneeId:
          *                 type: string
          *                 format: uuid
+         *                 description: ID del usuario (agente) al que se asignará el ticket.
+         *                 example: ""
          *     responses:
-         *       200:
-         *         description: Ticket assigned successfully
+         *       201:
+         *         description: Ticket asignado correctamente
+         *         content:
+         *           application/json:
+         *             schema:
+         *               type: object
+         *               properties:
+         *                 success:
+         *                   type: boolean
+         *                   example: true
+         *                 message:
+         *                   type: string
+         *                   example: "Ticket asignado correctamente al agente de soporte."
+         *                 data:
+         *                   type: object
+         *                   properties:
+         *                     id:
+         *                       type: string
+         *                       format: uuid
+         *                       example: "c41d9e58-4b6d-43f2-bb09-8a8c53a49d21"
+         *                     title:
+         *                       type: string
+         *                       example: "Falla en el sistema de impresión"
+         *                     status:
+         *                       type: string
+         *                       enum: [OPEN, ASSIGNED, IN_PROGRESS, RESOLVED, CLOSED]
+         *                       example: "ASSIGNED"
+         *                     assigneeId:
+         *                       type: string
+         *                       format: uuid
+         *                       example: "9b7f3c12-45e8-4f5a-bc8a-7a1234d9f2a1"
+         *                     updatedAt:
+         *                       type: string
+         *                       format: date-time
+         *                       example: "2025-11-09T14:32:45.000Z"
+         *       400:
+         *         description: Solicitud inválida — datos faltantes o formato incorrecto.
          *       401:
-         *         description: Unauthorized
+         *         description: No autenticado — se requiere token Bearer.
          *       403:
-         *         description: Forbidden
+         *         description: Prohibido — el usuario no tiene permisos para asignar tickets.
          */
         this.router.post(
             "/:id/assign",
@@ -312,7 +354,53 @@ export class TicketsRouter extends BaseRouter<TicketController, BaseMiddleware> 
             this.safeHandler((req, res) => this.controller.close(req, res)),
         )
 
-
+        /**
+         * @swagger
+         * /tickets/{id}/export:
+         *   get:
+         *     summary: Exporta el historial completo de un ticket
+         *     description: >
+         *       Genera un archivo con toda la información del ticket:
+         *       detalles, comentarios, cambios de auditoría y adjuntos.
+         *     tags: [Tickets]
+         *     security:
+         *       - bearerAuth: []
+         *     parameters:
+         *       - in: path
+         *         name: id
+         *         required: true
+         *         schema:
+         *           type: string
+         *           format: uuid
+         *         description: ID del ticket
+         *       - in: query
+         *         name: format
+         *         schema:
+         *           type: string
+         *           enum: [pdf, json]
+         *           default: json
+         *         description: Formato de exportación
+         *     responses:
+         *       200:
+         *         description: Archivo generado exitosamente
+         *         content:
+         *           application/json:
+         *             schema:
+         *               type: object
+         *           application/pdf:
+         *             schema:
+         *               type: string
+         *               format: binary
+         *       401:
+         *         description: No autenticado
+         *       404:
+         *         description: Ticket no encontrado
+         */
+        this.router.get(
+            "/:id/export",
+            authenticate,
+            this.safeHandler((req, res) => this.controller.exportHistory(req, res)),
+        )
     }
 
     /**

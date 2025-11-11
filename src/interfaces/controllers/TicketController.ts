@@ -12,6 +12,8 @@ import {
 import { TicketMapper } from "../mappers/TicketMapper"
 import { ZodError } from "zod"
 import { CloseTicket } from "../../application/use-cases/CloseTicket"
+import { ExportFormat, ExportTicketHistoryUseCase } from "../../application/use-cases/ExportTicketHistoryUseCase"
+import PDFDocument from "pdfkit"
 
 /**
  * Controlador HTTP de Tickets
@@ -28,6 +30,7 @@ export class TicketController {
         private readonly assignTicket: AssignTicket,
         private readonly transitionTicketStatus: TransitionTicketStatus,
         private readonly closeTicketUseCase: CloseTicket,
+        private readonly exportTicketHistoryUseCase?: ExportTicketHistoryUseCase,
     ) { }
 
     // ──────────────────────────────
@@ -138,6 +141,136 @@ export class TicketController {
             this.handleError(res, error, "Error al cerrar el ticket")
         }
     }
+
+    /** Exporta el historial de un ticket. (GET /tickets/:id/export) */
+    async exportHistory(req: Request, res: Response): Promise<void> {
+        try {
+            if (!this.exportTicketHistoryUseCase) {
+                res.status(501).json({
+                    success: false,
+                    error: "Feature not implemented",
+                })
+                return
+            }
+
+            const { id: ticketId } = req.params
+            const format = (req.query.format as "json" | "pdf") || "json"
+
+            const historyExport = await this.exportTicketHistoryUseCase.execute(ticketId, format)
+
+            // === EXPORTACIÓN JSON ===
+            if (format === "json") {
+                res.status(200).json({
+                    success: true,
+                    message: "Historial exportado correctamente",
+                    data: historyExport,
+                })
+                return
+            }
+
+            // === EXPORTACIÓN PDF ===
+            if (format === "pdf") {
+                // ✅ 1. Importar pdfkit correctamente arriba:
+                // import PDFDocument from "pdfkit"
+
+                const doc = new PDFDocument({ margin: 50 })
+
+                res.setHeader("Content-Type", "application/pdf")
+                res.setHeader(
+                    "Content-Disposition",
+                    `attachment; filename="ticket-${ticketId}.pdf"`
+                )
+
+                // ✅ 2. Piping seguro
+                doc.pipe(res)
+
+                const { ticket, comments, auditLogs, attachments } = historyExport
+
+                // === ENCABEZADO ===
+                doc
+                    .fontSize(20)
+                    .fillColor("#333")
+                    .fillOpacity(0.85)
+                    .text("Reporte de Ticket", { align: "center" })
+                    .fillOpacity(1)
+                    .moveDown()
+
+                // === INFORMACIÓN DEL TICKET ===
+                doc.fontSize(14).text(`ID: ${ticket.id}`)
+                doc.text(`Título: ${ticket.title}`)
+                doc.text(`Descripción: ${ticket.description}`)
+                doc.text(`Estado: ${ticket.status}`)
+                doc.text(`Prioridad: ${ticket.priority}`)
+                doc.text(`Área: ${ticket.areaId}`)
+                doc.text(`Solicitante: ${ticket.requesterId}`)
+                doc.text(`Fecha de creación: ${new Date(ticket.createdAt).toLocaleString()}`)
+                doc.moveDown(1.5)
+
+                // === COMENTARIOS ===
+                doc.fontSize(16).text("Comentarios", { underline: true }).moveDown(0.5)
+                if (!comments?.length) {
+                    doc.fontSize(12).text("No hay comentarios registrados.")
+                } else {
+                    comments.forEach((c, i) => {
+                        doc.fontSize(12).text(`${i + 1}. ${c.body}`)
+                        doc.fontSize(10).text(
+                            `Autor: ${c.authorId} | Interno: ${c.isInternal ? "Sí" : "No"} | Fecha: ${new Date(c.createdAt).toLocaleString()}`
+                        )
+                        doc.moveDown(0.5)
+                    })
+                }
+                doc.moveDown(1.5)
+
+                // === HISTORIAL DE AUDITORÍA ===
+                doc.fontSize(16).text("Historial de Auditoría", { underline: true }).moveDown(0.5)
+                if (!auditLogs?.length) {
+                    doc.fontSize(12).text("No hay registros de auditoría.")
+                } else {
+                    auditLogs.forEach((log, i) => {
+                        doc.fontSize(12).text(`${i + 1}. Acción: ${log.action}`)
+                        doc.fontSize(10).text(
+                            `Actor: ${log.actorId} | Fecha: ${new Date(log.occurredAt).toLocaleString()}`
+                        )
+                        doc.fontSize(10).text(`Cambios: ${JSON.stringify(log.changes, null, 2)}`)
+                        doc.moveDown(0.5)
+                    })
+                }
+                doc.moveDown(1.5)
+
+                // === ADJUNTOS ===
+                if (attachments?.length > 0) {
+                    doc.fontSize(16).text("Adjuntos", { underline: true }).moveDown(0.5)
+                    attachments.forEach((att, i) => {
+                        doc.fontSize(12).text(`${i + 1}. ${att.filename} (${att.url || "sin URL"})`)
+                    })
+                    doc.moveDown(1.5)
+                }
+
+                // === PIE DE PÁGINA ===
+                doc
+                    .moveDown(2)
+                    .fontSize(10)
+                    .fillColor("#666")
+                    .text("Reporte generado automáticamente por el sistema de tickets.", {
+                        align: "center",
+                    })
+
+                // ✅ 3. Cerrar correctamente
+                doc.end()
+                return
+            }
+
+            // ✅ 4. Si llega un formato no soportado
+            res.status(400).json({
+                success: false,
+                error: `Formato "${format}" no soportado`,
+            })
+        } catch (error) {
+            this.handleError(res, error, "Error al exportar historial")
+        }
+    }
+
+
 
     // ──────────────────────────────
     // Método utilitario privado

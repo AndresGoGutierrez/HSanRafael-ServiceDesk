@@ -2,7 +2,7 @@ import type { Request, Response } from "express"
 import type { AreaController } from "../../controllers/AreaController"
 import type { BaseMiddleware } from "../middlewares/validate"
 import { BaseRouter } from "../base/BaseRouter"
-import { CreateAreaSchema, UpdateAreaSchema, UpdateSLASchema, DeactivateAreaSchema, WorkflowConfigSchema } from "../../../application/dtos/area"
+import { CreateAreaSchema, UpdateAreaSchema, DeactivateAreaSchema } from "../../../application/dtos/area"
 import type { AuthMiddleware } from "../middlewares/auth.middleware"
 import { z } from "zod"
 
@@ -124,37 +124,7 @@ export class AreaRouter extends BaseRouter<AreaController, BaseMiddleware> {
             (req: Request, res: Response) => this.controller.update(req, res),
         )
 
-        /**
-         * @swagger
-         * /areas/{id}/sla:
-         *   put:
-         *     summary: Configura el SLA de un área
-         *     tags: [Areas]
-         *     parameters:
-         *       - in: path
-         *         name: id
-         *         required: true
-         *         schema:
-         *           type: string
-         *           format: uuid
-         *     requestBody:
-         *       required: true
-         *       content:
-         *         application/json:
-         *           schema:
-         *             $ref: '#/components/schemas/UpdateSLA'
-         *     responses:
-         *       200:
-         *         description: SLA actualizado correctamente
-         */
-        this.router.put(
-            "/:id/sla",
-            authenticate,
-            authorize("ADMIN", "AGENT"),
-            this.middleware.validate("params", IdParamSchema),
-            this.middleware.validate("body", UpdateSLASchema),
-            (req: Request, res: Response) => this.controller.updateSLA(req, res),
-        )
+
 
         /**
      * @swagger
@@ -192,12 +162,17 @@ export class AreaRouter extends BaseRouter<AreaController, BaseMiddleware> {
             this.middleware.validate("body", DeactivateAreaSchema),
             (req: Request, res: Response) => this.controller.deactivate(req, res),
         )
+
+
         /**
          * @swagger
-         * /areas/{id}/workflow:
-         *   put:
-         *     summary: Configura el flujo de trabajo (workflow) de un área
-         *     tags: [Areas]
+         * /areas/{id}/tickets:
+         *   get:
+         *     summary: Lista todos los tickets de un área
+         *     description: Obtiene todos los tickets asociados a un área específica
+         *     tags: [Tickets]
+         *     security:
+         *       - bearerAuth: []
          *     parameters:
          *       - in: path
          *         name: id
@@ -205,23 +180,32 @@ export class AreaRouter extends BaseRouter<AreaController, BaseMiddleware> {
          *         schema:
          *           type: string
          *           format: uuid
-         *     requestBody:
-         *       required: true
-         *       content:
-         *         application/json:
-         *           schema:
-         *             $ref: '#/components/schemas/WorkflowConfig'
+         *         description: ID del área
+         *       - in: query
+         *         name: from
+         *         schema:
+         *           type: string
+         *           format: date-time
+         *         description: Fecha de inicio para filtrar
+         *       - in: query
+         *         name: to
+         *         schema:
+         *           type: string
+         *           format: date-time
+         *         description: Fecha de fin para filtrar
          *     responses:
          *       200:
-         *         description: Workflow configurado correctamente
+         *         description: Lista de tickets del área
+         *       401:
+         *         description: No autenticado
+         *       404:
+         *         description: Área no encontrada
          */
-        this.router.put(
-            "/:id/workflow",
+        this.router.get(
+            "/:id/tickets",
             authenticate,
-            authorize("ADMIN", "AGENT"),
-            this.middleware.validate("params", IdParamSchema),
-            this.middleware.validate("body", WorkflowConfigSchema),
-            (req: Request, res: Response) => this.controller.configureWorkflow(req, res),
+            authorize("ADMIN", "AGENT", "TECH"),
+            (req: Request, res: Response) => this.controller.listByArea(req, res),
         )
     }
 }
