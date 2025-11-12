@@ -1,14 +1,24 @@
-import type { RehydrateAttachmentDto } from "../../application/dtos/attachment"
-import type { AttachmentRepository } from "../../application/ports/AttachmentRepository"
-import { Attachment } from "../../domain/entities/Attachment"
-import { prismaClient } from "../db/prisma"
+import type { RehydrateAttachmentDto } from "../../application/dtos/attachment";
+import type { AttachmentRepository } from "../../application/ports/AttachmentRepository";
+import { Attachment } from "../../domain/entities/Attachment";
+import { prismaClient } from "../db/prisma";
 
 /**
  * Mapper que traduce entre la entidad de dominio `Attachment`
  * y el modelo de datos de Prisma.
  */
 class AttachmentMapper {
-    static toPrisma(attachment: Attachment) {
+    static toPrisma(attachment: Attachment): {
+        id: string;
+        ticketId: string;
+        uploaderId: string;
+        filename: string;
+        contentType: string;
+        size: number;
+        url: string;
+        createdAt: Date;
+        deletedAt: Date | null;
+    } {
         return {
             id: attachment.id.toString(),
             ticketId: attachment.ticketId,
@@ -19,11 +29,11 @@ class AttachmentMapper {
             url: attachment.url,
             createdAt: attachment.createdAt,
             deletedAt: attachment.deletedAt ?? null,
-        }
+        };
     }
 
     static toDomain(record: unknown): Attachment {
-        return Attachment.rehydrate(record as RehydrateAttachmentDto)
+        return Attachment.rehydrate(record as RehydrateAttachmentDto);
     }
 }
 
@@ -37,7 +47,7 @@ export class PrismaAttachmentRepository implements AttachmentRepository {
      * Si ya existe, actualiza sus datos.
      */
     async save(attachment: Attachment): Promise<void> {
-        const data = AttachmentMapper.toPrisma(attachment)
+        const data = AttachmentMapper.toPrisma(attachment);
 
         await prismaClient.attachment.upsert({
             where: { id: data.id },
@@ -49,8 +59,7 @@ export class PrismaAttachmentRepository implements AttachmentRepository {
                 url: data.url,
                 deletedAt: data.deletedAt, // ✅ mantiene consistencia
             },
-        })
-
+        });
     }
 
     /**
@@ -59,8 +68,8 @@ export class PrismaAttachmentRepository implements AttachmentRepository {
      * @returns Entidad `Attachment` o `null` si no existe.
      */
     async findById(id: string): Promise<Attachment | null> {
-        const record = await prismaClient.attachment.findUnique({ where: { id } })
-        return record ? AttachmentMapper.toDomain(record) : null
+        const record = await prismaClient.attachment.findUnique({ where: { id } });
+        return record ? AttachmentMapper.toDomain(record) : null;
     }
 
     /**
@@ -75,8 +84,8 @@ export class PrismaAttachmentRepository implements AttachmentRepository {
                 deletedAt: null, // ✅ solo activos
             },
             orderBy: { createdAt: "asc" },
-        })
-        return records.map(AttachmentMapper.toDomain)
+        });
+        return records.map(AttachmentMapper.toDomain);
     }
 
     /**
@@ -87,14 +96,13 @@ export class PrismaAttachmentRepository implements AttachmentRepository {
             await prismaClient.attachment.update({
                 where: { id },
                 data: { deletedAt: new Date() },
-            })
+            });
         } catch (error: any) {
             if (error.code === "P2025") {
                 // Registro no encontrado, se ignora silenciosamente o logueas
-                return
+                return;
             }
-            throw new Error(`Error eliminando Attachment con id ${id}: ${error.message}`)
+            throw new Error(`Error eliminando Attachment con id ${id}: ${error.message}`);
         }
     }
-
 }

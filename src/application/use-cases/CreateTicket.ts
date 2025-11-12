@@ -11,7 +11,7 @@ import { UserId } from "../../domain/value-objects/UserId";
 
 /**
  * Caso de uso: Crear un nuevo Ticket.
- * 
+ *
  * - Valida los datos de entrada mediante Zod (CreateTicketSchema)
  * - Verifica que el área exista y obtiene su configuración de SLA
  * - Crea la entidad Ticket aplicando las reglas de negocio
@@ -25,7 +25,7 @@ export class CreateTicket {
         private readonly clock: Clock,
         private readonly eventBus: EventBus,
         private readonly auditRepo: AuditRepository,
-    ) { }
+    ) {}
 
     async execute(input: CreateTicketInput): Promise<Ticket> {
         // Validar DTO con Zod
@@ -37,8 +37,8 @@ export class CreateTicket {
             throw new Error("Área no encontrada");
         }
 
-        // Obtener tiempo SLA desde el área
-        const slaMinutes = area.slaResolutionMinutes;
+        // Obtener tiempo SLA desde el área, asegurando compatibilidad con Ticket.create()
+        const slaMinutes = area.slaResolutionMinutes ?? null; // ✅ conversión explícita
 
         // Crear entidad de dominio
         const ticket = Ticket.create(validatedInput, slaMinutes, this.clock.now());

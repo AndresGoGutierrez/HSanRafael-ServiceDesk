@@ -1,7 +1,7 @@
-import type { SLARepository } from "../../application/ports/SLARepository"
-import type { RehydrateSLADto } from "../../domain/entities/SLA"
-import { SLA } from "../../domain/entities/SLA"
-import { prismaClient } from "../db/prisma"
+import type { SLARepository } from "../../application/ports/SLARepository";
+import type { RehydrateSLADto } from "../../domain/entities/SLA";
+import { SLA } from "../../domain/entities/SLA";
+import { prismaClient } from "../db/prisma";
 
 /**
  * Mapper responsable de convertir entre:
@@ -16,7 +16,14 @@ export class SLAMapper {
     /**
      * Convierte una entidad de dominio `SLA` en un objeto compatible con Prisma.
      */
-    static toPrisma(sla: SLA) {
+    static toPrisma(sla: SLA): {
+        id: string;
+        areaId: string;
+        responseTimeMinutes: number;
+        resolutionTimeMinutes: number;
+        createdAt: Date;
+        updatedAt: Date;
+    } {
         return {
             id: sla.id.toString(),
             areaId: sla.areaId.toString(),
@@ -24,21 +31,28 @@ export class SLAMapper {
             resolutionTimeMinutes: sla.resolutionTimeMinutes,
             createdAt: sla.createdAt,
             updatedAt: sla.updatedAt,
-        }
+        };
     }
 
     /**
      * Restaura una entidad de dominio `SLA` desde un registro de base de datos.
      */
     static toDomain(record: RehydrateSLADto): SLA {
-        return SLA.rehydrate(record)
+        return SLA.rehydrate(record);
     }
 
     /**
      * Convierte una entidad de dominio `SLA` en un DTO de salida.
      * Ideal para respuestas HTTP o serialización.
      */
-    static toResponse(sla: SLA) {
+    static toResponse(sla: SLA): {
+        id: string;
+        areaId: string;
+        responseTimeMinutes: number;
+        resolutionTimeMinutes: number;
+        createdAt: string;
+        updatedAt: string;
+    } {
         return {
             id: sla.id.toString(),
             areaId: sla.areaId.toString(),
@@ -46,7 +60,7 @@ export class SLAMapper {
             resolutionTimeMinutes: sla.resolutionTimeMinutes,
             createdAt: sla.createdAt.toISOString(),
             updatedAt: sla.updatedAt.toISOString(),
-        }
+        };
     }
 }
 
@@ -58,7 +72,7 @@ export class SLAMapper {
  */
 export class PrismaSLARepository implements SLARepository {
     async save(sla: SLA): Promise<void> {
-        const data = SLAMapper.toPrisma(sla)
+        const data = SLAMapper.toPrisma(sla);
         await prismaClient.sLA.upsert({
             where: { id: data.id },
             create: data,
@@ -67,27 +81,27 @@ export class PrismaSLARepository implements SLARepository {
                 resolutionTimeMinutes: data.resolutionTimeMinutes,
                 updatedAt: data.updatedAt,
             },
-        })
+        });
     }
 
     async findById(id: string): Promise<SLA | null> {
-        const row = await prismaClient.sLA.findUnique({ where: { id } })
-        return row ? SLAMapper.toDomain(row as RehydrateSLADto) : null
+        const row = await prismaClient.sLA.findUnique({ where: { id } });
+        return row ? SLAMapper.toDomain(row as RehydrateSLADto) : null;
     }
 
     async findByAreaId(areaId: string): Promise<SLA | null> {
-        const row = await prismaClient.sLA.findUnique({ where: { areaId } })
-        return row ? SLAMapper.toDomain(row as RehydrateSLADto) : null
+        const row = await prismaClient.sLA.findUnique({ where: { areaId } });
+        return row ? SLAMapper.toDomain(row as RehydrateSLADto) : null;
     }
 
     async listAll(): Promise<SLA[]> {
         const rows = await prismaClient.sLA.findMany({
             orderBy: { createdAt: "desc" },
-        })
-        return rows.map((row) => SLAMapper.toDomain(row as RehydrateSLADto))
+        });
+        return rows.map((row) => SLAMapper.toDomain(row as RehydrateSLADto));
     }
 
     async deleteById(id: string): Promise<void> {
-        await prismaClient.sLA.delete({ where: { id } })
+        await prismaClient.sLA.delete({ where: { id } });
     }
 }

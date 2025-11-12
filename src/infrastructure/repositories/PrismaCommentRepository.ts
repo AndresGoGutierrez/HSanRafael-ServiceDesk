@@ -1,7 +1,7 @@
-import { prismaClient } from "../db/prisma"
-import type { CommentRepository } from "../../application/ports/CommentRepository"
-import type { RehydrateCommentDto } from "../../application/dtos/comment"
-import { Comment } from "../../domain/entities/Comment"
+import { prismaClient } from "../db/prisma";
+import type { CommentRepository } from "../../application/ports/CommentRepository";
+import type { RehydrateCommentDto } from "../../application/dtos/comment";
+import { Comment } from "../../domain/entities/Comment";
 
 /**
  * Mapper encargado de transformar entre la entidad de dominio `Comment`
@@ -12,11 +12,18 @@ import { Comment } from "../../domain/entities/Comment"
  */
 
 function unwrapId(id: { toString(): string } | string): string {
-    return typeof id === "string" ? id : id.toString()
+    return typeof id === "string" ? id : id.toString();
 }
 
 class CommentMapper {
-    static toPersistence(comment: Comment) {
+    static toPersistence(comment: Comment): {
+        id: string;
+        ticketId: string;
+        authorId: string;
+        body: string;
+        isInternal: boolean;
+        createdAt: Date;
+    } {
         return {
             id: comment.id.toString(),
             ticketId: unwrapId(comment.ticketId),
@@ -24,19 +31,20 @@ class CommentMapper {
             body: comment.body,
             isInternal: comment.isInternal,
             createdAt: comment.createdAt,
-        }
+        };
     }
 
-    static toDomain(row: any): Comment {
+    static toDomain(row: unknown): Comment {
+        const r = row as Record<string, unknown>;
         const dto: RehydrateCommentDto = {
-            id: row.id,
-            ticketId: row.ticketId,
-            authorId: row.authorId,
-            body: row.body,
-            isInternal: row.isInternal,
-            createdAt: row.createdAt,
-        }
-        return Comment.rehydrate(dto)
+            id: r.id as string,
+            ticketId: r.ticketId as string,
+            authorId: r.authorId as string,
+            body: r.body as string,
+            isInternal: (r.isInternal as boolean) ?? false,
+            createdAt: r.createdAt as Date,
+        };
+        return Comment.rehydrate(dto);
     }
 }
 
@@ -50,8 +58,8 @@ export class PrismaCommentRepository implements CommentRepository {
      * Usa `create` porque los comentarios son inmutables (no se sobrescriben).
      */
     async save(comment: Comment): Promise<void> {
-        const data = CommentMapper.toPersistence(comment)
-        await prismaClient.comment.create({ data })
+        const data = CommentMapper.toPersistence(comment);
+        await prismaClient.comment.create({ data });
     }
 
     /**
@@ -61,9 +69,9 @@ export class PrismaCommentRepository implements CommentRepository {
     async findById(id: string): Promise<Comment | null> {
         const row = await prismaClient.comment.findUnique({
             where: { id },
-        })
+        });
 
-        return row ? CommentMapper.toDomain(row) : null
+        return row ? CommentMapper.toDomain(row) : null;
     }
 
     /**
@@ -74,8 +82,8 @@ export class PrismaCommentRepository implements CommentRepository {
         const rows = await prismaClient.comment.findMany({
             where: { ticketId },
             orderBy: { createdAt: "asc" },
-        })
+        });
 
-        return rows.map(CommentMapper.toDomain)
+        return rows.map(CommentMapper.toDomain);
     }
 }
