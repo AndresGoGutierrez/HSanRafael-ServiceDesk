@@ -15,7 +15,7 @@ const envSchema = z.object({
     PGADMIN_DEFAULT_EMAIL: z.email(),
     PGADMIN_DEFAULT_PASSWORD: z.string().min(8),
 
-    DATABASE_URL: z.url(),
+    DATABASE_URL: z.string().url().or(z.string()),
 });
 
 export type EnvVariables = z.infer<typeof envSchema>;
