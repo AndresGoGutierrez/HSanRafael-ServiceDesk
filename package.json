@@ -5,7 +5,7 @@
   "scripts": {
     "start:dev": "nodemon --watch src --ext ts --exec tsx src/main.ts",
     "start:prod": "node dist/main.js",
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.build.json",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "vitest run test/e2e",
