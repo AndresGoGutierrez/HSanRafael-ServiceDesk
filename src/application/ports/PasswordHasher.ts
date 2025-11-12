@@ -11,7 +11,7 @@ export interface PasswordHasher {
      * @param password Contraseña sin encriptar.
      * @returns Hash en formato string.
      */
-    hash(password: string): Promise<string>
+    hash(password: string): Promise<string>;
 
     /**
      * Compara una contraseña en texto plano con su hash.
@@ -19,5 +19,5 @@ export interface PasswordHasher {
      * @param hash Hash previamente generado.
      * @returns `true` si coinciden, `false` en caso contrario.
      */
-    compare(password: string, hash: string): Promise<boolean>
+    compare(password: string, hash: string): Promise<boolean>;
 }

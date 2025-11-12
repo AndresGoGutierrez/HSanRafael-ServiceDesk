@@ -1,20 +1,20 @@
-import type { TicketRepository } from "../ports/TicketRepository"
-import type { AuditRepository } from "../ports/AuditRepository"
-import type { EventBus } from "../ports/EventBus"
-import type { Clock } from "../ports/Clock"
-import { TicketId } from "../../domain/value-objects/TicketId"
-import type { TicketStatus } from "../../domain/value-objects/Status"
-import { UserId } from "../../domain/value-objects/UserId"
-import { AuditTrail } from "../../domain/entities/AuditTrail"
+import type { TicketRepository } from "../ports/TicketRepository";
+import type { AuditRepository } from "../ports/AuditRepository";
+import type { EventBus } from "../ports/EventBus";
+import type { Clock } from "../ports/Clock";
+import { TicketId } from "../../domain/value-objects/TicketId";
+import type { TicketStatus } from "../../domain/value-objects/Status";
+import { UserId } from "../../domain/value-objects/UserId";
+import { AuditTrail } from "../../domain/entities/AuditTrail";
 
 /**
  * Datos requeridos para cerrar un ticket
  */
 export interface CloseTicketInput {
-    ticketId: string
-    resolutionSummary: string
-    notifyRequester: boolean
-    actorId: string
+    ticketId: string;
+    resolutionSummary: string;
+    notifyRequester: boolean;
+    actorId: string;
 }
 
 /**
@@ -32,32 +32,32 @@ export class CloseTicket {
         private readonly auditRepository: AuditRepository,
         private readonly eventBus: EventBus,
         private readonly clock: Clock,
-    ) { }
+    ) {}
 
     async execute(input: CloseTicketInput): Promise<void> {
-        const ticketId = TicketId.from(input.ticketId)
-        const now = this.clock.now()
+        const ticketId = TicketId.from(input.ticketId);
+        const now = this.clock.now();
 
-        const ticket = await this.ticketRepository.findById(ticketId)
+        const ticket = await this.ticketRepository.findById(ticketId);
         if (!ticket) {
-            throw new Error("Ticket no encontrado")
+            throw new Error("Ticket no encontrado");
         }
 
         // Verificar estado actual
         if (ticket.status === "CLOSED") {
-            throw new Error("El ticket ya está cerrado.")
+            throw new Error("El ticket ya está cerrado.");
         }
 
         // Si aún no está resuelto, primero se marca como resuelto
         if (ticket.status !== "RESOLVED") {
-            ticket.transition("RESOLVED" as TicketStatus, now)
+            ticket.transition("RESOLVED" as TicketStatus, now);
         }
 
         // Cerrar el ticket con su resumen
-        ticket.resolutionSummary = input.resolutionSummary
-        ticket.transition("CLOSED" as TicketStatus, now)
+        ticket.resolutionSummary = input.resolutionSummary;
+        ticket.transition("CLOSED" as TicketStatus, now);
 
-        await this.ticketRepository.save(ticket)
+        await this.ticketRepository.save(ticket);
 
         // Registrar auditoría
         const audit = AuditTrail.create(
@@ -71,10 +71,10 @@ export class CloseTicket {
                     resolutionSummary: input.resolutionSummary,
                 },
             },
-            now // ✅ este `now` se pasa al constructor como `createdAt`
-        )
+            now, // ✅ este `now` se pasa al constructor como `createdAt`
+        );
 
-        await this.auditRepository.save(audit)
+        await this.auditRepository.save(audit);
 
         // Publicar evento para notificación al solicitante
         if (input.notifyRequester && ticket.requesterId) {
@@ -86,7 +86,7 @@ export class CloseTicket {
                     requesterId: ticket.requesterId.toString(),
                     resolutionSummary: input.resolutionSummary,
                 },
-            })
+            });
         }
     }
 }

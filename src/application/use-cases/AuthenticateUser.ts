@@ -6,15 +6,15 @@ import { Email } from "../../domain/value-objects/Email";
 
 /**
  * Caso de uso: Autenticación de usuario.
- * 
+ *
  * Valida las credenciales de un usuario y genera un token JWT.
  */
 export class AuthenticateUser {
     constructor(
         private readonly userRepository: UserRepository,
         private readonly passwordHasher: PasswordHasher,
-        private readonly tokenService: TokenService
-    ) { }
+        private readonly tokenService: TokenService,
+    ) {}
 
     /**
      * Ejecuta el flujo de autenticación.

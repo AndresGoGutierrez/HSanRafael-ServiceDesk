@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from "zod";
 
 /**
  * Esquema para la creación de un área.
@@ -15,9 +15,9 @@ export const CreateAreaSchema = z.object({
         .trim()
         .max(255, { message: "La descripción no puede exceder los 255 caracteres." })
         .optional(),
-})
+});
 
-export type CreateAreaInput = z.infer<typeof CreateAreaSchema>
+export type CreateAreaInput = z.infer<typeof CreateAreaSchema>;
 
 /**
  * Esquema para actualizar un área existente.
@@ -25,8 +25,8 @@ export type CreateAreaInput = z.infer<typeof CreateAreaSchema>
  */
 export const UpdateAreaSchema = CreateAreaSchema.extend({
     // podrías incluir validaciones condicionales si aplica
-})
-export type UpdateAreaInput = z.infer<typeof UpdateAreaSchema>
+});
+export type UpdateAreaInput = z.infer<typeof UpdateAreaSchema>;
 /**
  * Esquema para rehidratar una entidad Area desde la persistencia.
  */
@@ -40,14 +40,12 @@ export const RehydrateAreaSchema = z.object({
     createdAt: z
         .union([z.date(), z.string().transform((val) => new Date(val))])
         .refine((d) => !isNaN(d.getTime()), { message: "Fecha inválida." }),
-})
+});
 
-export type RehydrateAreaDto = z.infer<typeof RehydrateAreaSchema>
+export type RehydrateAreaDto = z.infer<typeof RehydrateAreaSchema>;
 
 export const DeactivateAreaSchema = z.object({
     reason: z.string().optional(),
-})
+});
 
-export type DeactivateAreaInput = z.infer<typeof DeactivateAreaSchema>
-
-
+export type DeactivateAreaInput = z.infer<typeof DeactivateAreaSchema>;

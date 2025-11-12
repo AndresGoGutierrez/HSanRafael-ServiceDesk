@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from "zod";
 
 /**
  * Schema para crear un registro de auditoría (AuditTrail).
@@ -31,16 +31,16 @@ export const CreateAuditTrailSchema = z.object({
         .trim()
         .regex(
             /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/,
-            "Invalid IPv4 address format"
+            "Invalid IPv4 address format",
         )
         .optional()
         .nullable()
         .describe("Dirección IP desde la que se ejecutó la acción"),
 
     userAgent: z.string().trim().optional().nullable(),
-})
+});
 
-export type CreateAuditTrailInput = z.infer<typeof CreateAuditTrailSchema>
+export type CreateAuditTrailInput = z.infer<typeof CreateAuditTrailSchema>;
 
 /**
  * Schema para rehidratar un registro de auditoría desde la base de datos.
@@ -62,17 +62,14 @@ export const RehydrateAuditTrailSchema = z.object({
         .trim()
         .regex(
             /^(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)(\.(25[0-5]|2[0-4]\d|1\d{2}|[1-9]?\d)){3}$/,
-            "Invalid IPv4 address format"
+            "Invalid IPv4 address format",
         )
         .optional()
         .nullable(),
 
     userAgent: z.string().trim().optional().nullable(),
 
-    occurredAt: z.preprocess(
-        (val) => (typeof val === "string" ? new Date(val) : val),
-        z.date()
-    ),
-})
+    occurredAt: z.preprocess((val) => (typeof val === "string" ? new Date(val) : val), z.date()),
+});
 
-export type RehydrateAuditTrailDto = z.infer<typeof RehydrateAuditTrailSchema>
+export type RehydrateAuditTrailDto = z.infer<typeof RehydrateAuditTrailSchema>;

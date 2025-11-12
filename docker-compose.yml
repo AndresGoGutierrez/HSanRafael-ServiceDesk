@@ -1,55 +1,72 @@
-version: "3.9"   # Versión de sintaxis de Docker Compose
+version: "3.9"
 
 services:
   # ==============================
   # Servicio de Base de Datos (PostgreSQL)
   # ==============================
   db:
-    container_name: hospital-desk-db      # Nombre del contenedor
-    image: postgres:15.1-alpine           # Imagen oficial de PostgreSQL (versión 15.1, ligera con Alpine)
-    
-    environment:                          # Variables de entorno para configurar PostgreSQL
-      POSTGRES_DB: ${DB_DATABASE}         # Nombre de la base de datos (definido en .env)
-      POSTGRES_USER: ${DB_USERNAME}           # Usuario administrador (definido en .env)
-      POSTGRES_PASSWORD: ${DB_PASSWORD}   # Contraseña del usuario administrador (definido en .env)
-    
+    container_name: hospital-desk-db
+    image: postgres:15.1-alpine
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     ports:
-      - ${DB_PORT}:5432                   # Expone el puerto de la DB: host=${DB_PORT}, contenedor=5432
-    
-    healthcheck:                          # Comprueba que PostgreSQL está disponible
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME}"]  
-      interval: 5s                        # Revisa cada 5 segundos
-      timeout: 3s                         # Espera máximo 3 segundos por respuesta
-      retries: 10                         # Reintenta 10 veces antes de marcar como fallido
-    
-    volumes:                              # Persistencia de datos y scripts de inicialización
-      - db_data:/var/lib/postgres/data    # Almacena datos de PostgreSQL fuera del contenedor
-      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql  
-        # Script SQL de inicialización que se ejecuta la primera vez
+      - ${DB_PORT}:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - db_data:/var/lib/postgres/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - hospital-net
 
   # ==============================
   # Servicio de Administración (pgAdmin4)
   # ==============================
   pgadmin:
-    container_name: hospital-desk-pgadmin  # Nombre del contenedor
-    image: dpage/pgadmin4:7.7              # Imagen oficial de pgAdmin4 (versión fija recomendada)
-    
-    environment:                           # Credenciales para acceder a pgAdmin
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}       # Usuario administrador (correo)
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD} # Contraseña del administrador
-    
+    container_name: hospital-desk-pgadmin
+    image: dpage/pgadmin4:7.7
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     ports:
-      - "5050:80"                          # Acceso desde navegador en http://localhost:5050
-    
-    depends_on:                            # Asegura que la base de datos esté levantada primero
+      - "5050:80"
+    depends_on:
       - db
-    
-    volumes:                               # Persistencia de configuración de pgAdmin
+    volumes:
       - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - hospital-net
+
+  # ==============================
+  # Servicio de la API (Node.js + Express)
+  # ==============================
+  api:
+    container_name: hospital-desk-api
+    build:
+      context: .                # Carpeta raíz
+      dockerfile: Dockerfile    # Dockerfile que crearás
+    ports:
+      - "3000:3000"             # Puerto de la API
+    env_file:
+      - .env                    # Cargar variables de entorno
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["npm", "run", "start:dev"]
+    networks:
+      - hospital-net
 
 # ==============================
-# Volúmenes persistentes
+# Red y Volúmenes persistentes
 # ==============================
+networks:
+  hospital-net:
+
 volumes:
-  db_data:        # Datos de PostgreSQL (tablas, registros, etc.)
-  pgadmin_data:   # Configuraciones de pgAdmin (conexiones guardadas, usuarios, etc.)
+  db_data:
+  pgadmin_data:

@@ -3,13 +3,13 @@
  * Este modelo es agnóstico a la tecnología usada para firmar/verificar (JWT, Paseto, etc.).
  */
 export interface TokenPayload {
-    userId: string
-    email: string
+    userId: string;
+    email: string;
     /**
      * Rol del usuario dentro del sistema.
      * Idealmente debe alinearse con el tipo de dominio `UserRole`.
      */
-    role: "REQUESTER" | "AGENT" | "TECH" | "ADMIN"
+    role: "REQUESTER" | "AGENT" | "TECH" | "ADMIN";
 }
 
 /**
@@ -23,7 +23,7 @@ export interface TokenService {
      * @param expiresIn Tiempo de expiración (por ejemplo: "1h", "7d").
      * @returns Token firmado como string.
      */
-    sign(payload: TokenPayload, expiresIn?: string): string
+    sign(payload: TokenPayload, expiresIn?: string): string;
 
     /**
      * Verifica y decodifica un token firmado.
@@ -31,5 +31,5 @@ export interface TokenService {
      * @returns El payload original si el token es válido.
      * @throws Error si el token es inválido o ha expirado.
      */
-    verify(token: string): TokenPayload
+    verify(token: string): TokenPayload;
 }
