@@ -17,7 +17,6 @@ WORKDIR /app
 
 COPY --from=builder /app/dist ./dist
 COPY package*.json ./
-COPY .env ./
 RUN npm install --omit=dev
 
 EXPOSE 8000
