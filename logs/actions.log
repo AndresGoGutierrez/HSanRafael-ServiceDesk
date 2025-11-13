@@ -699,3 +699,10 @@
 {"level":30,"time":1762872668088,"pid":38928,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
 {"level":30,"time":1762872668107,"pid":38928,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
 {"level":30,"time":1762873272903,"pid":38928,"hostname":"LAPTOP-UR26325H","msg":"🧩 Prisma disconnected on SIGINT"}
+{"level":30,"time":1762905052666,"pid":10012,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762905052667,"pid":10012,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":50,"time":1762905056762,"pid":10012,"hostname":"LAPTOP-UR26325H","msg":"❌ Error connecting Prisma to the database","error":"Can't reach database server at `localhost:5433`\n\nPlease make sure your database server is running at `localhost:5433`.","stack":"PrismaClientInitializationError: Can't reach database server at `localhost:5433`\n\nPlease make sure your database server is running at `localhost:5433`.\n    at r (C:\\Universidad Santoto\\Septimo Semestre\\JavaScript\\TS-WORKSHOP\\prisma\\generated\\prisma\\runtime\\library.js:116:2770)\n    at async ServerBootstrap.dbConnection (C:\\Universidad Santoto\\Septimo Semestre\\JavaScript\\TS-WORKSHOP\\src\\config\\ServerBootstrap.ts:216:13)\n    at async Server.<anonymous> (C:\\Universidad Santoto\\Septimo Semestre\\JavaScript\\TS-WORKSHOP\\src\\config\\ServerBootstrap.ts:233:13)"}
+{"level":30,"time":1762905085375,"pid":22924,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762905085375,"pid":22924,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762905085407,"pid":22924,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762905166097,"pid":22924,"hostname":"LAPTOP-UR26325H","msg":"🧩 Prisma disconnected on SIGINT"}
