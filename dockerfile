@@ -1,37 +1,29 @@
-# =============================
-# Etapa 1: Build (compilación)
-# =============================
-FROM node:20 AS builder
+# Stage de build
+FROM node:20-alpine AS build
+WORKDIR /usr/src/app
 
-WORKDIR /app
+# copiar package.json / package-lock para cachear deps
+COPY package.json package-lock.json* ./
+RUN npm ci --silent
 
-# Copiamos dependencias y las instalamos
-COPY package*.json ./
-RUN npm install
-
-# Copiamos todo el código fuente
+# copiar el resto, compilar y generar prisma client
 COPY . .
-
-# Generamos el cliente de Prisma y compilamos TypeScript
-RUN npm run prisma:generate
 RUN npm run build
+RUN npx prisma generate
 
-# =============================
-# Etapa 2: Runtime (ejecución)
-# =============================
-FROM node:20
+# Stage runtime
+FROM node:20-alpine AS runtime
+WORKDIR /usr/src/app
 
-WORKDIR /app
+# copiar artifacts desde build
+COPY --from=build /usr/src/app/dist ./dist
+COPY --from=build /usr/src/app/node_modules ./node_modules
+COPY --from=build /usr/src/app/prisma ./prisma
 
-# Copiamos únicamente los archivos necesarios para ejecutar la app
-COPY --from=builder /app/dist ./dist
-COPY package*.json ./
+# opción: crear usuario no-root
+RUN addgroup -S app && adduser -S app -G app
+USER app
 
-# Instalamos solo dependencias de producción
-RUN npm install --omit=dev --ignore-scripts
-
-# Exponemos el puerto de Express
-EXPOSE 8000
-
-# Ejecutamos la aplicación compilada
+ENV NODE_ENV=production
+EXPOSE 3000
 CMD ["node", "dist/main.js"]
