@@ -23,4 +23,4 @@ RUN npm install --omit=dev --ignore-scripts
 
 EXPOSE 8000
 
-CMD ["node", "dist/main.js"]
+CMD ["node", "src/main.js"]
