@@ -17,7 +17,9 @@ WORKDIR /app
 
 COPY --from=builder /app/dist ./dist
 COPY package*.json ./
-RUN npm install --omit=dev
+
+# Instalamos solo dependencias de producción y evitamos ejecutar scripts
+RUN npm install --omit=dev --ignore-scripts
 
 EXPOSE 8000
 
