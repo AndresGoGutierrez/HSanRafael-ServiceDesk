@@ -6,7 +6,7 @@ on:
       IMAGE_REPOSITORY:
         description: 'Repository of the image (same as declared in App Service creation)'
         required: true
-        default: 'hsanrafael-api'
+        default: 'imagehospitaldesk'
       IMAGE_TAG:
         description: 'Tag of the image'
         required: true
@@ -14,7 +14,7 @@ on:
       AZURE_WEBAPP_NAME:
         description: 'Nombre del App Service creado en Azure'
         required: true
-        default: 'HSanRafael-ServiceDesk'
+        default: 'servicehospitaldesk'
 
 env:
   ACR_NAME: ${{ secrets.ACR_NAME_NICOLAS }}
