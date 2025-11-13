@@ -1,29 +1,39 @@
-# Stage de build
+# =============================
+# Etapa 1: Build (Compilación)
+# =============================
 FROM node:20-alpine AS build
+
+# Directorio de trabajo dentro del contenedor
 WORKDIR /src
 
-# copiar package.json / package-lock para cachear deps
-COPY package.json package-lock.json* ./
+# Copiar dependencias primero (para aprovechar la cache)
+COPY package*.json ./
 RUN npm ci --silent
 
-# copiar el resto, compilar y generar prisma client
+# Copiar el resto del código del proyecto
 COPY . .
-RUN npm run build
+
+# Generar cliente Prisma antes de compilar TypeScript
 RUN npx prisma generate
 
-# Stage runtime
+# Compilar el proyecto (TypeScript → JavaScript en /dist)
+RUN npm run build
+
+# =============================
+# Etapa 2: Runtime (Ejecución)
+# =============================
 FROM node:20-alpine AS runtime
+
 WORKDIR /src
 
-# copiar artifacts desde build
-COPY --from=build /usr/src/app/dist ./dist
-COPY --from=build /usr/src/app/node_modules ./node_modules
-COPY --from=build /usr/src/app/prisma ./prisma
+# Copiar solo lo necesario desde la etapa de build
+COPY --from=build /app/dist ./dist
+COPY --from=build /app/node_modules ./node_modules
 
-# opción: crear usuario no-root
-RUN addgroup -S app && adduser -S app -G app
-USER app
 
+# Definir entorno y puerto
 ENV NODE_ENV=production
 EXPOSE 3000
+
+# Ejecutar el archivo compilado (equivalente a src/main.ts)
 CMD ["node", "dist/main.js"]
