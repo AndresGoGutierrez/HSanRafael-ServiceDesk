@@ -26,8 +26,6 @@ WORKDIR /app
 # Copiamos únicamente los archivos necesarios para ejecutar la app
 COPY --from=builder /app/dist ./dist
 COPY package*.json ./
-COPY prisma ./prisma
-COPY .env ./
 
 # Instalamos solo dependencias de producción
 RUN npm install --omit=dev --ignore-scripts
