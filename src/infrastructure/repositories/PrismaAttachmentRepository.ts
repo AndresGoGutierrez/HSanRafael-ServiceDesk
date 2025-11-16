@@ -4,8 +4,8 @@ import { Attachment } from "../../domain/entities/Attachment"
 import { prismaClient } from "../db/prisma"
 
 /**
- * Mapper que traduce entre la entidad de dominio `Attachment`
- * y el modelo de datos de Prisma.
+ * Mapper that translates between the domain entity `Attachment`
+ * and the Prisma data model.
  */
 class AttachmentMapper {
     static toPrisma(attachment: Attachment) {
@@ -28,13 +28,13 @@ class AttachmentMapper {
 }
 
 /**
- * Implementación del repositorio de adjuntos (`AttachmentRepository`)
- * usando Prisma ORM.
+ * Implementation of the attachment repository (`AttachmentRepository`)
+ * using Prisma ORM.
  */
 export class PrismaAttachmentRepository implements AttachmentRepository {
     /**
-     * Guarda un nuevo adjunto en la base de datos.
-     * Si ya existe, actualiza sus datos.
+     * Saves a new attachment to the database.
+     * If it already exists, updates its data.
      */
     async save(attachment: Attachment): Promise<void> {
         const data = AttachmentMapper.toPrisma(attachment)
@@ -47,16 +47,16 @@ export class PrismaAttachmentRepository implements AttachmentRepository {
                 contentType: data.contentType,
                 size: data.size,
                 url: data.url,
-                deletedAt: data.deletedAt, // ✅ mantiene consistencia
+                deletedAt: data.deletedAt,
             },
         })
 
     }
 
     /**
-     * Busca un adjunto por su identificador único.
-     * @param id ID del adjunto
-     * @returns Entidad `Attachment` o `null` si no existe.
+     * Searches for an attachment by its unique identifier.
+     * @param id ID of the attachment
+     * @returns `Attachment` entity or `null` if it does not exist.
      */
     async findById(id: string): Promise<Attachment | null> {
         const record = await prismaClient.attachment.findUnique({ where: { id } })
@@ -64,15 +64,15 @@ export class PrismaAttachmentRepository implements AttachmentRepository {
     }
 
     /**
-     * Obtiene todos los adjuntos asociados a un ticket.
-     * @param ticketId ID del ticket
-     * @returns Lista de entidades `Attachment`
+     * Gets all attachments associated with a ticket.
+     * @param ticketId Ticket ID
+     * @returns List of `Attachment` entities
      */
     async findByTicketId(ticketId: string): Promise<Attachment[]> {
         const records = await prismaClient.attachment.findMany({
             where: {
                 ticketId,
-                deletedAt: null, // ✅ solo activos
+                deletedAt: null,
             },
             orderBy: { createdAt: "asc" },
         })
@@ -80,7 +80,7 @@ export class PrismaAttachmentRepository implements AttachmentRepository {
     }
 
     /**
-     * Marca un adjunto como eliminado (soft delete).
+     * Marks an attachment as deleted (soft delete).
      */
     async deleteById(id: string): Promise<void> {
         try {
@@ -90,7 +90,6 @@ export class PrismaAttachmentRepository implements AttachmentRepository {
             })
         } catch (error: any) {
             if (error.code === "P2025") {
-                // Registro no encontrado, se ignora silenciosamente o logueas
                 return
             }
             throw new Error(`Error eliminando Attachment con id ${id}: ${error.message}`)

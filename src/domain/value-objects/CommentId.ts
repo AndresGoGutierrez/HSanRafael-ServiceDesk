@@ -1,19 +1,19 @@
 /**
- * Value Object que representa el identificador único de un comentario.
- * Garantiza inmutabilidad y encapsula la lógica de creación y validación.
+ * Value Object representing the unique identifier of a comment.
+ * Ensures immutability and encapsulates creation and validation logic.
  */
 export class CommentId {
   private constructor(private readonly value: string) {}
 
   /**
-   * Genera un nuevo CommentId único usando UUID v4.
+   * Generates a new unique CommentId using UUID v4.
    */
   static new(): CommentId {
     return new CommentId(crypto.randomUUID())
   }
 
   /**
-   * Crea un CommentId a partir de un valor existente (por ejemplo, desde la base de datos).
+   * Creates a CommentId from an existing value (for example, from the database).
    */
   static from(value: string): CommentId {
     if (!value || typeof value !== "string") {
@@ -23,14 +23,14 @@ export class CommentId {
   }
 
   /**
-   * Devuelve el identificador como string.
+   * Returns the identifier as a string.
    */
   toString(): string {
     return this.value
   }
 
   /**
-   * Compara dos CommentId por igualdad de valor.
+   * Compares two CommentIds for equality of value.
    */
   equals(other: CommentId): boolean {
     return this.value === other.value

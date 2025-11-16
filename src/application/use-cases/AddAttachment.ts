@@ -7,10 +7,10 @@ import { type EventBus } from "../ports/EventBus"
 /**
  * Use Case: AddAttachment
  * -----------------------
- * Encargado de crear un nuevo adjunto en el sistema.
+ * Responsible for creating a new attachment in the system.
  * 
- * Orquesta las operaciones de validación, creación de la entidad,
- * persistencia en el repositorio y publicación de eventos de dominio.
+ * Orchestrates validation operations, entity creation,
+ * persistence in the repository, and publication of domain events.
  */
 export class AddAttachment {
     constructor(
@@ -20,23 +20,23 @@ export class AddAttachment {
     ) { }
 
     /**
-     * Ejecuta el caso de uso.
+     * Executes the use case.
      *
-     * @param input Datos para crear el adjunto.
-     * @returns La entidad Attachment creada.
-     * @throws {ZodError} Si el DTO no cumple con las reglas de validación.
+     * @param input Data to create the attachment.
+     * @returns The Attachment entity created.
+     * @throws {ZodError} If the DTO does not comply with the validation rules.
      */
     async execute(input: CreateAttachmentInput): Promise<Attachment> {
-        // Validar entrada usando Zod (DTO)
+        // Validate input using Zod (DTO)
         const validated = CreateAttachmentSchema.parse(input)
 
-        // Crear entidad de dominio con fecha actual del reloj inyectado
+        // Create domain entity with current clock date injected
         const attachment = Attachment.create(validated, this.clock.now())
 
-        // Persistir en el repositorio
+        // Persist in the repository
         await this.repository.save(attachment)
 
-        // Publicar eventos de dominio (si los hay)
+        // Publish domain events (if any)
         const events = attachment.pullDomainEvents()
         if (events.length > 0) {
             await this.eventBus.publishAll(events)

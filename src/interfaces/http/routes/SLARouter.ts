@@ -7,10 +7,10 @@ import { CreateSLASchema } from "../../../application/dtos/sla"
 import { z } from "zod"
 
 /**
- * Router HTTP responsable de definir las rutas relacionadas con la gestión de SLA.
+ * HTTP router responsible for defining routes related to SLA management.
  *
- * Capa de infraestructura (delivery) que conecta las rutas HTTP con
- * los controladores y casos de uso correspondientes.
+ * Infrastructure layer (delivery) that connects HTTP routes with
+ * the corresponding controllers and use cases.
  */
 export class SLARouter extends BaseRouter<SLAController, BaseMiddleware> {
     constructor(
@@ -23,12 +23,12 @@ export class SLARouter extends BaseRouter<SLAController, BaseMiddleware> {
     }
 
     /**
-     * Define las rutas del módulo SLA.
+     * Defines the paths for the SLA module.
      */
     protected registerRoutes(): void {
         const { authenticate, authorize } = this.authMiddleware
 
-        // ✅ Validación de parámetro de ruta con zod
+        // Validation of route parameter with zod
         const AreaIdSchema = z.object({
             id: z.string().uuid({ message: "El parámetro 'id' debe ser un UUID válido" }),
         })

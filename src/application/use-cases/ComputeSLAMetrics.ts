@@ -2,10 +2,10 @@ import type { MetricsQueryInput, SLAMetrics } from "../dtos/metrics"
 import type { TicketRepository } from "../ports/TicketRepository"
 
 /**
- * Caso de uso: Calcular métricas de cumplimiento SLA
+ * Use case: Calculate SLA compliance metrics
  * 
- * Este caso de uso no depende de Prisma ni de infraestructura.
- * Solo requiere un repositorio que proporcione los tickets.
+ * This use case does not depend on Prisma or infrastructure.
+ * It only requires a repository that provides the tickets.
  */
 export class ComputeSLAMetrics {
     constructor(private readonly ticketRepo: TicketRepository) { }
@@ -51,7 +51,7 @@ export class ComputeSLAMetrics {
     }
 
     /**
-     * Calcula el promedio en minutos entre pares de fechas.
+     * Calculates the average in minutes between pairs of dates.
      */
     private calculateAverageMinutes(pairs: [Date, Date][]): number | null {
         if (pairs.length === 0) return null
@@ -64,7 +64,7 @@ export class ComputeSLAMetrics {
     }
 
     /**
-     * Agrupa los tickets por el campo especificado.
+     * Groups tickets by the specified field.
      */
     private groupByField<T extends Record<string, any>>(
         items: T[],

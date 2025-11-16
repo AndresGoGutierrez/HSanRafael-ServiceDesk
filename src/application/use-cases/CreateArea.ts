@@ -5,9 +5,9 @@ import { Area } from "../../domain/entities/Area"
 import { CreateAreaSchema, type CreateAreaInput } from "../dtos/area"
 
 /**
- * Caso de uso: creación de un área.
- * Se encarga de validar la entrada, verificar duplicados, crear la entidad
- * y propagar eventos de dominio.
+ * Use case: creation of an area.
+ * Responsible for validating input, checking for duplicates, creating the entity,
+ * and propagating domain events.
  */
 export class CreateArea {
     constructor(
@@ -17,28 +17,28 @@ export class CreateArea {
     ) { }
 
     /**
-     * Ejecuta el flujo de creación de un área.
-     * @param input Datos de entrada validados mediante Zod.
-     * @returns La entidad `Area` recién creada.
+     * Executes the flow for creating an area.
+     * @param input Input data validated by Zod.
+     * @returns The newly created `Area` entity.
      */
     async execute(input: CreateAreaInput): Promise<Area> {
-        // Validar input con esquema Zod (garantiza shape correcto)
+        // Validate input with Zod schema (ensures correct shape)
         const validated = CreateAreaSchema.parse(input)
 
-        // Verificar duplicado por nombre (case-insensitive opcional)
+        // Check for duplicate by name (case-insensitive optional)
         const existing = await this.repo.findByName(validated.name.trim())
         if (existing) {
             throw new Error(`Ya existe un área con el nombre "${validated.name}".`)
         }
 
-        // Crear la entidad del dominio
+        // Create the domain entity
         const now = this.clock.now()
         const area = Area.create(validated, now)
 
-        // Persistir entidad en el repositorio
+        // Persist entity in the repository
         await this.repo.save(area)
 
-        // Publicar eventos de dominio si los hay
+        // Publish domain events if any exist
         const events = area.pullDomainEvents()
         if (events.length > 0) {
             await this.bus.publishAll(events)

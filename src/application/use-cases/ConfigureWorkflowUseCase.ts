@@ -9,14 +9,14 @@ import { UserId } from "../../domain/value-objects/UserId"
 import { CreateWorkflowSchema, type CreateWorkflowDto } from "../dtos/workflow"
 
 /**
- * Caso de uso: Configurar el Workflow de un área.
+ * Use case: Configure the workflow for an area.
  *
- * Responsabilidades:
- * - Validar la entrada con Zod.
- * - Verificar existencia del área.
- * - Crear un nuevo Workflow (manteniendo historial de versiones).
- * - Registrar cambios en el AuditTrail.
- * - Publicar eventos de dominio.
+ * Responsibilities:
+ * - Validate the entry with Zod.
+ * - Verify the existence of the area.
+ * - Create a new workflow (keeping a version history).
+ * - Record changes in the AuditTrail.
+ * - Publish domain events.
  */
 export class ConfigureWorkflowUseCase {
     constructor(
@@ -28,18 +28,18 @@ export class ConfigureWorkflowUseCase {
     ) { }
 
     /**
-     * Ejecuta la configuración de un Workflow para un área.
-     * @param areaId Identificador del área.
-     * @param input Datos de configuración del workflow.
-     * @param actorId Identificador del usuario que realiza la acción.
-     * @returns La nueva entidad `Workflow` creada.
-     * @throws Error si el área no existe o la validación falla.
+     * Executes the configuration of a Workflow for an area.
+     * @param areaId Identifier of the area.
+     * @param input Workflow configuration data.
+     * @param actorId Identifier of the user performing the action.
+     * @returns The newly created `Workflow` entity.
+     * @throws Error if the area does not exist or validation fails.
      */
     async execute(areaId: string, input: CreateWorkflowDto, actorId: string): Promise<Workflow> {
-        // 1. Validación de entrada con Zod
+        // Input validation with Zod
         const validatedInput = CreateWorkflowSchema.parse(input);
 
-        // 2. Verificar existencia del área
+        // Verify existence of the area
         const area = await this.areaRepository.findById(areaId);
         if (!area) {
             throw new Error(`Area not found: ${areaId}`);
@@ -48,21 +48,21 @@ export class ConfigureWorkflowUseCase {
         const now = this.clock.now();
 
         // -----------------------------------------------------
-        // 3. Validación del workflow personalizado
+        // Custom workflow validation
         // -----------------------------------------------------
 
         const transitions = validatedInput.transitions;
 
-        // Extraer estados fuente
+        // Extract source states
         const fromStates = Object.keys(transitions);
 
-        // Extraer estados destino
+        // Extract destination states
         const toStates = Array.from(new Set(Object.values(transitions).flat()));
 
-        // Lista completa de estados
+        // Complete list of states
         const allStates = new Set([...fromStates, ...toStates]);
 
-        // A) Validar transiciones
+        // A) Validate transitions
         for (const [state, nextStates] of Object.entries(transitions)) {
             for (const next of nextStates) {
                 if (!allStates.has(next)) {
@@ -71,7 +71,7 @@ export class ConfigureWorkflowUseCase {
             }
         }
 
-        // B) Validar requiredFields
+        // B) Validate requiredFields
         if (validatedInput.requiredFields) {
             for (const state of Object.keys(validatedInput.requiredFields)) {
                 if (!allStates.has(state)) {
@@ -81,13 +81,13 @@ export class ConfigureWorkflowUseCase {
         }
 
         // -----------------------------------------------------
-        // 4. Obtener workflow anterior
+        // Get previous workflow
         // -----------------------------------------------------
 
         const previousWorkflow = await this.workflowRepository.findLatestByAreaId(areaId);
 
         // -----------------------------------------------------
-        // 5. Crear workflow
+        // Create workflow
         // -----------------------------------------------------
 
         const workflow = Workflow.create(
@@ -102,7 +102,7 @@ export class ConfigureWorkflowUseCase {
         await this.workflowRepository.save(workflow);
 
         // -----------------------------------------------------
-        // 6. Auditoría
+        // Audit
         // -----------------------------------------------------
 
         const audit = AuditTrail.create(
@@ -128,7 +128,7 @@ export class ConfigureWorkflowUseCase {
         await this.auditRepository.save(audit);
 
         // -----------------------------------------------------
-        // 7. Publicar eventos
+        // Publish events
         // -----------------------------------------------------
 
         await this.eventBus.publishAll(workflow.pullDomainEvents());

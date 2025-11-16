@@ -18,16 +18,15 @@ export class DeactivateUser {
         const user = await this.userRepository.findById(userIdVO.toString())
         if (!user) throw new Error("User not found")
 
-        // ✅ Asegúrate de usar una propiedad inmutable o un método del dominio
         if (!user.isActive) throw new Error("User already deactivated")
 
-        // Idealmente el dominio tiene un método como `user.deactivate()`
-        // para registrar eventos y evitar modificar propiedades directamente.
+        // Ideally, the domain has a method such as `user.deactivate()`
+        // to log events and avoid modifying properties directly.
         user.deactivate(this.clock.now())
 
         await this.userRepository.save(user)
 
-        // Crear registro de auditoría
+        // Create audit log
         const audit = AuditTrail.create(
             {
                 actorId: actorIdVO,

@@ -6,7 +6,7 @@ import type { TicketRepository } from "../../application/ports/TicketRepository"
 import { prismaClient } from "../db/prisma"
 
 /**
- * Mapper para convertir entre entidades de dominio y modelos de Prisma.
+ * Mapper to convert between domain entities and Prisma models.
  */
 class TicketMapper {
   static toPrisma(ticket: Ticket) {
@@ -51,7 +51,7 @@ class TicketMapper {
 }
 
 /**
- * Implementación del repositorio de Tickets usando Prisma.
+ * Implementation of the Ticket repository using Prisma.
  */
 export class PrismaTicketRepository implements TicketRepository {
   async save(ticket: Ticket): Promise<void> {
@@ -94,7 +94,7 @@ export class PrismaTicketRepository implements TicketRepository {
 
     const records = await prismaClient.ticket.findMany({ where })
 
-    // Convertir los registros crudos en entidades de dominio
+    // Convert raw records into domain entities
     return records.map((row) =>
       Ticket.rehydrate({
         id: row.id,

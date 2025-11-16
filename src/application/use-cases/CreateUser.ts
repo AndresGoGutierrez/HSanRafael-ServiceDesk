@@ -11,14 +11,14 @@ import {
 import { User } from "../../domain/entities/User"
 
 /**
- * Caso de uso: Crear un nuevo usuario en el sistema.
+ * Use case: Create a new user in the system.
  *
- * - Valida la entrada con Zod.
- * - Verifica la unicidad del correo electrónico.
- * - Hashea la contraseña.
- * - Crea y persiste la entidad de dominio.
- * - Publica eventos de dominio.
- * - Devuelve un DTO seguro sin información sensible.
+ * - Validate the input with Zod.
+ * - Verify the uniqueness of the email address.
+ * - Hash the password.
+ * - Create and persist the domain entity.
+ * - Publish domain events.
+ * - Return a secure DTO without sensitive information.
  */
 export class CreateUser {
     constructor(
@@ -43,6 +43,6 @@ export class CreateUser {
         await this.userRepo.save(user);
         await this.eventBus.publishAll(user.pullDomainEvents());
 
-        return user; // ✅ devolvemos la entidad de dominio
+        return user; 
     }
 }

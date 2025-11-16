@@ -1,15 +1,15 @@
 import { z } from "zod"
 
 /**
- * Schema de validación para las consultas de métricas SLA.
- * Permite filtrar por área y rango de fechas.
+ * Validation schema for SLA metric queries.
+ * Allows filtering by area and date range.
  */
 export const MetricsQuerySchema = z.object({
-    areaId: z.string().uuid().optional(), // si existe, debe ser un UUID válido
+    areaId: z.string().uuid().optional(), 
     from: z
         .union([z.string(), z.date()])
         .optional()
-        .transform((val) => (val ? new Date(val) : undefined)), // conversión segura a Date
+        .transform((val) => (val ? new Date(val) : undefined)), 
     to: z
         .union([z.string(), z.date()])
         .optional()
@@ -19,23 +19,23 @@ export const MetricsQuerySchema = z.object({
 export type MetricsQueryInput = z.infer<typeof MetricsQuerySchema>
 
 /**
- * Representa las métricas SLA calculadas para un conjunto de tickets.
+ * Represents the SLA metrics calculated for a set of tickets.
  */
 export interface SLAMetrics {
-    /** Total de tickets evaluados */
+    /** Total tickets evaluated */
     totalTickets: number
-    /** Tickets que cumplieron con el SLA */
+    /** Tickets that met the SLA */
     slaCompliant: number
-    /** Tickets que incumplieron el SLA */
+    /** Tickets that violated the SLA */
     slaBreached: number
-    /** Porcentaje de cumplimiento SLA */
+    /** SLA compliance percentage */
     compliancePercentage: number
-    /** Tiempo promedio de primera respuesta (en minutos) */
+    /** Average first response time (in minutes) */
     avgFirstResponseTime: number | null
-    /** Tiempo promedio de resolución (en minutos) */
+    /** Average resolution time (in minutes) */
     avgResolutionTime: number | null
-    /** Distribución de tickets por prioridad */
+    /** Ticket distribution by priority */
     ticketsByPriority: Record<string, number>
-    /** Distribución de tickets por estado */
+    /** Ticket distribution by state */
     ticketsByStatus: Record<string, number>
 }

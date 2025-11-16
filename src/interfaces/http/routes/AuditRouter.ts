@@ -3,13 +3,12 @@ import type { AuditController } from "../../controllers/AuditController"
 import type { AuthMiddleware } from "../middlewares/auth.middleware"
 
 /**
- * Router HTTP responsable de las rutas relacionadas con la auditoría de tickets.
+ * HTTP router responsible for routes related to ticket auditing.
  *
- * Orquesta el flujo entre:
- *  - Middleware de autenticación/autorización.
- *  - Controladores que coordinan los casos de uso.
+ * Orchestrates the flow between:
+ *  - Authentication/authorization middleware.
+ *  - Controllers that coordinate use cases.
  * 
- * Cumple el rol de capa de infraestructura en Clean Architecture.
  */
 export class AuditRouter {
     private readonly router: Router
@@ -23,7 +22,7 @@ export class AuditRouter {
     }
 
     /**
-     * Inicializa las rutas de auditoría.
+     * Initializes audit trails.
      */
     private initializeRoutes(): void {
 
@@ -62,15 +61,15 @@ export class AuditRouter {
     }
 
     /**
-     * Devuelve el router configurado para ser usado en la capa de infraestructura (Express).
+     * Returns the router configured for use in the infrastructure layer (Express).
      */
     public getRouter(): Router {
         return this.router
     }
 
     /**
-     * Envoltorio de seguridad para evitar errores no manejados.
-     * Garantiza que todas las rutas manejen excepciones correctamente.
+     * Security wrapper to prevent unhandled errors.
+     * Ensures that all routes handle exceptions correctly.
      */
     private safeHandler(
         handler: (req: Request, res: Response) => Promise<void> | void,

@@ -3,10 +3,10 @@ import type { AddComment } from "../../application/use-cases/AddComment"
 import type { ListCommentsByTicket } from "../../application/use-cases/ListCommentsByTicket"
 
 /**
- * Controlador responsable de manejar operaciones relacionadas con comentarios.
+ * Controller responsible for handling operations related to comments.
  * 
- * Pertenece a la capa de interfaz (controllers) y delega la lógica
- * de negocio a los casos de uso `AddComment` y `ListCommentsByTicket`.
+ * Belongs to the interface layer (controllers) and delegates business logic
+ * to the `AddComment` and `ListCommentsByTicket` use cases.
  */
 export class CommentController {
     constructor(
@@ -15,7 +15,7 @@ export class CommentController {
     ) { }
 
     /**
-     * Crea un nuevo comentario asociado a un ticket.
+     * Creates a new comment associated with a ticket.
      * POST /tickets/:ticketId/comments
      */
     async create(req: Request, res: Response): Promise<void> {
@@ -68,7 +68,7 @@ export class CommentController {
     }
 
     /**
-     * Lista los comentarios asociados a un ticket específico.
+     * Lists comments associated with a specific ticket.
      * GET /tickets/:ticketId/comments
      */
     async listByTicket(req: Request, res: Response): Promise<void> {

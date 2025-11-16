@@ -7,7 +7,7 @@ import { TicketId } from "../../domain/value-objects/TicketId"
 export type ExportFormat = "pdf" | "json"
 
 /**
- * Representa la estructura completa de exportación del historial de un ticket.
+ * Represents the complete export structure of a ticket's history.
  */
 export interface TicketHistoryExport {
     ticket: {
@@ -54,11 +54,11 @@ export interface TicketHistoryExport {
 }
 
 /**
- * Caso de uso: Exportar el historial completo de un ticket.
+ * Use case: Export the complete history of a ticket.
  *
- * - Recopila toda la información relacionada (comentarios, auditorías, adjuntos).
- * - Asegura consistencia y tipado fuerte.
- * - Devuelve los datos listos para exportar a PDF o JSON.
+ * - Collects all related information (comments, audits, attachments).
+ * - Ensures consistency and strong typing.
+ * - Returns data ready for export to PDF or JSON.
  */
 export class ExportTicketHistoryUseCase {
     constructor(
@@ -75,14 +75,14 @@ export class ExportTicketHistoryUseCase {
             throw new Error("Ticket not found")
         }
 
-        // Obtener información relacionada en paralelo para mayor eficiencia
+        // Obtain related information in parallel for greater efficiency
         const [comments, auditLogs, attachments] = await Promise.all([
             this.commentRepository.findByTicketId(ticketId),
             this.auditRepository.findByTicketId(ticketId),
             this.attachmentRepository.findByTicketId(ticketId),
         ])
 
-        // Construir respuesta tipada
+        // Build typed response
         return {
             ticket: {
                 id: ticket.id.toString(),

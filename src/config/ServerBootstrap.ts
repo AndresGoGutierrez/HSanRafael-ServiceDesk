@@ -100,7 +100,7 @@ export class ServerBootstrap extends ConfigServer {
         this.handleShutdown()
     }
 
-    /** Configura middlewares globales del servidor */
+    /** Configure global server middleware */
     private configureMiddleware(): void {
         this._app.use(express.json())
         this._app.use(express.urlencoded({ extended: true }))
@@ -109,12 +109,12 @@ export class ServerBootstrap extends ConfigServer {
         this._app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
     }
 
-    /** Configura las rutas principales con sus dependencias */
+    /** Configures the main routes with their dependencies */
     private configureRoutes(): void {
         const router = Router()
         const middleware = new BaseMiddleware()
 
-        // Dependencias compartidas
+        // Shared dependencies
         const clock = new SystemClock()
         const eventBus = new InMemoryEventBus()
         const passwordHasher = new BcryptPasswordHasher()
@@ -210,7 +210,7 @@ export class ServerBootstrap extends ConfigServer {
         this._app.use("/api", router)
     }
 
-    /** Conecta Prisma a la base de datos */
+    /** Connect Prisma to the database */
     private async dbConnection(): Promise<void> {
         try {
             await prismaClient.$connect()
@@ -225,7 +225,7 @@ export class ServerBootstrap extends ConfigServer {
         }
     }
 
-    /** Escucha el puerto configurado */
+    /** Listen to the configured port */
     public listen(): void {
         this._app.listen(this._port, async () => {
             this._logger.info(`🚀 Server listening on port ${this._port} in ${this.getEnvironment("NODE_ENV")} mode`)
@@ -234,7 +234,7 @@ export class ServerBootstrap extends ConfigServer {
         })
     }
 
-    /** Maneja el apagado controlado del servidor */
+    /** Handles controlled shutdown of the server */
     private handleShutdown(): void {
         const disconnect = async (signal: string): Promise<void> => {
             await prismaClient.$disconnect()

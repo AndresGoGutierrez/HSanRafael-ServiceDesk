@@ -1,33 +1,29 @@
 import type { Comment } from "../../domain/entities/Comment"
 
 /**
- * Contrato de persistencia para la entidad Comment.
+ * Persistence contract for the Comment entity.
  * 
- * Define las operaciones que cualquier implementación (por ejemplo, Prisma, Mongo, o memoria)
- * debe cumplir para manejar comentarios dentro del dominio.
+ * Defines the operations that any implementation (e.g., Prisma, Mongo, or memory)
+ * must comply with to handle comments within the domain.
  */
 export interface CommentRepository {
     /**
-     * Persiste un comentario nuevo o actualizado en la fuente de datos.
+     * Persists a new or updated comment in the data source.
      */
     save(comment: Comment): Promise<void>
 
     /**
-     * Busca un comentario por su identificador único.
-     * @param id Identificador del comentario.
-     * @returns El comentario o null si no existe.
+     * Searches for a comment by its unique identifier.
+     * @param id Comment identifier.
+     * @returns The comment or null if it does not exist.
      */
     findById(id: string): Promise<Comment | null>
 
     /**
-     * Obtiene todos los comentarios asociados a un ticket.
-     * @param ticketId Identificador del ticket.
+     * Gets all comments associated with a ticket.
+     * @param ticketId Ticket identifier.
      */
     findByTicketId(ticketId: string): Promise<Comment[]>
 
-    /**
-     * Elimina un comentario por su identificador.
-     * (Opcional — solo si tu caso de uso lo requiere)
-     */
     delete?(id: string): Promise<void>
 }

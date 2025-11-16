@@ -2,9 +2,9 @@ import { z } from "zod"
 import type { UserRole } from "../../domain/entities/User"
 
 /**
- * Schema para validar las credenciales de inicio de sesión.
- * Se asegura de que el correo tenga un formato válido y la contraseña
- * cumpla una longitud mínima segura.
+ * Schema to validate login credentials.
+ * Ensures that the email address has a valid format and that the password
+ * meets a minimum secure length requirement.
  */
 export const LoginSchema = z.object({
   email: z.string().trim().email("Formato de correo inválido"),
@@ -14,8 +14,8 @@ export const LoginSchema = z.object({
 export type LoginInput = z.infer<typeof LoginSchema>
 
 /**
- * Schema para estructurar la respuesta del login.
- * Representa el token de sesión y la información básica del usuario autenticado.
+ * Schema for structuring the login response.
+ * Represents the session token and basic information about the authenticated user.
  */
 export const LoginResponseSchema = z.object({
   token: z.string().min(1, "Token inválido"),

@@ -10,8 +10,8 @@ import { ZodError } from "zod"
 import { UserId } from '../../domain/value-objects/UserId';
 
 /**
- * Controlador HTTP para la entidad User.
- * Actúa como un adaptador entre Express y los casos de uso.
+ * HTTP controller for the User entity.
+ * Acts as an adapter between Express and use cases.
  */
 export class UserController {
     constructor(
@@ -66,16 +66,16 @@ export class UserController {
     }
 
     /**
-     * Desactiva un usuario existente (PATCH /users/:id/deactivate)
+     * Deactivate an existing user (PATCH /users/:id/deactivate)
      */
     async deactivate(req: Request, res: Response): Promise<void> {
         try {
-            // ✅ Validar entrada con Zod
+            // Validate input with Zod
             const { reason } = DeactivateUserSchema.parse(req.body)
             const { id } = req.params
             const actorId = (req as any).user?.userId
 
-            // ✅ Validar que actorId exista
+            // Validate that actorId exists
             if (!actorId) {
                 res.status(401).json({
                     success: false,
@@ -96,7 +96,7 @@ export class UserController {
     }
 
     /**
-     * Manejo centralizado de errores y validaciones.
+     * Centralized error handling and validation.
      */
     private handleError(res: Response, error: unknown, fallback: string): void {
         if (error instanceof ZodError) {

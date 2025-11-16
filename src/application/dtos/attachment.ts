@@ -1,8 +1,8 @@
 import { z } from "zod"
 
 /**
- * Schema para la creación de un adjunto (Attachment) asociado a un ticket.
- * Se valida que todos los campos requeridos sean correctos y coherentes.
+ * Schema for creating an attachment associated with a ticket.
+ * All required fields are validated to ensure they are correct and consistent.
  */
 export const CreateAttachmentSchema = z.object({
     ticketId: z.string().uuid(),
@@ -12,7 +12,7 @@ export const CreateAttachmentSchema = z.object({
         .string()
         .trim()
         .min(1)
-        .regex(/^[\w.+-]+\/[\w.+-]+$/, "Invalid MIME type format"), // Ejemplo: "image/png"
+        .regex(/^[\w.+-]+\/[\w.+-]+$/, "Invalid MIME type format"),
     size: z.number().int().positive("File size must be positive"),
     url: z.string().trim().url("Invalid URL format"),
 })
@@ -20,8 +20,8 @@ export const CreateAttachmentSchema = z.object({
 export type CreateAttachmentInput = z.infer<typeof CreateAttachmentSchema>
 
 /**
- * Schema para rehidratar un adjunto desde la base de datos o una fuente persistente.
- * Se usa típicamente en el repositorio.
+ * Schema for rehydrating an attachment from the database or a persistent source.
+ * Typically used in the repository.
  */
 export const RehydrateAttachmentSchema = z.object({
     id: z.string().uuid(),

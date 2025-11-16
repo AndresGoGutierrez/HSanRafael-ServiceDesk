@@ -1,15 +1,15 @@
 import { z } from "zod"
 
 /**
- * Value Object que representa un correo electrónico válido.
- * Garantiza validación, inmutabilidad y comparación segura.
+ * Value Object representing a valid email address.
+ * Ensures validation, immutability, and secure comparison.
  */
 export class Email {
     private constructor(private readonly value: string) { }
 
     /**
-     * Crea un nuevo Email validado.
-     * Lanza un error si el valor no cumple el formato.
+     * Creates a new validated email address.
+     * Throws an error if the value does not comply with the format.
      */
     static create(value: string): Email {
         if (!value || typeof value !== "string") {
@@ -21,29 +21,29 @@ export class Email {
         const schema = z
             .string()
             .email("Invalid email format")
-            .max(254, "Email is too long") // estándar RFC
+            .max(254, "Email is too long") 
         const parsed = schema.parse(normalized)
 
         return new Email(parsed)
     }
 
     /**
-     * Restaura un Email existente (por ejemplo, desde la base de datos).
-     * Úsalo solo cuando estés seguro de que el valor ya fue validado.
+     * Restores an existing email (for example, from the database).
+     * Use this only when you are sure that the value has already been validated.
      */
     static from(value: string): Email {
         return new Email(value.trim().toLowerCase())
     }
 
     /**
-     * Devuelve el valor primitivo (string).
+     * Returns the primitive value (string).
      */
     toString(): string {
         return this.value
     }
 
     /**
-     * Compara igualdad entre dos objetos Email.
+     * Compares equality between two Email objects.
      */
     equals(other: Email): boolean {
         return this.value === other.value

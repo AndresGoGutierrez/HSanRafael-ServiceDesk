@@ -4,8 +4,8 @@ import { Area } from "../../domain/entities/Area"
 import { prismaClient } from "../db/prisma"
 
 /**
- * Mapper entre la entidad de dominio `Area` y el modelo Prisma.
- * Mantiene aislada la lógica de transformación.
+ * Mapper between the `Area` domain entity and the Prisma model.
+ * Keeps the transformation logic isolated.
  */
 export class AreaMapper {
   static toPrisma(area: Area) {
@@ -38,8 +38,8 @@ export class AreaMapper {
 
 }
 /**
- * Implementación del repositorio de áreas usando Prisma ORM.
- * Responsable de la persistencia y rehidratación de entidades `Area`.
+ * Implementation of the area repository using Prisma ORM.
+ * Responsible for the persistence and rehydration of `Area` entities.
  */
 export class PrismaAreaRepository implements AreaRepository {
   async save(area: Area): Promise<void> {

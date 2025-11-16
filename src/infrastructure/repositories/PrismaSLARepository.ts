@@ -4,17 +4,17 @@ import { SLA } from "../../domain/entities/SLA"
 import { prismaClient } from "../db/prisma"
 
 /**
- * Mapper responsable de convertir entre:
- *  - Entidad de dominio `SLA`
- *  - Modelo de persistencia Prisma (`SLA` table)
- *  - Objeto de respuesta (DTO)
+ * Mapper responsible for converting between:
+ *  - Domain entity `SLA`
+ *  - Prisma persistence model (`SLA` table)
+ *  - Response object (DTO)
  *
- * Esta clase garantiza que los detalles de infraestructura
- * no "contaminen" el dominio.
+ * This class ensures that infrastructure details
+ * do not “contaminate” the domain.
  */
 export class SLAMapper {
     /**
-     * Convierte una entidad de dominio `SLA` en un objeto compatible con Prisma.
+     * Converts an `SLA` domain entity into a Prisma-compatible object.
      */
     static toPrisma(sla: SLA) {
         return {
@@ -28,15 +28,15 @@ export class SLAMapper {
     }
 
     /**
-     * Restaura una entidad de dominio `SLA` desde un registro de base de datos.
+     * Restores an `SLA` domain entity from a database record.
      */
     static toDomain(record: RehydrateSLADto): SLA {
         return SLA.rehydrate(record)
     }
 
     /**
-     * Convierte una entidad de dominio `SLA` en un DTO de salida.
-     * Ideal para respuestas HTTP o serialización.
+     * Converts an `SLA` domain entity into an output DTO.
+     * Ideal for HTTP responses or serialization.
      */
     static toResponse(sla: SLA) {
         return {
@@ -51,10 +51,10 @@ export class SLAMapper {
 }
 
 /**
- * Implementación del repositorio de SLA usando Prisma ORM.
+ * Implementation of the SLA repository using Prisma ORM.
  *
- * Encapsula completamente el acceso a la base de datos
- * y garantiza que el dominio no dependa de infraestructura.
+ * Completely encapsulates database access
+ * and ensures that the domain does not depend on infrastructure.
  */
 export class PrismaSLARepository implements SLARepository {
     async save(sla: SLA): Promise<void> {

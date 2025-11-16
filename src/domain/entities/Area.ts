@@ -11,16 +11,12 @@ export interface RehydrateAreaDto {
     name: string
     description: string | null
     isActive: boolean
-    createdAt: string | Date // <-- más flexible para serialización
+    createdAt: string | Date
 }
 
-
-
-
-
 /**
- * Representa un área dentro del dominio.
- * Contiene información de SLA, estado y eventos de creación.
+ * Represents an area within the domain.
+ * Contains SLA information, status, and creation events.
  */
 export class Area extends BaseEntity<AreaId> {
     public name: string
@@ -41,7 +37,7 @@ export class Area extends BaseEntity<AreaId> {
         this.isActive = isActive
     }
 
-    /** Crea una nueva instancia de Area desde datos de entrada */
+    /** Create a new instance of Area from input data */
     public static create(dto: CreateAreaInput, now: Date): Area {
         if (!dto.name?.trim()) {
             throw new Error("El nombre del área no puede estar vacío.")
@@ -67,7 +63,7 @@ export class Area extends BaseEntity<AreaId> {
         return area
     }
 
-    /** Restaura una entidad desde la persistencia */
+    /** Restores an entity from persistence */
     public static rehydrate(row: RehydrateAreaDto): Area {
         return new Area(
             AreaId.from(row.id),
@@ -78,7 +74,7 @@ export class Area extends BaseEntity<AreaId> {
         )
     }
 
-    /** Desactiva el área (soft delete) */
+    /** Disables the area (soft delete) */
     public deactivate(at: Date): void {
         if (!this.isActive) {
             throw new Error("Area is already deactivated")
@@ -93,7 +89,7 @@ export class Area extends BaseEntity<AreaId> {
         })
     }
 
-    /** Actualiza nombre y descripción */
+    /** Update name and description */
     public update(name: string, description?: string): void {
         const trimmedName = name?.trim()
         if (!trimmedName) {

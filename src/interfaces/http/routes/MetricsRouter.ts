@@ -3,8 +3,8 @@ import type { MetricsController } from "../../controllers/MetricsController"
 import type { AuthMiddleware } from "../middlewares/auth.middleware"
 
 /**
- * Router HTTP responsable de exponer los endpoints de métricas del sistema.
- * Actúa como adaptador de transporte en la capa de infraestructura.
+ * HTTP router responsible for exposing the system's metrics endpoints.
+ * Acts as a transport adapter in the infrastructure layer.
  */
 export class MetricsRouter {
     private readonly router: Router
@@ -18,8 +18,8 @@ export class MetricsRouter {
     }
 
     /**
-     * Define las rutas disponibles para métricas del sistema.
-     * Aplica autenticación, autorización y delega la lógica al controlador.
+     * Defines the routes available for system metrics.
+     * Applies authentication, authorization, and delegates logic to the controller.
      */
     private setupRoutes(): void {
         /**
@@ -67,7 +67,7 @@ export class MetricsRouter {
     }
 
     /**
-     * Manejador seguro que captura excepciones no controladas de los controladores.
+     * Wraps controllers in a safe handler to catch unhandled errors.
      */
     private safeHandler(
         handler: (req: Request, res: Response) => Promise<void> | void,
@@ -86,7 +86,7 @@ export class MetricsRouter {
     }
 
     /**
-     * Devuelve el router configurado para su uso en la capa de infraestructura.
+     * Returns the router configured for use in the infrastructure layer.
      */
     public getRouter(): Router {
         return this.router

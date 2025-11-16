@@ -4,35 +4,35 @@ import { MetricsQuerySchema } from "../../application/dtos/metrics"
 import { ZodError } from "zod"
 
 /**
- * Controlador encargado de manejar las solicitudes relacionadas con métricas de SLA.
+ * Controller responsible for handling requests related to SLA metrics.
  *
- * Pertenece a la capa de infraestructura (interface adapters),
- * y delega la lógica de negocio al caso de uso `ComputeSLAMetrics`.
+ * Belongs to the infrastructure layer (interface adapters),
+ * and delegates business logic to the `ComputeSLAMetrics` use case.
  */
 export class MetricsController {
     constructor(private readonly computeSLAMetrics: ComputeSLAMetrics) { }
 
     /**
-     * Obtiene las métricas de SLA basadas en los parámetros de consulta.
+     * Gets SLA metrics based on query parameters.
      * 
      * GET /metrics/sla
      */
     async getSLAMetrics(req: Request, res: Response): Promise<void> {
         try {
-            // Validar query params
+            // Validate query params
             const query = MetricsQuerySchema.parse(req.query)
 
-            // Ejecutar el caso de uso
+            // Run the use case
             const metrics = await this.computeSLAMetrics.execute(query)
 
-            // Responder con éxito
+            // Respond successfully
             res.status(200).json({
                 success: true,
                 message: "Métricas de SLA calculadas correctamente",
                 data: metrics,
             })
         } catch (error) {
-            // Validación de esquema Zod
+            // Zod schema validation
             if (error instanceof ZodError) {
                 res.status(400).json({
                     success: false,
@@ -42,7 +42,7 @@ export class MetricsController {
                 return
             }
 
-            // Errores controlados de aplicación
+            // Controlled application errors
             if (error instanceof Error) {
                 res.status(400).json({
                     success: false,
@@ -51,7 +51,7 @@ export class MetricsController {
                 return
             }
 
-            // Errores inesperados
+            // Unexpected errors
             console.error("[MetricsController] Error inesperado:", error)
             res.status(500).json({
                 success: false,

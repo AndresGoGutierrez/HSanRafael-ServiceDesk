@@ -1,23 +1,23 @@
 /**
- * Contrato para servicios de hashing de contraseñas.
+ * Contract for password hashing services.
  *
- * Este puerto define las operaciones necesarias para manejar
- * el ciclo de vida de contraseñas en el dominio sin acoplarse
- * a una implementación concreta (por ejemplo, bcrypt, Argon2, etc.).
+ * This port defines the operations necessary to manage
+ * the password lifecycle in the domain without coupling
+ * to a specific implementation (e.g., bcrypt, Argon2, etc.).
  */
 export interface PasswordHasher {
     /**
-     * Genera un hash seguro a partir de una contraseña en texto plano.
-     * @param password Contraseña sin encriptar.
-     * @returns Hash en formato string.
+     * Generates a secure hash from a plaintext password.
+     * @param password Unencrypted password.
+     * @returns Hash in string format.
      */
     hash(password: string): Promise<string>
 
     /**
-     * Compara una contraseña en texto plano con su hash.
-     * @param password Contraseña sin encriptar.
-     * @param hash Hash previamente generado.
-     * @returns `true` si coinciden, `false` en caso contrario.
+     * Compares a plaintext password with its hash.
+     * @param password Unencrypted password.
+     * @param hash Previously generated hash.
+     * @returns `true` if they match, `false` otherwise.
      */
     compare(password: string, hash: string): Promise<boolean>
 }

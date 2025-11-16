@@ -6,10 +6,10 @@ import type { EventBus } from "../ports/EventBus"
 import { AssignTicketSchema, type AssignTicketInput } from "../dtos/ticket"
 
 /**
- * Caso de uso: Asignar un ticket a un usuario.
+ * Use case: Assign a ticket to a user.
  * 
- * Valida los datos, recupera el ticket, aplica la lógica de negocio 
- * y publica los eventos resultantes.
+ * Validates the data, retrieves the ticket, applies the business logic, 
+ * and publishes the resulting events.
  */
 export class AssignTicket {
   constructor(
@@ -19,26 +19,26 @@ export class AssignTicket {
   ) {}
 
   async execute(ticketId: string, input: AssignTicketInput): Promise<void> {
-    // 1️⃣ Validar entrada
+    // Validate input
     const validated = AssignTicketSchema.parse(input)
 
-    // 2️⃣ Convertir a Value Objects del dominio
+    // Convert to domain value objects
     const domainTicketId = TicketId.from(ticketId)
     const assigneeId = UserId.from(validated.assigneeId)
 
-    // 3️⃣ Recuperar el ticket
+    //Retrieve ticket
     const ticket = await this.repository.findById(domainTicketId)
     if (!ticket) {
       throw new Error(`Ticket with ID ${ticketId} not found.`)
     }
 
-    // 4️⃣ Ejecutar lógica de dominio
+    // Execute domain logic
     ticket.assign(assigneeId, this.clock.now())
 
-    // 5️⃣ Persistir cambios
+    // Persist changes
     await this.repository.save(ticket)
 
-    // 6️⃣ Publicar eventos de dominio (si los hay)
+    // Publish domain events (if any)
     const events = ticket.pullDomainEvents()
     if (events.length > 0) {
       await this.eventBus.publishAll(events)

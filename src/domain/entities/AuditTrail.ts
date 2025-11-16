@@ -2,7 +2,7 @@ import { BaseEntity } from "./BaseEntity"
 import { UserId } from "../value-objects/UserId"
 
 /**
- * Identificador único del registro de auditoría.
+ * Unique identifier for the audit log.
  */
 export class AuditTrailId {
     private constructor(private readonly value: string) { }
@@ -47,7 +47,7 @@ export interface RehydrateAuditTrailDto {
 }
 
 /**
- * Entidad de dominio que representa una acción registrada en el sistema.
+ * Domain entity representing an action recorded in the system.
  */
 export class AuditTrail extends BaseEntity<AuditTrailId> {
     public readonly occurredAt!: Date 

@@ -7,14 +7,13 @@ import { CreateAttachmentSchema } from "../../../application/dtos/attachment"
 import type { AuthMiddleware } from "../middlewares/auth.middleware"
 
 /**
- * Router HTTP para manejar las rutas relacionadas con los attachments.
+ * HTTP router to handle routes related to attachments.
  *
- * Esta clase orquesta el flujo entre:
- *  - Validación (middleware de infraestructura)
- *  - Controladores (capa interfaces/controllers)
- *  - Use Cases (capa de aplicación)
+ * This class orchestrates the flow between:
+ *  - Validation (infrastructure middleware)
+ *  - Controllers (interfaces/controllers layer)
+ *  - Use Cases (application layer)
  *
- * ❗ Sin lógica de dominio aquí → se respeta Clean Architecture
  */
 export class AttachmentRouter extends BaseRouter<AttachmentController, BaseMiddleware> {
     constructor(

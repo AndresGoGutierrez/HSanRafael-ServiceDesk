@@ -18,8 +18,8 @@ export interface RehydrateSLADto {
 }
 
 /**
- * Entidad de dominio que representa un SLA (Service Level Agreement).
- * Define los tiempos de respuesta y resolución asociados a un área específica.
+ * Domain entity representing an SLA (Service Level Agreement).
+ * Defines the response and resolution times associated with a specific area.
  */
 export class SLA extends BaseEntity<SLAId> {
     public readonly areaId: AreaId
@@ -43,7 +43,7 @@ export class SLA extends BaseEntity<SLAId> {
     }
 
     /** 
-     * Crea una nueva instancia de SLA desde datos de entrada.
+     * Creates a new SLA instance from input data.
      */
     public static create(dto: CreateSLAInput, now: Date): SLA {
         this.validateTimes(dto.responseTimeMinutes, dto.resolutionTimeMinutes)
@@ -72,7 +72,7 @@ export class SLA extends BaseEntity<SLAId> {
     }
 
     /**
-     * Restaura una entidad SLA desde su persistencia.
+     * Restores an SLA entity from its persistence.
      */
     public static rehydrate(row: RehydrateSLADto): SLA {
         return new SLA(
@@ -86,7 +86,7 @@ export class SLA extends BaseEntity<SLAId> {
     }
 
     /**
-     * Actualiza los tiempos configurados del SLA.
+     * Updates the configured SLA times.
      */
     public update(responseTimeMinutes: number, resolutionTimeMinutes: number, now: Date): void {
         SLA.validateTimes(responseTimeMinutes, resolutionTimeMinutes)
@@ -113,7 +113,7 @@ export class SLA extends BaseEntity<SLAId> {
     }
 
     /**
-     * Valida coherencia de los tiempos del SLA.
+     * Validates consistency of SLA times.
      */
     private static validateTimes(response: number, resolution: number): void {
         if (response < 0 || resolution < 0) {

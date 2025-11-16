@@ -3,14 +3,14 @@ import swaggerJsdoc, { type Options } from "swagger-jsdoc"
 
 /**
  * -----------------------------------------------------------------------------
- * 🌐 Swagger / OpenAPI Specification
+ * Swagger / OpenAPI Specification
  * -----------------------------------------------------------------------------
- * Genera la documentación OpenAPI de la API "Hospital Service Desk",
- * manteniendo independencia del entorno mediante variables de entorno (.env).
+ * Generates OpenAPI documentation for the “Hospital Service Desk” API,
+ * maintaining independence from the environment through environment variables (.env).
  * -----------------------------------------------------------------------------
  */
 
-// Se obtiene la URL base desde .env o se usa un valor por defecto.
+// The base URL is obtained from .env or a default value is used.
 const apiBaseUrl =
     process.env.API_BASE_URL ||
     `http://localhost:${process.env.PORT || 8000}/api`
@@ -293,11 +293,11 @@ const swaggerOptions: Options = {
 
         security: [{ bearerAuth: [] }],
     },
-    // Escanea todos los routers donde se definen endpoints
+    // Scan all routers where endpoints are defined
     apis: ["./src/interfaces/http/routes/**/*.ts"],
 }
 
 /**
- * Exporta la especificación lista para usar en swagger-ui-express
+ * Exports the specification ready for use in swagger-ui-express
  */
 export const swaggerSpec = swaggerJsdoc(swaggerOptions)

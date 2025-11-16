@@ -20,7 +20,7 @@ export interface RehydrateCommentDto {
 }
 
 /**
- * Entidad de dominio que representa un comentario en un ticket.
+ * Domain entity representing a comment on a ticket.
  */
 export class Comment extends BaseEntity<CommentId> {
     public constructor(
@@ -35,8 +35,8 @@ export class Comment extends BaseEntity<CommentId> {
     }
 
     /**
-     * Fábrica de creación de comentarios.
-     * Valida y emite el evento de dominio correspondiente.
+     * Comment creation factory.
+     * Validates and emits the corresponding domain event.
      */
     public static create(dto: CreateCommentInput, now: Date): Comment {
         if (!dto.body || dto.body.trim().length === 0) {
@@ -67,7 +67,7 @@ export class Comment extends BaseEntity<CommentId> {
     }
 
     /**
-     * Reconstrucción de un comentario desde una fuente persistida.
+     * Reconstructing a comment from a persistent source.
      */
     public static rehydrate(row: RehydrateCommentDto): Comment {
         return new Comment(

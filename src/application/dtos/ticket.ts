@@ -2,7 +2,7 @@ import { z } from "zod"
 import { ZTicketPriority, ZTicketStatus } from "../../domain/value-objects/status.zod"
 
 /**
- * Esquema para crear un nuevo ticket
+ * Schema for creating a new ticket
  */
 export const CreateTicketSchema = z.object({
     title: z.string().trim().min(3, "El título debe tener al menos 3 caracteres"),
@@ -18,7 +18,7 @@ export const CreateTicketSchema = z.object({
 export type CreateTicketInput = z.infer<typeof CreateTicketSchema>
 
 /**
- * Esquema de ticket básico para transferir datos (DTO)
+ * Basic ticket schema for transferring data (DTO)
  */
 export const TicketSchema = z.object({
     id: z.string().uuid(),
@@ -33,8 +33,8 @@ export const TicketSchema = z.object({
 export type TicketDto = z.infer<typeof TicketSchema>
 
 /**
- * Esquema extendido para reconstruir un ticket desde persistencia
- * (incluye campos opcionales o derivados del dominio)
+ * Extended schema for reconstructing a ticket from persistence
+ * (includes optional or domain-derived fields)
  */
 export const RehydrateTicketSchema = z.object({
     id: z.string().uuid(),
@@ -59,7 +59,7 @@ export const RehydrateTicketSchema = z.object({
 export type RehydrateTicketDto = z.infer<typeof RehydrateTicketSchema>
 
 /**
- * Esquema para asignar un ticket a un agente
+ * Schema for assigning a ticket to an agent
  */
 export const AssignTicketSchema = z.object({
     assigneeId: z.string().uuid("El assigneeId debe ser un UUID válido"),
@@ -68,7 +68,7 @@ export const AssignTicketSchema = z.object({
 export type AssignTicketInput = z.infer<typeof AssignTicketSchema>
 
 /**
- * Esquema para transición de estado del ticket
+ * Ticket status transition diagram
  */
 export const TransitionTicketSchema = z.object({
     status: ZTicketStatus,

@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 /**
- * Schema para crear un nuevo comentario.
- * Define las reglas de validación de entrada desde la capa de infraestructura (HTTP, etc.)
+ * Schema for creating a new comment.
+ * Defines input validation rules from the infrastructure layer (HTTP, etc.).
  */
 export const CreateCommentSchema = z.object({
   body: z.string().trim().min(1, "El comentario no puede estar vacío"),
@@ -11,15 +11,15 @@ export const CreateCommentSchema = z.object({
       z.boolean(),
       z.enum(["true", "false"])
     ])
-    .transform(val => val === true || val === "true") // 🔥 convierte string a boolean
+    .transform(val => val === true || val === "true")
     .default(false)
 })
 
 export type CreateCommentInput = z.infer<typeof CreateCommentSchema>
 
 /**
- * Schema para rehidratar la entidad desde una fuente de datos (p. ej. base de datos).
- * Garantiza que los datos cargados cumplen con la estructura del dominio.
+ * Schema for rehydrating the entity from a data source (e.g., database).
+ * Ensures that the loaded data complies with the domain structure.
  */
 export const RehydrateCommentSchema = z.object({
     id: z.string().uuid({ message: "El id debe ser un UUID válido" }),
@@ -38,6 +38,6 @@ export const RehydrateCommentSchema = z.object({
 });
 
 /**
- * Tipo DTO usado para rehidratar la entidad de dominio Comment.
+ * DTO type used to rehydrate the Comment domain entity.
  */
 export type RehydrateCommentDto = z.infer<typeof RehydrateCommentSchema>;

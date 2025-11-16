@@ -1,9 +1,8 @@
 import { z } from "zod"
 
 /**
- * Esquema para la creación de un área.
- * Aplica validaciones básicas y limpieza de espacios.
- */
+ * Outline for creating an area.* Applies basic validations and space cleaning.
+*/
 export const CreateAreaSchema = z.object({
     name: z
         .string()
@@ -20,15 +19,15 @@ export const CreateAreaSchema = z.object({
 export type CreateAreaInput = z.infer<typeof CreateAreaSchema>
 
 /**
- * Esquema para actualizar un área existente.
- * Hereda las mismas restricciones que CreateAreaSchema.
+ * Schema for updating an existing area.
+ * Inherits the same restrictions as CreateAreaSchema.
  */
 export const UpdateAreaSchema = CreateAreaSchema.extend({
     // podrías incluir validaciones condicionales si aplica
 })
 export type UpdateAreaInput = z.infer<typeof UpdateAreaSchema>
 /**
- * Esquema para rehidratar una entidad Area desde la persistencia.
+ * Scheme for rehydrating an Area entity from persistence.
  */
 export const RehydrateAreaSchema = z.object({
     id: z.string().uuid({ message: "El ID debe ser un UUID válido." }),

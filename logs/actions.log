@@ -721,3 +721,7 @@
 {"level":30,"time":1763311589552,"pid":32156,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
 {"level":30,"time":1763311589577,"pid":32156,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
 {"level":30,"time":1763311823134,"pid":32156,"hostname":"LAPTOP-UR26325H","msg":"🧩 Prisma disconnected on SIGINT"}
+{"level":30,"time":1763323375236,"pid":32368,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1763323375236,"pid":32368,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1763323375284,"pid":32368,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1763323471496,"pid":32368,"hostname":"LAPTOP-UR26325H","msg":"🧩 Prisma disconnected on SIGINT"}

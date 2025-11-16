@@ -8,12 +8,12 @@ import type { AuditRepository } from "../ports/AuditRepository"
 import type { Clock } from "../ports/Clock"
 
 /**
- * Caso de uso: Desactivar un área del sistema.
+ * Use case: Deactivate an area of the system.
  *
- * Reglas de negocio:
- * - No se puede desactivar un área con tickets activos.
- * - Se registra un evento de auditoría.
- * - La acción se ejecuta desde el dominio (no se muta el estado directamente).
+ * Business rules:
+ * - An area with active tickets cannot be deactivated.
+ * - An audit event is recorded.
+ * - The action is executed from the domain (the status is not changed directly).
  */
 export class DeactivateArea {
     constructor(
@@ -24,11 +24,11 @@ export class DeactivateArea {
     ) { }
 
     /**
-     * Ejecuta la desactivación del área especificada.
+     * Deactivates the specified area.
      *
-     * @param areaId - Identificador único del área a desactivar.
-     * @param actorId - Identificador del usuario que realiza la acción.
-     * @param reason - Motivo opcional de la desactivación.
+     * @param areaId - Unique identifier of the area to be deactivated.
+     * @param actorId - Identifier of the user performing the action.
+     * @param reason - Optional reason for deactivation.
      */
     async execute(areaId: string, actorId: string, reason?: string): Promise<void> {
         const areaIdVO = AreaId.from(areaId)
@@ -50,11 +50,11 @@ export class DeactivateArea {
             )
         }
 
-        // Desactivar desde el dominio
+        // Disable from the domain
         area.deactivate(this.clock.now())
         await this.areaRepository.save(area)
 
-        // Registrar evento de auditoría
+        // Log audit event
         const audit = AuditTrail.create(
             {
                 actorId: actorIdVO,

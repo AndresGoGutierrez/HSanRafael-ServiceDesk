@@ -8,26 +8,26 @@ import type { AuthMiddleware } from "../middlewares/auth.middleware"
 import { CreateWorkflowSchema } from "../../../application/dtos/workflow"
 
 /**
- * Router para la configuración de workflows en áreas.
- * Define las rutas relacionadas con la gestión de flujos de trabajo.
+ * Router for configuring workflows in areas.
+ * Defines routes related to workflow management.
  */
 export class WorkflowRouter extends BaseRouter<WorkflowController, BaseMiddleware> {
     constructor(
         controller: WorkflowController,
         middleware: BaseMiddleware,
-        private readonly authMiddleware: AuthMiddleware, // ✅ Se marca como readonly (no debería cambiar)
+        private readonly authMiddleware: AuthMiddleware,
     ) {
         super(controller, middleware)
         this.registerRoutes()
     }
 
     /**
-     * Registra las rutas asociadas al Workflow.
+     * Records the routes associated with the Workflow.
      */
     protected registerRoutes(): void {
         const { authenticate, authorize } = this.authMiddleware
 
-        // ✅ Validación reutilizable y clara para el parámetro de ruta :id
+        // Reusable and clear validation for the route parameter :id
         const AreaIdParamSchema = z.object({
             id: z.string().uuid({ message: "El ID del área debe ser un UUID válido" }),
         })
@@ -106,8 +106,8 @@ export class WorkflowRouter extends BaseRouter<WorkflowController, BaseMiddlewar
          */
         this.router.put(
             "/areas/:id/workflow",
-            authenticate, // ✅ Middleware de autenticación
-            authorize("ADMIN", "AGENT"), // ✅ Solo admins y agentes pueden configurar
+            authenticate,
+            authorize("ADMIN", "AGENT"), 
             this.middleware.validate("params", AreaIdParamSchema),
             this.middleware.validate("body", CreateWorkflowSchema),
             (req: Request, res: Response) => this.controller.configureWorkflow(req, res),

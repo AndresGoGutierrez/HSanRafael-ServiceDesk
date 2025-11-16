@@ -7,7 +7,7 @@ import { type EventBus } from "../ports/EventBus"
 import { CreateCommentSchema, type CreateCommentInput } from "../dtos/comment"
 
 /**
- * Caso de uso: Agregar comentario a un ticket.
+ * Use case: Add comment to a ticket.
  */
 export class AddComment {
   constructor(
@@ -17,23 +17,23 @@ export class AddComment {
   ) {}
 
   async execute(input: CreateCommentInput & { ticketId: string; authorId: string }): Promise<Comment> {
-    // 1️⃣ Validar solo el body (body, isInternal)
+    // Validate only the body (body, isInternal)
     const validated = CreateCommentSchema.parse(input)
 
-    // 2️⃣ Convertir a Value Objects del dominio
+    // Convert to domain value objects
     const domainInput = {
       ...validated,
       ticketId: TicketId.from(input.ticketId),
       authorId: UserId.from(input.authorId),
     }
 
-    // 3️⃣ Crear la entidad de dominio
+    // Create the domain entity
     const comment = Comment.create(domainInput, this.clock.now())
 
-    // 4️⃣ Persistir en el repositorio
+    // Persist in the repository
     await this.repository.save(comment)
 
-    // 5️⃣ Publicar eventos de dominio (si los hay)
+    //Publish domain events (if any)
     const events = comment.pullDomainEvents()
     if (events.length > 0) {
       await this.eventBus.publishAll(events)

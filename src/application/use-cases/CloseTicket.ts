@@ -8,7 +8,7 @@ import { UserId } from "../../domain/value-objects/UserId"
 import { AuditTrail } from "../../domain/entities/AuditTrail"
 
 /**
- * Datos requeridos para cerrar un ticket
+ * Data required to close a ticket
  */
 export interface CloseTicketInput {
     ticketId: string
@@ -18,13 +18,13 @@ export interface CloseTicketInput {
 }
 
 /**
- * Caso de uso: Cierra un ticket en el sistema
+ * Use case: Close a ticket in the system
  *
- * Este caso de uso orquesta la lógica de negocio de cerrar un ticket:
- * - Verifica existencia y estado.
- * - Marca el ticket como resuelto y luego cerrado.
- * - Persiste cambios y registra auditoría.
- * - Emite un evento de dominio si se debe notificar.
+ * This use case orchestrates the business logic of closing a ticket:
+ * - Verify existence and status.
+ * - Mark the ticket as resolved and then closed.
+ * - Persist changes and log audit.
+ * - Issue a domain event if notification is required.
  */
 export class CloseTicket {
     constructor(
@@ -43,23 +43,23 @@ export class CloseTicket {
             throw new Error("Ticket no encontrado")
         }
 
-        // Verificar estado actual
+        // Check current status
         if (ticket.status === "CLOSED") {
             throw new Error("El ticket ya está cerrado.")
         }
 
-        // Si aún no está resuelto, primero se marca como resuelto
+        // If it is still unresolved, it is first marked as resolved.
         if (ticket.status !== "RESOLVED") {
             ticket.transition("RESOLVED" as TicketStatus, now)
         }
 
-        // Cerrar el ticket con su resumen
+        // Close the ticket with its summary
         ticket.resolutionSummary = input.resolutionSummary
         ticket.transition("CLOSED" as TicketStatus, now)
 
         await this.ticketRepository.save(ticket)
 
-        // Registrar auditoría
+        // Record audit
         const audit = AuditTrail.create(
             {
                 actorId: UserId.from(input.actorId),
@@ -71,12 +71,12 @@ export class CloseTicket {
                     resolutionSummary: input.resolutionSummary,
                 },
             },
-            now // ✅ este `now` se pasa al constructor como `createdAt`
+            now 
         )
 
         await this.auditRepository.save(audit)
 
-        // Publicar evento para notificación al solicitante
+        // Publish event to notify the applicant
         if (input.notifyRequester && ticket.requesterId) {
             await this.eventBus.publish({
                 type: "ticket.closed",

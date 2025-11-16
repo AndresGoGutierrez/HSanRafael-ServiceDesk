@@ -1,20 +1,20 @@
 import { BaseEntity } from "./BaseEntity"
 
 /**
- * Value Object que representa el identificador único de un Attachment.
+ * Value Object representing the unique identifier of an Attachment.
  */
 export class AttachmentId {
     private constructor(private readonly value: string) { }
 
     /**
-     * Crea un nuevo identificador UUID.
+     * Creates a new UUID identifier.
      */
     static new(): AttachmentId {
         return new AttachmentId(crypto.randomUUID())
     }
 
     /**
-     * Reconstruye un identificador existente desde un string.
+     * Reconstructs an existing identifier from a string.
      */
     static from(value: string): AttachmentId {
         if (!value || typeof value !== "string") {
@@ -24,14 +24,14 @@ export class AttachmentId {
     }
 
     /**
-     * Retorna el identificador en formato string.
+     * Returns the identifier in string format.
      */
     toString(): string {
         return this.value
     }
 
     /**
-     * Verifica igualdad entre dos AttachmentId.
+     * Checks for equality between two AttachmentIds.
      */
     equals(other: AttachmentId): boolean {
         return this.value === other.value
@@ -39,7 +39,7 @@ export class AttachmentId {
 }
 
 /**
- * Datos necesarios para crear un nuevo Attachment desde una solicitud o comando.
+ * Data required to create a new Attachment from a request or command.
  */
 export interface CreateAttachmentInput {
     ticketId: string
@@ -51,7 +51,7 @@ export interface CreateAttachmentInput {
 }
 
 /**
- * DTO utilizado para rehidratar un Attachment desde la persistencia.
+ * DTO used to rehydrate an Attachment from persistence.
  */
 export interface RehydrateAttachmentDto {
     id: string
@@ -65,7 +65,7 @@ export interface RehydrateAttachmentDto {
 }
 
 /**
- * Entidad de dominio que representa un adjunto (Attachment).
+ * Domain entity representing an attachment.
  */
 export class Attachment extends BaseEntity<AttachmentId> {
 
@@ -85,8 +85,8 @@ export class Attachment extends BaseEntity<AttachmentId> {
     }
 
     /**
-     * Fábrica de dominio para crear un nuevo Attachment.
-     * Registra un evento de dominio al ser creado.
+     * Domain factory for creating a new Attachment.
+     * Registers a domain event when created.
      */
     static create(dto: CreateAttachmentInput, now: Date = new Date()): Attachment {
         const attachment = new Attachment(
@@ -115,7 +115,7 @@ export class Attachment extends BaseEntity<AttachmentId> {
     }
 
     /**
-     * Restaura un Attachment existente desde la base de datos o un DTO persistido.
+     * Restores an existing Attachment from the database or a persisted DTO.
      */
     static rehydrate(dto: RehydrateAttachmentDto): Attachment {
         return new Attachment(
@@ -131,8 +131,8 @@ export class Attachment extends BaseEntity<AttachmentId> {
     }
 
     /**
-     * Marca el adjunto como eliminado lógicamente.
-     * Registra un evento de dominio que indica su eliminación.
+     * Marks the attachment as logically deleted.
+     * Records a domain event indicating its deletion.
      */
     public markAsDeleted(now: Date): void {
         this.deletedAt = now

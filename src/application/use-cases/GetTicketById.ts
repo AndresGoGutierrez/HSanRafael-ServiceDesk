@@ -3,11 +3,11 @@ import type { TicketRepository } from "../ports/TicketRepository";
 import type { Ticket } from "../../domain/entities/Ticket";
 
 /**
- * Caso de uso: Obtener un ticket por su identificador.
+ * Use case: Get a ticket by its identifier.
  * 
- * - Acepta un string como entrada externa (de un controlador o capa API)
- * - Lo convierte a un Value Object (`TicketId`) para mantener coherencia en el dominio
- * - Delegar la búsqueda al repositorio
+ * - Accepts a string as external input (from a controller or API layer)
+ * - Converts it to a Value Object (`TicketId`) to maintain consistency in the domain
+ * - Delegate the search to the repository
  */
 export class GetTicketById {
   constructor(private readonly ticketRepo: TicketRepository) {}
@@ -17,10 +17,10 @@ export class GetTicketById {
       throw new Error("El ID del ticket no puede estar vacío.");
     }
 
-    // ✅ Convertimos la cadena a Value Object
+    // We convert the string to a Value Object
     const id = TicketId.from(ticketId);
 
-    // ✅ El repositorio recibe un objeto de dominio, no un tipo primitivo
+    // The repository receives a domain object, not a primitive type.
     const ticket = await this.ticketRepo.findById(id);
 
     return ticket ?? null;

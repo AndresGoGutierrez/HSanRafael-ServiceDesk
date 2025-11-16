@@ -1,17 +1,17 @@
 import { z } from "zod"
 
 // Transitions: { "OPEN": ["IN_PROGRESS", "ESCALATED"], ... }
-// Keys: estados definidos por cada área (dinámicos)
+// Keys: states defined by each area (dynamic)
 export const WorkflowTransitionsSchema = z.record(
-    z.string(),              // estado actual
-    z.array(z.string())      // estados permitidos siguientes
+    z.string(),             
+    z.array(z.string())      
 )
 
-// Required fields por estado
+// Required fields by state
 export const WorkflowRequiredFieldsSchema = z
     .record(
-        z.string(),          // estado
-        z.array(z.string())  // lista de campos requeridos
+        z.string(),          
+        z.array(z.string())  
     )
     .optional()
 

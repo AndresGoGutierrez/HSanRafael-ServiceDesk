@@ -4,11 +4,11 @@ import type { RehydrateCommentDto } from "../../application/dtos/comment"
 import { Comment } from "../../domain/entities/Comment"
 
 /**
- * Mapper encargado de transformar entre la entidad de dominio `Comment`
- * y el modelo de persistencia manejado por Prisma.
+ * Mapper responsible for transforming between the `Comment` domain entity
+ * and the persistence model managed by Prisma.
  *
- * Este patrón mantiene la infraestructura desacoplada de la capa de dominio,
- * siguiendo los principios de Clean Architecture.
+ * This pattern keeps the infrastructure decoupled from the domain layer,
+ * following the principles of Clean Architecture.
  */
 
 function unwrapId(id: { toString(): string } | string): string {
@@ -41,13 +41,13 @@ class CommentMapper {
 }
 
 /**
- * Implementación de `CommentRepository` usando Prisma ORM.
- * Responsable de la persistencia de la entidad `Comment`.
+ * Implementation of `CommentRepository` using Prisma ORM.
+ * Responsible for the persistence of the `Comment` entity.
  */
 export class PrismaCommentRepository implements CommentRepository {
     /**
-     * Persiste un comentario en la base de datos.
-     * Usa `create` porque los comentarios son inmutables (no se sobrescriben).
+     * Persists a comment in the database.
+     * Uses `create` because comments are immutable (they are not overwritten).
      */
     async save(comment: Comment): Promise<void> {
         const data = CommentMapper.toPersistence(comment)
@@ -55,8 +55,8 @@ export class PrismaCommentRepository implements CommentRepository {
     }
 
     /**
-     * Busca un comentario por su identificador único.
-     * Retorna una entidad de dominio o `null` si no existe.
+     * Searches for a comment by its unique identifier.
+     * Returns a domain entity or `null` if it does not exist.
      */
     async findById(id: string): Promise<Comment | null> {
         const row = await prismaClient.comment.findUnique({
@@ -67,8 +67,8 @@ export class PrismaCommentRepository implements CommentRepository {
     }
 
     /**
-     * Obtiene todos los comentarios asociados a un ticket.
-     * Los comentarios se devuelven en orden cronológico ascendente.
+     * Gets all comments associated with a ticket.
+     * Comments are returned in ascending chronological order.
      */
     async findByTicketId(ticketId: string): Promise<Comment[]> {
         const rows = await prismaClient.comment.findMany({

@@ -2,10 +2,8 @@ import { WorkflowId } from "../value-objects/WorkflowId"
 import { AreaId } from "../value-objects/AreaId"
 import { BaseEntity } from "./BaseEntity"
 
-// Estados dinámicos → string
 export type TicketStatus = string
 
-// Workflow completamente dinámico
 export type WorkflowTransitions = Record<string, string[]>
 
 export type WorkflowRequiredFields = Record<string, string[]>
