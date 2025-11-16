@@ -8,6 +8,7 @@ import { Ticket } from "../../domain/entities/Ticket";
 import type { AuditRepository } from "../ports/AuditRepository";
 import { AuditTrail } from "../../domain/entities/AuditTrail";
 import { UserId } from "../../domain/value-objects/UserId";
+import { SLARepository } from "../ports/SLARepository";
 
 /**
  * Caso de uso: Crear un nuevo Ticket.
@@ -22,6 +23,7 @@ export class CreateTicket {
     constructor(
         private readonly ticketRepo: TicketRepository,
         private readonly areaRepo: AreaRepository,
+        private readonly slaRepo: SLARepository,
         private readonly clock: Clock,
         private readonly eventBus: EventBus,
         private readonly auditRepo: AuditRepository,
@@ -38,7 +40,9 @@ export class CreateTicket {
         }
 
         // Obtener tiempo SLA desde el área
-        const slaMinutes = area.slaResolutionMinutes;
+        const sla = await this.slaRepo.findByAreaId(area.id.toString());
+        const slaMinutes = sla?.resolutionTimeMinutes ?? 0;
+
 
         // Crear entidad de dominio
         const ticket = Ticket.create(validatedInput, slaMinutes, this.clock.now());

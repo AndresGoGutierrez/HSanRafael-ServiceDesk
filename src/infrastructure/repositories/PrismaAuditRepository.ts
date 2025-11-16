@@ -4,9 +4,6 @@ import type { RehydrateAuditTrailDto } from "../../application/dtos/audit"
 import { AuditTrail } from "../../domain/entities/AuditTrail"
 import type { InputJsonValue } from "@prisma/client/runtime/library"
 
-
-
-
 /**
  * Mapper responsable de convertir entre la entidad de dominio `AuditTrail`
  * y el modelo de persistencia manejado por Prisma.
@@ -37,13 +34,23 @@ class AuditMapper {
     }
 
     static toDomain(record: any): AuditTrail {
-        const adaptedRecord = {
-            ...record,
-            createdAt: record.occurredAt,
-        } as Omit<RehydrateAuditTrailDto, "occurredAt"> & { createdAt: Date }
+        const dto: RehydrateAuditTrailDto = {
+            id: record.id,
+            ticketId: record.ticketId,
+            actorId: record.actorId,
+            action: record.action,
+            entityType: record.entityType,
+            entityId: record.entityId,
+            changes: record.changes,
+            metadata: record.metadata,
+            ipAddress: record.ipAddress,
+            userAgent: record.userAgent,
+            occurredAt: record.occurredAt, // <-- AHORA ES CORRECTO
+        }
 
-        return AuditTrail.rehydrate(adaptedRecord)
+        return AuditTrail.rehydrate(dto)
     }
+
 }
 
 /**
