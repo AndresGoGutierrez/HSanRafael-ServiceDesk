@@ -1,4 +1,5 @@
-Patrones de Arquitectura
+Patrones de Arquitectura:
+
 1. Clean Architecture (Arquitectura Limpia)
 El sistema está organizado en capas con dependencias unidireccionales: Dominio → Aplicación → Infraestructura → Interfaces. README.md:427-465
 
@@ -36,5 +37,119 @@ TicketsController actúa como punto de entrada HTTP, validando entrada con Zod, 
 
 10. Dependency Injection
 Los módulos reciben dependencias (repositorio, event bus, clock) en el constructor y las inyectan en casos de uso y controladores. README.md:1458-1475 ServerBootstrap ensambla todas las dependencias. README.md:1490-1496
+
+Modelo de la base de datos:
+
+https://github.com/AndresGoGutierrez/HSanRafael-ServiceDesk/blob/main/prisma/DBML-Schema.png?raw=true
+
+DBML Schema:
+
+Table User {
+  id uuid [pk, note: 'Primary key, generated UUID']
+  name varchar
+  email varchar [unique]
+  areaId uuid
+  createdAt timestamp [default: `now()`]
+  isActive boolean [default: true]
+  password varchar
+  role varchar
+}
+
+Table Area {
+  id uuid [pk]
+  name varchar [unique]
+  createdAt timestamp [default: `now()`]
+  description text
+  isActive boolean [default: true]
+}
+
+Table SLA {
+  id uuid [pk]
+  areaId uuid [unique]
+  responseTimeMinutes int
+  resolutionTimeMinutes int
+  createdAt timestamp [default: `now()`]
+  updatedAt timestamp
+}
+
+Table Workflow {
+  id uuid [pk]
+  areaId uuid
+  transitions json
+  requiredFields json
+  createdAt timestamp [default: `now()`]
+  updatedAt timestamp
+}
+
+Table Ticket {
+  id uuid [pk]
+  title varchar
+  status varchar
+  priority varchar
+  areaId uuid
+  assigneeId uuid
+  closedAt timestamp
+  createdAt timestamp [default: `now()`]
+  description text
+  firstResponseAt timestamp
+  requesterId uuid
+  resolutionSummary text
+  resolvedAt timestamp
+  slaBreached boolean [default: false]
+  slaTargetAt timestamp
+  updatedAt timestamp
+}
+
+Table Comment {
+  id uuid [pk]
+  ticketId uuid
+  authorId uuid
+  body text
+  isInternal boolean [default: false]
+  createdAt timestamp [default: `now()`]
+}
+
+Table Attachment {
+  id uuid [pk]
+  ticketId uuid
+  uploaderId uuid
+  filename varchar
+  contentType varchar
+  size int
+  url varchar
+  createdAt timestamp [default: `now()`]
+  deletedAt timestamp
+}
+
+Table AuditTrail {
+  id uuid [pk]
+  ticketId uuid
+  actorId uuid
+  action varchar
+  entityType varchar
+  entityId uuid
+  changes json
+  metadata json
+  ipAddress varchar
+  userAgent varchar
+  occurredAt timestamp [default: `now()`]
+}
+
+// --------------------------------------------------------
+// Relaciones (Refs)
+// --------------------------------------------------------
+
+Ref: User.areaId > Area.id
+Ref: SLA.areaId > Area.id
+Ref: Workflow.areaId > Area.id
+Ref: Ticket.areaId > Area.id
+Ref: Ticket.assigneeId > User.id
+Ref: Ticket.requesterId > User.id
+Ref: Comment.ticketId > Ticket.id
+Ref: Comment.authorId > User.id
+Ref: Attachment.ticketId > Ticket.id
+Ref: Attachment.uploaderId > User.id
+Ref: AuditTrail.ticketId > Ticket.id
+Ref: AuditTrail.actorId > User.id
 
 
