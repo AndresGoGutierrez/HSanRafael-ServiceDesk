@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { CreateTicket } from "../../src/application/use-cases/CreateTicket";
+import { randomUUID } from "crypto";
 
 // -------------------------
 // Fakes / In-memory repos
@@ -80,8 +81,8 @@ describe("CreateTicket use case", (): void => {
         title: "Printer down",
         description: "Office printer is not working",
         priority: "HIGH",
-        userId: "11111111-1111-1111-1111-111111111111",
-        areaId: "22222222-2222-2222-2222-222222222222",
+        userId: randomUUID(),  // UUID real
+        areaId: randomUUID(),  // UUID real
         createdAt: new Date("2025-01-01T00:00:00Z") // <-- agregado
     } as const;
 
