@@ -1,20 +1,18 @@
 import { z } from "zod"
 
-export const TicketStatusEnum = z.enum([
-    "OPEN",
-    "IN_PROGRESS",
-    "PENDING",
-    "RESOLVED",
-    "CLOSED",
-])
-
+// Transitions: { "OPEN": ["IN_PROGRESS", "ESCALATED"], ... }
+// Keys: estados definidos por cada área (dinámicos)
 export const WorkflowTransitionsSchema = z.record(
-    TicketStatusEnum,
-    z.array(TicketStatusEnum)
+    z.string(),              // estado actual
+    z.array(z.string())      // estados permitidos siguientes
 )
 
+// Required fields por estado
 export const WorkflowRequiredFieldsSchema = z
-    .record(z.string(), z.array(z.string()))
+    .record(
+        z.string(),          // estado
+        z.array(z.string())  // lista de campos requeridos
+    )
     .optional()
 
 export const CreateWorkflowSchema = z.object({

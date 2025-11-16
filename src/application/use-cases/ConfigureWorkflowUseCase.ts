@@ -36,33 +36,75 @@ export class ConfigureWorkflowUseCase {
      * @throws Error si el área no existe o la validación falla.
      */
     async execute(areaId: string, input: CreateWorkflowDto, actorId: string): Promise<Workflow> {
-        // ✅ Validación de entrada (Zod garantiza tipos y reglas)
-        const validatedInput = CreateWorkflowSchema.parse(input)
+        // 1. Validación de entrada con Zod
+        const validatedInput = CreateWorkflowSchema.parse(input);
 
-        // ✅ Verificar existencia del área
-        const area = await this.areaRepository.findById(areaId)
+        // 2. Verificar existencia del área
+        const area = await this.areaRepository.findById(areaId);
         if (!area) {
-            throw new Error(`Area not found: ${areaId}`)
+            throw new Error(`Area not found: ${areaId}`);
         }
 
-        const now = this.clock.now()
+        const now = this.clock.now();
 
-        // ✅ Obtener workflow anterior (para registrar cambios)
-        const previousWorkflow = await this.workflowRepository.findLatestByAreaId(areaId)
+        // -----------------------------------------------------
+        // 3. Validación del workflow personalizado
+        // -----------------------------------------------------
 
-        // ✅ Crear nuevo workflow (mantiene histórico)
+        const transitions = validatedInput.transitions;
+
+        // Extraer estados fuente
+        const fromStates = Object.keys(transitions);
+
+        // Extraer estados destino
+        const toStates = Array.from(new Set(Object.values(transitions).flat()));
+
+        // Lista completa de estados
+        const allStates = new Set([...fromStates, ...toStates]);
+
+        // A) Validar transiciones
+        for (const [state, nextStates] of Object.entries(transitions)) {
+            for (const next of nextStates) {
+                if (!allStates.has(next)) {
+                    throw new Error(`Invalid workflow: state "${next}" is not defined as a transition key or value`);
+                }
+            }
+        }
+
+        // B) Validar requiredFields
+        if (validatedInput.requiredFields) {
+            for (const state of Object.keys(validatedInput.requiredFields)) {
+                if (!allStates.has(state)) {
+                    throw new Error(`Invalid requiredFields: state "${state}" does not exist in transitions`);
+                }
+            }
+        }
+
+        // -----------------------------------------------------
+        // 4. Obtener workflow anterior
+        // -----------------------------------------------------
+
+        const previousWorkflow = await this.workflowRepository.findLatestByAreaId(areaId);
+
+        // -----------------------------------------------------
+        // 5. Crear workflow
+        // -----------------------------------------------------
+
         const workflow = Workflow.create(
             {
                 areaId,
-                transitions: validatedInput.transitions,
+                transitions,
                 requiredFields: validatedInput.requiredFields ?? {},
             },
             now,
-        )
+        );
 
-        await this.workflowRepository.save(workflow)
+        await this.workflowRepository.save(workflow);
 
-        // ✅ Registrar auditoría
+        // -----------------------------------------------------
+        // 6. Auditoría
+        // -----------------------------------------------------
+
         const audit = AuditTrail.create(
             {
                 actorId: UserId.from(actorId),
@@ -81,13 +123,17 @@ export class ConfigureWorkflowUseCase {
                 },
             },
             now,
-        )
+        );
 
-        await this.auditRepository.save(audit)
+        await this.auditRepository.save(audit);
 
-        // ✅ Publicar eventos de dominio
-        await this.eventBus.publishAll(workflow.pullDomainEvents())
+        // -----------------------------------------------------
+        // 7. Publicar eventos
+        // -----------------------------------------------------
 
-        return workflow
+        await this.eventBus.publishAll(workflow.pullDomainEvents());
+
+        return workflow;
     }
+
 }

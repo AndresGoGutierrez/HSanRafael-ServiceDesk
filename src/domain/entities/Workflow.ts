@@ -2,14 +2,13 @@ import { WorkflowId } from "../value-objects/WorkflowId"
 import { AreaId } from "../value-objects/AreaId"
 import { BaseEntity } from "./BaseEntity"
 
-/** Posibles estados del ticket dentro del workflow */
-export type TicketStatus = "OPEN" | "IN_PROGRESS" | "PENDING" | "RESOLVED" | "CLOSED"
+// Estados dinámicos → string
+export type TicketStatus = string
 
-/** Define las transiciones válidas entre estados */
-export type WorkflowTransitions = Record<TicketStatus, TicketStatus[]>
+// Workflow completamente dinámico
+export type WorkflowTransitions = Record<string, string[]>
 
-/** Define los campos requeridos por cada estado */
-export type WorkflowRequiredFields = Partial<Record<TicketStatus, string[]>>
+export type WorkflowRequiredFields = Record<string, string[]>
 
 export interface CreateWorkflowInput {
     areaId: string
@@ -26,10 +25,6 @@ export interface RehydrateWorkflowDto {
     updatedAt: string | Date
 }
 
-/**
- * Entidad del dominio que representa el flujo de trabajo (Workflow).
- * Define las reglas de transición y los campos requeridos por estado.
- */
 export class Workflow extends BaseEntity<WorkflowId> {
     public readonly areaId: AreaId
     public transitions: WorkflowTransitions
@@ -40,44 +35,28 @@ export class Workflow extends BaseEntity<WorkflowId> {
         id: WorkflowId,
         areaId: AreaId,
         transitions: WorkflowTransitions,
-        requiredFields: WorkflowRequiredFields | undefined,
+        requiredFields: WorkflowRequiredFields,
         createdAt: Date,
         updatedAt: Date,
     ) {
         super(id, createdAt)
         this.areaId = areaId
         this.transitions = transitions
-        this.requiredFields = requiredFields ?? {}
+        this.requiredFields = requiredFields
         this.updatedAt = updatedAt
     }
 
-    /** Crea una nueva instancia de Workflow desde datos de entrada */
     public static create(dto: CreateWorkflowInput, now: Date): Workflow {
-        Workflow.validateTransitions(dto.transitions)
-
-        const workflow = new Workflow(
+        return new Workflow(
             WorkflowId.new(),
             AreaId.from(dto.areaId),
             dto.transitions,
-            dto.requiredFields,
+            dto.requiredFields ?? {},
             now,
             now,
         )
-
-        workflow.recordEvent({
-            type: "workflow.created",
-            occurredAt: now,
-            payload: {
-                id: workflow.id.toString(),
-                areaId: dto.areaId,
-                transitions: dto.transitions,
-            },
-        })
-
-        return workflow
     }
 
-    /** Restaura una entidad desde la persistencia */
     public static rehydrate(row: RehydrateWorkflowDto): Workflow {
         return new Workflow(
             WorkflowId.from(row.id),
@@ -89,26 +68,21 @@ export class Workflow extends BaseEntity<WorkflowId> {
         )
     }
 
-    /** Verifica si una transición es válida */
     public canTransition(from: TicketStatus, to: TicketStatus): boolean {
         return this.transitions[from]?.includes(to) ?? false
     }
 
-    /** Obtiene los campos requeridos para un estado */
     public getRequiredFields(status: TicketStatus): string[] {
         return this.requiredFields[status] ?? []
     }
 
-    /** Actualiza las transiciones del workflow */
     public updateTransitions(
         transitions: WorkflowTransitions,
         requiredFields: WorkflowRequiredFields,
         now: Date,
     ): void {
-        Workflow.validateTransitions(transitions)
-
-        const previousTransitions = this.transitions
-        const previousRequiredFields = this.requiredFields
+        const prevT = this.transitions
+        const prevR = this.requiredFields
 
         this.transitions = transitions
         this.requiredFields = requiredFields
@@ -121,27 +95,10 @@ export class Workflow extends BaseEntity<WorkflowId> {
                 id: this.id.toString(),
                 areaId: this.areaId.toString(),
                 changes: {
-                    transitions: { from: previousTransitions, to: transitions },
-                    requiredFields: { from: previousRequiredFields, to: requiredFields },
+                    transitions: { from: prevT, to: transitions },
+                    requiredFields: { from: prevR, to: requiredFields },
                 },
             },
         })
-    }
-
-    /** Valida que las transiciones sean coherentes con los estados posibles */
-    private static validateTransitions(transitions: WorkflowTransitions): void {
-        const validStatuses: TicketStatus[] = ["OPEN", "IN_PROGRESS", "PENDING", "RESOLVED", "CLOSED"]
-
-        for (const [from, toStates] of Object.entries(transitions)) {
-            if (!validStatuses.includes(from as TicketStatus)) {
-                throw new Error(`Invalid source status in transitions: "${from}"`)
-            }
-
-            for (const to of toStates) {
-                if (!validStatuses.includes(to)) {
-                    throw new Error(`Invalid destination status in transitions: "${to}"`)
-                }
-            }
-        }
     }
 }
