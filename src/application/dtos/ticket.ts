@@ -12,10 +12,7 @@ export const CreateTicketSchema = z.object({
     priority: ZTicketPriority,
     userId: z.string().uuid("El userId debe ser un UUID válido"),
     areaId: z.string().uuid("El areaId debe ser un UUID válido"),
-    createdAt: z
-        .union([z.string(), z.date()])
-        .optional()
-        .transform((val) => (val ? new Date(val) : new Date())), // fallback seguro
+    createdAt: z.union([z.string(), z.date()]).optional(),
 })
 
 export type CreateTicketInput = z.infer<typeof CreateTicketSchema>

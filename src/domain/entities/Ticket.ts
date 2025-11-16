@@ -36,6 +36,7 @@ export class Ticket extends BaseEntity<TicketId> {
      */
     public static create(dto: CreateTicketInput, slaMinutes: number | null, now: Date): Ticket {
         const slaTargetAt = slaMinutes ? new Date(now.getTime() + slaMinutes * 60000) : null
+        const createdAt = dto.createdAt ? new Date(dto.createdAt) : now;
 
         const ticket = new Ticket(
             TicketId.new(),
@@ -43,7 +44,7 @@ export class Ticket extends BaseEntity<TicketId> {
             dto.description.trim(),
             "OPEN",
             dto.priority,
-            UserId.from(dto.userId),
+            UserId.from(dto.userId),    
             null,
             dto.areaId,
             slaTargetAt,
@@ -52,7 +53,7 @@ export class Ticket extends BaseEntity<TicketId> {
             null,
             null,
             null,
-            dto.createdAt ?? now,
+            createdAt,
         )
 
         const event: TicketCreated = {
