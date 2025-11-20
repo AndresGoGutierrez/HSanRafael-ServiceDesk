@@ -10,7 +10,7 @@ RUN npm ci --silent
 
 COPY . .
 
-# Generar cliente Prisma antes de compilar TypeScript
+# Generar cliente Prisma ANTES de compilar
 RUN npx prisma generate
 
 # Compilar el proyecto (TypeScript → JavaScript en /dist)
