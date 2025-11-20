@@ -3,12 +3,12 @@ import type { AttachmentRepository } from "../ports/AttachmentRepository";
 import type { Attachment } from "../../domain/entities/Attachment";
 
 /**
- * Caso de uso: Listar todos los archivos adjuntos asociados a un ticket.
+ * Use case: List all attachments associated with a ticket.
  * 
- * Este caso de uso:
- * - Convierte el ID externo (string) a un Value Object (`TicketId`)
- * - Solicita al repositorio los adjuntos asociados a ese ticket
- * - Asegura que siempre se devuelva una lista (aunque esté vacía)
+ * This use case:
+ * - Converts the external ID (string) to a Value Object (`TicketId`)
+ * - Requests the attachments associated with that ticket from the repository
+ * - Ensures that a list is always returned (even if it is empty)
  */
 export class ListAttachmentsByTicket {
     constructor(private readonly repo: AttachmentRepository) { }
@@ -18,10 +18,10 @@ export class ListAttachmentsByTicket {
             throw new Error("El ID del ticket no puede estar vacío.");
         }
 
-        // Se valida que el ID sea un UUID válido (por consistencia con el dominio)
+        // Validate that the ID is a valid UUID (for consistency with the domain)
         const id = TicketId.from(ticketId);
 
-        // Convertimos explícitamente a string antes de pasar al repositorio
+        // We explicitly convert to string before passing to the repository
         const attachments = await this.repo.findByTicketId(id.toString());
 
         return attachments ?? [];

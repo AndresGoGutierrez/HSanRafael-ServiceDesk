@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 /**
- * Esquema base compartido por Create y Update.
- * Define las reglas de negocio para tiempos de SLA.
+ * Base schema shared by Create and Update.
+ * Defines business rules for SLA times.
  */
 const BaseSLASchema = z
     .object({
@@ -23,31 +23,40 @@ const BaseSLASchema = z
     });
 
 /**
- * DTO de creación de SLA
- * - Requiere ambos campos
+ * SLA creation DTO
+ * - Both fields are required
  */
 export const CreateSLASchema = BaseSLASchema;
 
 /**
- * DTO de actualización de SLA
- * - Todos los campos son opcionales
+ * SLA update DTO
+ * - All fields are optional
  */
 export const UpdateSLASchema = BaseSLASchema.partial();
 
 /**
- * Tipos inferidos a partir de los esquemas Zod
+ * Types inferred from Zod schemas
  */
 export type CreateSLADto = z.infer<typeof CreateSLASchema>;
 export type UpdateSLADto = z.infer<typeof UpdateSLASchema>;
 
 /**
- * DTO de respuesta (para capa de presentación / API)
+ * Response DTO (for presentation layer / API)
  */
 export interface SLAResponseDto {
+<<<<<<< HEAD
     id: string;
     areaId: string;
     responseTimeMinutes: number;
     resolutionTimeMinutes: number;
     createdAt: string; // mejor que Date para transporte HTTP
     updatedAt: string;
+=======
+    id: string
+    areaId: string
+    responseTimeMinutes: number
+    resolutionTimeMinutes: number
+    createdAt: string
+    updatedAt: string
+>>>>>>> main
 }

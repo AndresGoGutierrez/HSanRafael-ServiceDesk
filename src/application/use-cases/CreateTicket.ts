@@ -8,48 +8,52 @@ import { Ticket } from "../../domain/entities/Ticket";
 import type { AuditRepository } from "../ports/AuditRepository";
 import { AuditTrail } from "../../domain/entities/AuditTrail";
 import { UserId } from "../../domain/value-objects/UserId";
+import { SLARepository } from "../ports/SLARepository";
 
 /**
- * Caso de uso: Crear un nuevo Ticket.
- *
- * - Valida los datos de entrada mediante Zod (CreateTicketSchema)
- * - Verifica que el área exista y obtiene su configuración de SLA
- * - Crea la entidad Ticket aplicando las reglas de negocio
- * - Persiste el Ticket usando el repositorio
- * - Publica los eventos de dominio generados
+ * Use case: Create a new Ticket.
+ * 
+ * - Validates input data using Zod (CreateTicketSchema)
+ * - Verifies that the area exists and obtains its SLA configuration
+ * - Creates the Ticket entity applying business rules
+ * - Persists the Ticket using the repository
+ * - Publishes the generated domain events
  */
 export class CreateTicket {
     constructor(
         private readonly ticketRepo: TicketRepository,
         private readonly areaRepo: AreaRepository,
+        private readonly slaRepo: SLARepository,
         private readonly clock: Clock,
         private readonly eventBus: EventBus,
         private readonly auditRepo: AuditRepository,
     ) {}
 
     async execute(input: CreateTicketInput): Promise<Ticket> {
-        // Validar DTO con Zod
+        // Validate DTO with Zod
         const validatedInput = CreateTicketSchema.parse(input);
 
-        // Obtener el área (para SLA)
+        // Obtain the area (for SLA)
         const area = await this.areaRepo.findById(validatedInput.areaId);
         if (!area) {
             throw new Error("Área no encontrada");
         }
 
-        // Obtener tiempo SLA desde el área, asegurando compatibilidad con Ticket.create()
-        const slaMinutes = area.slaResolutionMinutes ?? null; // ✅ conversión explícita
+        // Get SLA time from the area
+        const sla = await this.slaRepo.findByAreaId(area.id.toString());
+        const slaMinutes = sla?.resolutionTimeMinutes ?? 0;
 
-        // Crear entidad de dominio
+
+        // Create domain entity
         const ticket = Ticket.create(validatedInput, slaMinutes, this.clock.now());
 
-        // Persistir el ticket
+        // Persist the ticket
         await this.ticketRepo.save(ticket);
 
         const audit = AuditTrail.create(
             {
-                ticketId: ticket.id.toString(), // 👈 clave para asociar el registro
-                actorId: UserId.from(validatedInput.userId), // el usuario que creó el ticket
+                ticketId: ticket.id.toString(), 
+                actorId: UserId.from(validatedInput.userId), 
                 action: "CREATE_TICKET",
                 entityType: "Ticket",
                 entityId: ticket.id.toString(),
@@ -68,7 +72,7 @@ export class CreateTicket {
 
         await this.auditRepo.save(audit);
 
-        // Publicar eventos de dominio
+        // Publish domain events
         const events = ticket.pullDomainEvents();
         await this.eventBus.publishAll(events);
 

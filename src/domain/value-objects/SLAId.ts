@@ -1,8 +1,8 @@
 import { v4 as uuidv4, validate as validateUUID } from "uuid"
 
 /**
- * Value Object que representa el identificador único de un SLA.
- * Garantiza inmutabilidad, validación y encapsulamiento del valor primitivo.
+ * Value Object representing the unique identifier of an SLA.
+ * Ensures immutability, validation, and encapsulation of the primitive value.
  */
 export class SLAId {
   private constructor(private readonly value: string) {
@@ -11,28 +11,28 @@ export class SLAId {
     }
   }
 
-  /** Crea un nuevo SLAId aleatorio */
+  /** Create a new random SLAId */
   public static new(): SLAId {
     return new SLAId(uuidv4())
   }
 
-  /** Restaura un SLAId existente desde su valor primitivo */
+  /** Restores an existing SLAId from its primitive value */
   public static from(id: string): SLAId {
     return new SLAId(id)
   }
 
-  /** Verifica si el string dado es un UUID válido */
+  /** Checks if the given string is a valid UUID */
   private static isValid(id: string): boolean {
-    // Usamos la función nativa de uuid en lugar de una regex manual
+    // We use the native uuid function instead of a manual regex
     return validateUUID(id)
   }
 
-  /** Retorna el valor primitivo subyacente */
+  /** Returns the underlying primitive value */
   public toString(): string {
     return this.value
   }
 
-  /** Compara igualdad con otro SLAId */
+  /** Compare equality with another SLAId */
   public equals(other: SLAId): boolean {
     if (!other) return false
     return this.value === other.value

@@ -4,40 +4,40 @@ import type { User } from "../../domain/entities/User";
 import { UserId } from "../../domain/value-objects/UserId";
 
 /**
- * Caso de uso: Actualizar un usuario existente.
+ * Use case: Update an existing user.
  *
- * Este caso de uso se encarga de aplicar cambios a un usuario del dominio,
- * garantizando que el usuario exista y que los datos cumplan las validaciones
- * definidas en el DTO. Mantiene el principio de inversión de dependencias
- * (no depende de detalles de infraestructura).
+ * This use case is responsible for applying changes to a domain user,
+ * ensuring that the user exists and that the data complies with the validations
+ * defined in the DTO. It maintains the principle of dependency inversion
+ * (it does not depend on infrastructure details).
  */
 export class UpdateUser {
     constructor(private readonly userRepository: UserRepository) { }
 
     /**
-     * Ejecuta la actualización del usuario.
+     * Executes the user update.
      *
-     * @param userIdString - Identificador del usuario como string (UUID).
-     * @param input - Datos actualizados del usuario.
-     * @throws Error si el usuario no existe.
+     * @param userIdString - User identifier as a string (UUID).
+     * @param input - Updated user data.
+     * @throws Error if the user does not exist.
      */
     async execute(userIdString: string, input: UpdateUserInput): Promise<User> {
-        // Validar input con Zod
+        // Validate input with Zod
         const validated = UpdateUserSchema.parse(input);
 
-        // Convertir string a Value Object
+        // Convert string to Value Object
         const userId = UserId.from(userIdString);
 
-        // Buscar el usuario existente
+        // Search for existing user
         const user = await this.userRepository.findById(userId.toString());
         if (!user) {
             throw new Error(`User with id ${userIdString} not found`);
         }
 
-        // Actualizar el perfil (entidad gestiona la lógica de negocio)
+        // Update profile (entity manages business logic)
         user.updateProfile(validated.name, validated.role, validated.areaId);
 
-        // Persistir cambios
+        // Persist changes
         await this.userRepository.save(user);
 
         return user;

@@ -1,8 +1,8 @@
 import { Router } from "express";
 
 /**
- * Clase base genérica para Routers HTTP.
- * No ejecuta `routes()` automáticamente para permitir inicialización completa en subclases.
+ * Generic base class for HTTP Routers.
+ * Does not automatically execute `routes()` to allow complete initialization in subclasses.
  */
 export class BaseRouter<C, M> {
     public readonly router: Router;
@@ -16,10 +16,10 @@ export class BaseRouter<C, M> {
 
     }
 
-    /** Método abstracto a implementar por subclases. */
+    /** Abstract method to be implemented by subclasses. */
     protected routes(): void {}
 
-    /** Devuelve el router de Express configurado. */
+    /** Returns the configured Express router. */
     public getRouter(): Router {
         return this.router;
     }

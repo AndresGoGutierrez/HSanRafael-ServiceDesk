@@ -1,14 +1,14 @@
 import { z } from "zod";
 
 /**
- * Enumeración de roles de usuario dentro del sistema
+ * List of user roles within the system
  */
 export const ZUserRole = z.enum(["REQUESTER", "AGENT", "TECH", "ADMIN"]);
 
 export type UserRole = z.infer<typeof ZUserRole>;
 
 /**
- * Esquema para la creación de un nuevo usuario
+ * Schema for creating a new user
  */
 export const CreateUserSchema = z.object({
     name: z.string().trim().min(2, "El nombre debe tener al menos 2 caracteres"),
@@ -24,7 +24,7 @@ export const CreateUserSchema = z.object({
 export type CreateUserInput = z.infer<typeof CreateUserSchema>;
 
 /**
- * Esquema para la actualización de datos de usuario
+ * Schema for updating user data
  */
 export const UpdateUserSchema = z.object({
     name: z.string().trim().min(2, "El nombre debe tener al menos 2 caracteres").optional(),
@@ -36,7 +36,7 @@ export const UpdateUserSchema = z.object({
 export type UpdateUserInput = z.infer<typeof UpdateUserSchema>;
 
 /**
- * Esquema para reconstruir un usuario desde persistencia
+ * Schema for reconstructing a user from persistence
  */
 export const RehydrateUserSchema = z.object({
     id: z.string().uuid(),

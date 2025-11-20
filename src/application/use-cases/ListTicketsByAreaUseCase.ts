@@ -3,12 +3,12 @@ import type { TicketRepository } from "../ports/TicketRepository"
 import type { AreaRepository } from "../ports/AreaRepository"
 
 /**
- * Caso de uso: Listar todos los tickets de un área específica.
+ * Use case: List all tickets in a specific area.
  *
- * Responsabilidades:
- * - Verificar que el área exista.
- * - Filtrar tickets por área.
- * - Permitir filtros opcionales por rango de fechas.
+ * Responsibilities:
+ * - Verify that the area exists.
+ * - Filter tickets by area.
+ * - Allow optional filters by date range.
  */
 export class ListTicketsByAreaUseCase {
     constructor(
@@ -17,10 +17,10 @@ export class ListTicketsByAreaUseCase {
     ) { }
 
     /**
-     * Ejecuta el caso de uso.
-     * @param areaId Identificador del área a consultar.
-     * @param filters Filtros opcionales por rango de fechas.
-     * @throws {AreaNotFoundError} Si el área no existe.
+     * Executes the use case.
+     * @param areaId Identifier of the area to be queried.
+     * @param filters Optional filters by date range.
+     * @throws {AreaNotFoundError} If the area does not exist.
      */
     async execute(
         areaId: string,
@@ -40,7 +40,7 @@ export class ListTicketsByAreaUseCase {
 }
 
 /**
- * Excepción de dominio para cuando el área no existe.
+ * Domain exception for when the area does not exist.
  */
 export class AreaNotFoundError extends Error {
     constructor(areaId: string) {

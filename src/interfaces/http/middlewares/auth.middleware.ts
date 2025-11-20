@@ -2,8 +2,8 @@ import type { Request, Response, NextFunction } from "express"
 import type { TokenService } from "../../../application/ports/TokenService"
 
 /**
- * Extiende la interfaz Request de Express para incluir
- * la información del usuario autenticado.
+ * Extends the Express Request interface to include
+ * information about the authenticated user.
  */
 export interface AuthenticatedRequest extends Request {
     user?: {
@@ -14,18 +14,18 @@ export interface AuthenticatedRequest extends Request {
 }
 
 /**
- * Middleware de autenticación y autorización.
+ * Authentication and authorization middleware.
  *
- * - Verifica y decodifica el token JWT.
- * - Adjunta el usuario autenticado al request.
- * - Permite restringir el acceso por roles.
+ * - Verifies and decodes the JWT token.
+ * - Attaches the authenticated user to the request.
+ * - Allows access to be restricted by roles.
  */
 export class AuthMiddleware {
     constructor(private readonly tokenService: TokenService) { console.log("[AuthMiddleware] Instancia creada con TokenService:", tokenService.constructor.name) }
 
     /**
-     * Middleware para autenticar una solicitud usando JWT.
-     * Lanza 401 si el token no existe, es inválido o expiró.
+     * Middleware to authenticate a request using JWT.
+     * Throws 401 if the token does not exist, is invalid, or has expired.
      */
     authenticate = async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         const authHeader = req.headers.authorization
@@ -65,8 +65,8 @@ export class AuthMiddleware {
     }
 
     /**
-     * Middleware de autorización basado en roles.
-     * Solo permite el acceso a usuarios con roles específicos.
+     * Role-based authorization middleware.
+     * Only allows access to users with specific roles.
      */
     authorize =
         (...allowedRoles: string[]) =>

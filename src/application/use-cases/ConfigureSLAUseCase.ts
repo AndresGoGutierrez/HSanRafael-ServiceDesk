@@ -10,16 +10,16 @@ import { UserId } from "../../domain/value-objects/UserId";
 import { CreateSLASchema, type CreateSLADto } from "../dtos/sla";
 
 /**
- * Caso de uso: Configurar o actualizar el SLA asociado a un área.
+ * Use case: Configure or update the SLA associated with an area.
  *
- * Responsabilidades:
- * - Validar la entrada con Zod.
- * - Verificar la existencia del área.
- * - Crear o actualizar el SLA.
- * - Registrar auditoría de cambios.
- * - Publicar eventos de dominio relevantes.
+ * Responsibilities:
+ * - Validate the entry with Zod.
+ * - Verify the existence of the area.
+ * - Create or update the SLA.
+ * - Record audit of changes.
+ * - Publish relevant domain events.
  *
- * Patrón: Application Service (Clean Architecture)
+ * Pattern: Application Service (Clean Architecture)
  */
 export class ConfigureSLAUseCase {
     constructor(
@@ -31,33 +31,31 @@ export class ConfigureSLAUseCase {
     ) {}
 
     /**
-     * Ejecuta la operación de configuración del SLA.
-     * @param areaId ID del área objetivo.
-     * @param input Datos de configuración del SLA.
-     * @param actorId ID del usuario que ejecuta la acción.
-     * @returns El SLA creado o actualizado.
-     * @throws Error si el área no existe o la validación falla.
+     * Executes the SLA configuration operation.
+     * @param areaId ID of the target area.
+     * @param input SLA configuration data.
+     * @param actorId ID of the user executing the action.
+     * @returns The created or updated SLA.
+     * @throws Error if the area does not exist or validation fails.
      */
     async execute(areaId: string, input: CreateSLADto, actorId: string): Promise<SLA> {
         const validatedInput = CreateSLASchema.parse(input);
         const now = this.clock.now();
 
-        // 🧩 1. Verificar existencia del área
-        const area = await this.areaRepository.findById(areaId);
+        // Verify existence of the area
+        const area = await this.areaRepository.findById(areaId)
         if (!area) {
             throw new Error(`Area with ID "${areaId}" not found.`);
         }
 
-        // 🧩 2. Verificar si ya existe un SLA asociado
-        const existingSLA = await this.slaRepository.findByAreaId(areaId);
+        // Check if an SLA is already associated
+        const existingSLA = await this.slaRepository.findByAreaId(areaId)
 
         let sla: SLA;
         let auditAction: "SLA_CREATED" | "SLA_UPDATED";
 
         if (existingSLA) {
-            // 🧠 Actualizar SLA existente
-            const { responseTimeMinutes: oldResponse, resolutionTimeMinutes: oldResolution } =
-                existingSLA;
+            const { responseTimeMinutes: oldResponse, resolutionTimeMinutes: oldResolution } = existingSLA
 
             existingSLA.update(
                 validatedInput.responseTimeMinutes,
@@ -77,7 +75,6 @@ export class ConfigureSLAUseCase {
                 },
             });
         } else {
-            // 🧠 Crear nuevo SLA
             sla = SLA.create(
                 {
                     areaId,
@@ -96,14 +93,14 @@ export class ConfigureSLAUseCase {
             });
         }
 
-        // 🧩 3. Publicar eventos de dominio
-        await this.eventBus.publishAll(sla.pullDomainEvents());
+        // Publish domain events
+        await this.eventBus.publishAll(sla.pullDomainEvents())
 
         return sla;
     }
 
     /**
-     * Registra un cambio en el AuditTrail.
+     * Records a change in the AuditTrail.
      */
     private async recordAuditTrail(
         actorId: string,

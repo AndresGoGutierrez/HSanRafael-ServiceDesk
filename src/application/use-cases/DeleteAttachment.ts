@@ -4,18 +4,17 @@ import { AuditTrail } from "../../domain/entities/AuditTrail"
 import type { AttachmentRepository } from "../ports/AttachmentRepository"
 import type { AuditRepository } from "../ports/AuditRepository"
 import type { Clock } from "../ports/Clock"
-// import { NotFoundError, ConflictError } from "../../domain/errors" // opcional
 
 /**
- * Caso de uso: Eliminar un adjunto (soft delete)
+ * Use case: Delete an attachment (soft delete)
  * 
- * - Aplica eliminación lógica (marca con deletedAt)
- * - Registra la acción en el sistema de auditoría
+ * - Applies logical deletion (marks with deletedAt)
+ * - Logs the action in the audit system
  * 
- * Cumple con principios de Clean Architecture:
- *  - No depende de infraestructura
- *  - Usa Value Objects para identidades
- *  - Orquesta lógica de negocio pura
+ * Complies with Clean Architecture principles:
+ *  - Does not depend on infrastructure
+ *  - Uses Value Objects for identities
+ *  - Orchestrates pure business logic
  */
 export class DeleteAttachment {
     constructor(

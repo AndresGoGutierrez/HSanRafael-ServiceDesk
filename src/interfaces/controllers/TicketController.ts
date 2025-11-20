@@ -16,11 +16,11 @@ import { ExportFormat, ExportTicketHistoryUseCase } from "../../application/use-
 import PDFDocument from "pdfkit"
 
 /**
- * Controlador HTTP de Tickets
+ * HTTP Ticket Controller
  *
- * 👉 Solo orquesta casos de uso y mapea entidades a respuestas HTTP.
- * ❌ No contiene lógica de negocio.
- * ✅ Maneja errores, validación y conversión de entidades → DTOs.
+ * Only orchestrates use cases and maps entities to HTTP responses.
+ * Does not contain business logic.
+ * Handles errors, validation, and conversion of entities → DTOs.
  */
 export class TicketController {
     constructor(
@@ -34,7 +34,7 @@ export class TicketController {
     ) { }
 
     // ──────────────────────────────
-    // Métodos de control
+    // Control methods
     // ──────────────────────────────
 
     async create(req: Request, res: Response): Promise<void> {
@@ -142,7 +142,7 @@ export class TicketController {
         }
     }
 
-    /** Exporta el historial de un ticket. (GET /tickets/:id/export) */
+    /** Exports the history of a ticket. (GET /tickets/:id/export) */
     async exportHistory(req: Request, res: Response): Promise<void> {
         try {
             if (!this.exportTicketHistoryUseCase) {
@@ -158,7 +158,7 @@ export class TicketController {
 
             const historyExport = await this.exportTicketHistoryUseCase.execute(ticketId, format)
 
-            // === EXPORTACIÓN JSON ===
+            // === JSON EXPORT ===
             if (format === "json") {
                 res.status(200).json({
                     success: true,
@@ -168,10 +168,10 @@ export class TicketController {
                 return
             }
 
-            // === EXPORTACIÓN PDF ===
+            // === PDF EXPORT ===
             if (format === "pdf") {
-                // ✅ 1. Importar pdfkit correctamente arriba:
-                // import PDFDocument from "pdfkit"
+                // Import pdfkit correctly above:
+                // import PDFDocument from “pdfkit”
 
                 const doc = new PDFDocument({ margin: 50 })
 
@@ -181,12 +181,12 @@ export class TicketController {
                     `attachment; filename="ticket-${ticketId}.pdf"`
                 )
 
-                // ✅ 2. Piping seguro
+                // Secure piping
                 doc.pipe(res)
 
                 const { ticket, comments, auditLogs, attachments } = historyExport
 
-                // === ENCABEZADO ===
+                // === HEADER ===
                 doc
                     .fontSize(20)
                     .fillColor("#333")
@@ -195,7 +195,7 @@ export class TicketController {
                     .fillOpacity(1)
                     .moveDown()
 
-                // === INFORMACIÓN DEL TICKET ===
+                // === TICKET INFORMATION ===
                 doc.fontSize(14).text(`ID: ${ticket.id}`)
                 doc.text(`Título: ${ticket.title}`)
                 doc.text(`Descripción: ${ticket.description}`)
@@ -206,7 +206,7 @@ export class TicketController {
                 doc.text(`Fecha de creación: ${new Date(ticket.createdAt).toLocaleString()}`)
                 doc.moveDown(1.5)
 
-                // === COMENTARIOS ===
+                // === COMMENTS ===
                 doc.fontSize(16).text("Comentarios", { underline: true }).moveDown(0.5)
                 if (!comments?.length) {
                     doc.fontSize(12).text("No hay comentarios registrados.")
@@ -221,7 +221,7 @@ export class TicketController {
                 }
                 doc.moveDown(1.5)
 
-                // === HISTORIAL DE AUDITORÍA ===
+                // === AUDIT HISTORY ===
                 doc.fontSize(16).text("Historial de Auditoría", { underline: true }).moveDown(0.5)
                 if (!auditLogs?.length) {
                     doc.fontSize(12).text("No hay registros de auditoría.")
@@ -237,7 +237,7 @@ export class TicketController {
                 }
                 doc.moveDown(1.5)
 
-                // === ADJUNTOS ===
+                // === ATTACHMENTS ===
                 if (attachments?.length > 0) {
                     doc.fontSize(16).text("Adjuntos", { underline: true }).moveDown(0.5)
                     attachments.forEach((att, i) => {
@@ -246,7 +246,7 @@ export class TicketController {
                     doc.moveDown(1.5)
                 }
 
-                // === PIE DE PÁGINA ===
+                // === FOOTER ===
                 doc
                     .moveDown(2)
                     .fontSize(10)
@@ -255,12 +255,10 @@ export class TicketController {
                         align: "center",
                     })
 
-                // ✅ 3. Cerrar correctamente
                 doc.end()
                 return
             }
 
-            // ✅ 4. Si llega un formato no soportado
             res.status(400).json({
                 success: false,
                 error: `Formato "${format}" no soportado`,
@@ -273,7 +271,7 @@ export class TicketController {
 
 
     // ──────────────────────────────
-    // Método utilitario privado
+    // Private utility method
     // ──────────────────────────────
     private handleError(res: Response, error: unknown, defaultMessage: string): void {
         if (error instanceof ZodError) {

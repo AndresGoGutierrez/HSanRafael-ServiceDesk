@@ -1,15 +1,15 @@
 import { z } from "zod";
 
 /**
- * Schema de validación para las consultas de métricas SLA.
- * Permite filtrar por área y rango de fechas.
+ * Validation schema for SLA metric queries.
+ * Allows filtering by area and date range.
  */
 export const MetricsQuerySchema = z.object({
-    areaId: z.string().uuid().optional(), // si existe, debe ser un UUID válido
+    areaId: z.string().uuid().optional(), 
     from: z
         .union([z.string(), z.date()])
         .optional()
-        .transform((val) => (val ? new Date(val) : undefined)), // conversión segura a Date
+        .transform((val) => (val ? new Date(val) : undefined)), 
     to: z
         .union([z.string(), z.date()])
         .optional()
@@ -19,9 +19,10 @@ export const MetricsQuerySchema = z.object({
 export type MetricsQueryInput = z.infer<typeof MetricsQuerySchema>;
 
 /**
- * Representa las métricas SLA calculadas para un conjunto de tickets.
+ * Represents the SLA metrics calculated for a set of tickets.
  */
 export interface SLAMetrics {
+<<<<<<< HEAD
     /** Total de tickets evaluados */
     totalTickets: number;
     /** Tickets que cumplieron con el SLA */
@@ -38,4 +39,22 @@ export interface SLAMetrics {
     ticketsByPriority: Record<string, number>;
     /** Distribución de tickets por estado */
     ticketsByStatus: Record<string, number>;
+=======
+    /** Total tickets evaluated */
+    totalTickets: number
+    /** Tickets that met the SLA */
+    slaCompliant: number
+    /** Tickets that violated the SLA */
+    slaBreached: number
+    /** SLA compliance percentage */
+    compliancePercentage: number
+    /** Average first response time (in minutes) */
+    avgFirstResponseTime: number | null
+    /** Average resolution time (in minutes) */
+    avgResolutionTime: number | null
+    /** Ticket distribution by priority */
+    ticketsByPriority: Record<string, number>
+    /** Ticket distribution by state */
+    ticketsByStatus: Record<string, number>
+>>>>>>> main
 }

@@ -1,28 +1,28 @@
 import type { Clock } from "../../application/ports/Clock"
 
 /**
- * Implementación concreta del puerto Clock.
+ * Concrete implementation of the Clock port.
  *
- * Proporciona la hora actual del sistema.
- * 
- * Esta clase pertenece a la capa de infraestructura.
- * Se puede reemplazar fácilmente por un mock o una versión fija
- * durante pruebas unitarias.
+ * Provides the current system time.
+ *
+ * This class belongs to the infrastructure layer.
+ * It can be easily replaced by a mock or a fixed version
+ * during unit testing.
  */
 export class SystemClock implements Clock {
     private readonly fixedDate?: Date
 
     /**
-     * Permite crear un reloj fijo (útil en testing)
-     * o un reloj real basado en la hora del sistema.
-     * @param fixedDate Si se provee, siempre devolverá esta fecha.
+     * Allows you to create a fixed clock (useful for testing)
+     * or a real clock based on the system time.
+     * @param fixedDate If provided, it will always return this date.
      */
     constructor(fixedDate?: Date) {
         this.fixedDate = fixedDate
     }
 
     /**
-     * Devuelve la hora actual del sistema o una hora fija.
+     * Returns the current system time or a fixed time.
      */
     now(): Date {
         return this.fixedDate ? new Date(this.fixedDate) : new Date()

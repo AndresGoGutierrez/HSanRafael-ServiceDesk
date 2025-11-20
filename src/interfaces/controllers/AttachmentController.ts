@@ -33,7 +33,7 @@ export class AttachmentController {
                 filename: file.originalname,
                 contentType: file.mimetype,
                 size: file.size,
-                url: `${baseUrl}/uploads/${file.filename}`, // o el path real si usas almacenamiento externo
+                url: `${baseUrl}/uploads/${file.filename}`,
             }
 
             const attachment = await this.addAttachment.execute(attachmentData)

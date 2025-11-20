@@ -4,7 +4,7 @@ import type { UserRepository } from "../../application/ports/UserRepository";
 import type { RehydrateUserDto } from "../../application/dtos/user";
 
 /**
- * Mapper para convertir entre la entidad de dominio y el modelo Prisma.
+ * Mapper to convert between the domain entity and the Prisma model.
  */
 class UserMapper {
     static toPrisma(user: User): {
@@ -43,8 +43,8 @@ class UserMapper {
 }
 
 /**
- * Implementación del repositorio de usuarios usando Prisma.
- * Cumple el contrato de la capa de aplicación (UserRepository).
+ * Implementation of the user repository using Prisma.
+ * Fulfills the application layer contract (UserRepository).
  */
 export class PrismaUserRepository implements UserRepository {
     async save(user: User): Promise<void> {
@@ -58,7 +58,6 @@ export class PrismaUserRepository implements UserRepository {
                 role: data.role,
                 areaId: data.areaId,
                 isActive: data.isActive,
-                // ⚠️ No actualizamos el password aquí por seguridad
             },
         });
     }

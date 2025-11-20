@@ -699,6 +699,7 @@
 {"level":30,"time":1762872668088,"pid":38928,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
 {"level":30,"time":1762872668107,"pid":38928,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
 {"level":30,"time":1762873272903,"pid":38928,"hostname":"LAPTOP-UR26325H","msg":"🧩 Prisma disconnected on SIGINT"}
+<<<<<<< HEAD
 {"level":30,"time":1762984400102,"pid":7764,"hostname":"DESKTOP-RQD41V9","msg":"🚀 Server listening on port 8000 in development mode"}
 {"level":30,"time":1762984400103,"pid":7764,"hostname":"DESKTOP-RQD41V9","msg":"📚 Swagger: http://localhost:8000/api-docs"}
 {"level":50,"time":1762984404211,"pid":7764,"hostname":"DESKTOP-RQD41V9","msg":"❌ Error connecting Prisma to the database","error":"Can't reach database server at `localhost:5433`\n\nPlease make sure your database server is running at `localhost:5433`.","stack":"PrismaClientInitializationError: Can't reach database server at `localhost:5433`\n\nPlease make sure your database server is running at `localhost:5433`.\n    at r (D:\\Universidad\\7Semestre\\JS-TS\\proyectoIntegrador\\HSanRafael-ServiceDesk\\prisma\\generated\\prisma\\runtime\\library.js:116:2770)\n    at async ServerBootstrap.dbConnection (D:\\Universidad\\7Semestre\\JS-TS\\proyectoIntegrador\\HSanRafael-ServiceDesk\\src\\config\\ServerBootstrap.ts:216:13)\n    at async Server.<anonymous> (D:\\Universidad\\7Semestre\\JS-TS\\proyectoIntegrador\\HSanRafael-ServiceDesk\\src\\config\\ServerBootstrap.ts:233:13)"}
@@ -709,3 +710,31 @@
 {"level":30,"time":1762984618856,"pid":14400,"hostname":"DESKTOP-RQD41V9","msg":"📚 Swagger: http://localhost:8000/api-docs"}
 {"level":30,"time":1762984619166,"pid":14400,"hostname":"DESKTOP-RQD41V9","msg":"✅ Prisma connected to the database"}
 {"level":30,"time":1762984635399,"pid":14400,"hostname":"DESKTOP-RQD41V9","msg":"🧩 Prisma disconnected on SIGINT"}
+=======
+{"level":30,"time":1762905052666,"pid":10012,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762905052667,"pid":10012,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":50,"time":1762905056762,"pid":10012,"hostname":"LAPTOP-UR26325H","msg":"❌ Error connecting Prisma to the database","error":"Can't reach database server at `localhost:5433`\n\nPlease make sure your database server is running at `localhost:5433`.","stack":"PrismaClientInitializationError: Can't reach database server at `localhost:5433`\n\nPlease make sure your database server is running at `localhost:5433`.\n    at r (C:\\Universidad Santoto\\Septimo Semestre\\JavaScript\\TS-WORKSHOP\\prisma\\generated\\prisma\\runtime\\library.js:116:2770)\n    at async ServerBootstrap.dbConnection (C:\\Universidad Santoto\\Septimo Semestre\\JavaScript\\TS-WORKSHOP\\src\\config\\ServerBootstrap.ts:216:13)\n    at async Server.<anonymous> (C:\\Universidad Santoto\\Septimo Semestre\\JavaScript\\TS-WORKSHOP\\src\\config\\ServerBootstrap.ts:233:13)"}
+{"level":30,"time":1762905085375,"pid":22924,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1762905085375,"pid":22924,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1762905085407,"pid":22924,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1762905166097,"pid":22924,"hostname":"LAPTOP-UR26325H","msg":"🧩 Prisma disconnected on SIGINT"}
+{"level":30,"time":1763071744046,"pid":39868,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1763071744046,"pid":39868,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1763071744075,"pid":39868,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1763072211435,"pid":39868,"hostname":"LAPTOP-UR26325H","msg":"🧩 Prisma disconnected on SIGINT"}
+{"level":30,"time":1763262391744,"pid":16356,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1763262391744,"pid":16356,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1763262391800,"pid":16356,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1763262615773,"pid":16356,"hostname":"LAPTOP-UR26325H","msg":"🧩 Prisma disconnected on SIGINT"}
+{"level":30,"time":1763311017965,"pid":15660,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1763311017966,"pid":15660,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1763311018019,"pid":15660,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1763311589552,"pid":32156,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1763311589552,"pid":32156,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1763311589577,"pid":32156,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1763311823134,"pid":32156,"hostname":"LAPTOP-UR26325H","msg":"🧩 Prisma disconnected on SIGINT"}
+{"level":30,"time":1763323375236,"pid":32368,"hostname":"LAPTOP-UR26325H","msg":"🚀 Server listening on port 8000 in development mode"}
+{"level":30,"time":1763323375236,"pid":32368,"hostname":"LAPTOP-UR26325H","msg":"📚 Swagger: http://localhost:8000/api-docs"}
+{"level":30,"time":1763323375284,"pid":32368,"hostname":"LAPTOP-UR26325H","msg":"✅ Prisma connected to the database"}
+{"level":30,"time":1763323471496,"pid":32368,"hostname":"LAPTOP-UR26325H","msg":"🧩 Prisma disconnected on SIGINT"}
+>>>>>>> main

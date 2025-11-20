@@ -1,8 +1,8 @@
 import { v4 as uuidv4 } from "uuid"
 
 /**
- * Value Object que representa el identificador único de un Workflow.
- * Garantiza inmutabilidad, validación y encapsulamiento del valor primitivo.
+ * Value Object representing the unique identifier of a Workflow.
+ * Ensures immutability, validation, and encapsulation of the primitive value.
  */
 export class WorkflowId {
     private readonly value: string
@@ -15,16 +15,16 @@ export class WorkflowId {
     }
 
     /**
-     * Crea una instancia de WorkflowId desde un UUID existente.
-     * @throws Error si el formato no es válido.
+     * Creates an instance of WorkflowId from an existing UUID.
+     * @throws Error if the format is invalid.
      */
     public static from(id: string): WorkflowId {
         return new WorkflowId(id)
     }
 
     /**
-     * Genera un nuevo identificador único de Workflow.
-     * Usa crypto.randomUUID() si está disponible.
+     * Generates a new unique Workflow identifier.
+     * Uses crypto.randomUUID() if available.
      */
     public static new(): WorkflowId {
         const id = typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -34,7 +34,7 @@ export class WorkflowId {
     }
 
     /**
-     * Verifica si una cadena cumple con el formato UUID v4.
+     * Verifies whether a string complies with the UUID v4 format.
      */
     private static isValid(id: string): boolean {
         const uuidRegex =
@@ -42,22 +42,22 @@ export class WorkflowId {
         return uuidRegex.test(id)
     }
 
-    /** Retorna el valor UUID como string */
+    /** Returns the UUID value as a string */
     public toString(): string {
         return this.value
     }
 
-    /** Retorna el valor UUID en formato JSON seguro */
+    /** Returns the UUID value in secure JSON format */
     public toJSON(): string {
         return this.value
     }
 
-    /** Compara dos WorkflowId por valor */
+    /** Compare two WorkflowIds by value */
     public equals(other: WorkflowId): boolean {
         return this.value === other.value
     }
 
-    /** Compara el valor directamente con un string */
+    /** Compare the value directly with a string */
     public equalsString(id: string): boolean {
         return this.value === id
     }

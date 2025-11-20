@@ -152,3 +152,9 @@ model AuditTrail {
   @@index([entityType])
   @@index([occurredAt])
 }
+
+
+generator erd {
+  provider = "prisma-erd-generator"
+  output   = "./ERD.svg"
+}

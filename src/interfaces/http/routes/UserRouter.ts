@@ -6,11 +6,11 @@ import { CreateUserSchema, UpdateUserSchema, DeactivateUserSchema } from "../../
 import type { AuthMiddleware } from "../middlewares/auth.middleware"
 
 /**
- * Router encargado de manejar las rutas relacionadas con usuarios.
+ * Router responsible for handling user-related routes.
  * 
- * - Aplica validaciones a nivel de infraestructura (no de dominio).
- * - Delegación completa de lógica al controlador.
- * - Compatible con los principios de Clean Architecture.
+ * - Applies validations at the infrastructure level (not the domain level).
+ * - Complete delegation of logic to the controller.
+ * - Compatible with Clean Architecture principles.
  */
 export class UserRouter extends BaseRouter<UserController, BaseMiddleware> {
     constructor(
@@ -23,7 +23,7 @@ export class UserRouter extends BaseRouter<UserController, BaseMiddleware> {
     }
 
     /**
-     * Define las rutas públicas para la gestión de usuarios.
+     * Defines public routes for user management.
      */
     protected routes(): void {
         const { authenticate, authorize } = this.authMiddleware
@@ -218,8 +218,8 @@ export class UserRouter extends BaseRouter<UserController, BaseMiddleware> {
     }
 
     /**
-     * Envuelve controladores en un try/catch centralizado
-     * para evitar caídas del servidor ante errores inesperados.
+     * Wraps controllers in a centralized try/catch block
+     * to prevent server crashes in the event of unexpected errors.
      */
     private safeHandler(
         handler: (req: Request, res: Response) => Promise<void> | void,

@@ -3,28 +3,28 @@ import type { ConfigureWorkflowUseCase } from "../../application/use-cases/Confi
 import { WorkflowMapper } from "../../infrastructure/repositories/PrismaWorkflowRepository"
 
 /**
- * Controlador HTTP responsable de manejar las operaciones
- * relacionadas con la configuración de workflows.
+ * HTTP controller responsible for handling operations
+ * related to workflow configuration.
  *
- * Pertenece a la capa de interfaz (delivery) y actúa como
- * adaptador entre el mundo HTTP y el dominio.
+ * It belongs to the interface layer (delivery) and acts as an
+ * adapter between the HTTP world and the domain.
  */
 export class WorkflowController {
     constructor(private readonly configureWorkflowUseCase: ConfigureWorkflowUseCase) { }
 
     /**
-     * Configura o actualiza el workflow asociado a un área.
+     * Configures or updates the workflow associated with an area.
      * 
      * Endpoint: **PUT /areas/:id/workflow**
      *
-     * Requiere autenticación (actor extraído del token JWT).
+     * Requires authentication (actor extracted from the JWT token).
      */
     async configureWorkflow(req: Request, res: Response): Promise<void> {
         try {
             const areaId = req.params.id
             const actorId = (req as any)?.user?.userId as string | undefined
 
-            // Validación de autenticación
+            // Authentication validation
             if (!actorId) {
                 res.status(401).json({
                     success: false,
@@ -33,7 +33,7 @@ export class WorkflowController {
                 return
             }
 
-            // Validación de parámetro obligatorio
+            // Mandatory parameter validation
             if (!areaId) {
                 res.status(400).json({
                     success: false,
@@ -42,20 +42,20 @@ export class WorkflowController {
                 return
             }
 
-            // Ejecución del caso de uso
+            // Use case execution
             const workflow = await this.configureWorkflowUseCase.execute(areaId, req.body, actorId)
 
-            // Respuesta exitosa
+            // Successful response
             res.status(200).json({
                 success: true,
                 message: "Workflow configurado exitosamente.",
                 data: WorkflowMapper.toResponse(workflow),
             })
         } catch (error) {
-            // Logging con contexto para depuración
+            // Contextual logging for debugging
             console.error("[WorkflowController] Error al configurar workflow:", error)
 
-            // Respuesta de error controlada
+            // Controlled error response
             res.status(500).json({
                 success: false,
                 error: error instanceof Error ? error.message : "Error interno al configurar el workflow.",

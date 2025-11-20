@@ -4,16 +4,16 @@ import { Workflow } from "../../domain/entities/Workflow";
 import { prismaClient } from "../db/prisma";
 
 /**
- * Mapper responsable de convertir entre:
- *  - Entidad de dominio `Workflow`
- *  - Modelo Prisma (`workflow` table)
- *  - DTO de salida (para respuestas HTTP)
+ * Mapper responsible for converting between:
+ *  - `Workflow` domain entity
+ *  - Prisma model (`workflow` table)
+ *  - Output DTO (for HTTP responses)
  *
- * Su propósito es aislar el dominio de la infraestructura.
+ * Its purpose is to isolate the domain from the infrastructure.
  */
 export class WorkflowMapper {
     /**
-     * Convierte una entidad de dominio `Workflow` a formato Prisma.
+     * Converts a `Workflow` domain entity to Prisma format.
      */
     static toPrisma(workflow: Workflow): {
         id: string;
@@ -34,7 +34,7 @@ export class WorkflowMapper {
     }
 
     /**
-     * Restaura una entidad de dominio `Workflow` desde un registro de base de datos.
+     * Restores a `Workflow` domain entity from a database record.
      */
     static toDomain(record: unknown): Workflow {
         const r = record as Record<string, unknown>;
@@ -50,7 +50,7 @@ export class WorkflowMapper {
     }
 
     /**
-     * Convierte una entidad de dominio `Workflow` a un objeto de respuesta serializable.
+     * Converts a `Workflow` domain entity to a serializable response object.
      */
     static toResponse(workflow: Workflow): {
         id: string;
@@ -72,10 +72,10 @@ export class WorkflowMapper {
 }
 
 /**
- * Implementación del repositorio de `Workflow` usando Prisma ORM.
+ * Implementation of the `Workflow` repository using Prisma ORM.
  *
- * Encapsula el acceso a la base de datos y asegura que
- * el dominio no dependa de detalles de infraestructura.
+ * Encapsulates database access and ensures that
+ * the domain does not depend on infrastructure details.
  */
 export class PrismaWorkflowRepository implements WorkflowRepository {
     async save(workflow: Workflow): Promise<void> {
@@ -125,8 +125,13 @@ export class PrismaWorkflowRepository implements WorkflowRepository {
         try {
             await prismaClient.workflow.delete({ where: { id } });
         } catch (error: any) {
+<<<<<<< HEAD
             if (error.code === "P2025") return; // Registro no encontrado
             throw new Error(`Error eliminando Workflow con id ${id}: ${error.message}`);
+=======
+            if (error.code === "P2025") return 
+            throw new Error(`Error eliminando Workflow con id ${id}: ${error.message}`)
+>>>>>>> main
         }
     }
 }

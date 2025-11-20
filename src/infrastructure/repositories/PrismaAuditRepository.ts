@@ -1,12 +1,20 @@
+<<<<<<< HEAD
 import { prismaClient } from "../db/prisma";
 import type { AuditRepository } from "../../application/ports/AuditRepository";
 import type { RehydrateAuditTrailDto } from "../../application/dtos/audit";
 import { AuditTrail } from "../../domain/entities/AuditTrail";
 import type { InputJsonValue } from "@prisma/client/runtime/library";
+=======
+import { prismaClient } from "../db/prisma"
+import type { AuditRepository } from "../../application/ports/AuditRepository"
+import type { RehydrateAuditTrailDto } from "../../application/dtos/audit"
+import { AuditTrail } from "../../domain/entities/AuditTrail"
+import type { InputJsonValue } from "@prisma/client/runtime/library"
+>>>>>>> main
 
 /**
- * Mapper responsable de convertir entre la entidad de dominio `AuditTrail`
- * y el modelo de persistencia manejado por Prisma.
+ * Mapper responsible for converting between the `AuditTrail` domain entity
+ * and the persistence model handled by Prisma.
  */
 class AuditMapper {
     static toPersistence(audit: AuditTrail): {
@@ -24,9 +32,14 @@ class AuditMapper {
     } {
         const actorIdStr = audit.actorId?.toString();
 
+<<<<<<< HEAD
         // Validar que sea un UUID válido
         const uuidRegex =
             /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+=======
+        // Validate that it is a valid UUID
+        const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
+>>>>>>> main
         if (!actorIdStr || !uuidRegex.test(actorIdStr)) {
             throw new Error(`AuditMapper: actorId inválido o ausente (${actorIdStr})`);
         }
@@ -46,6 +59,7 @@ class AuditMapper {
         };
     }
 
+<<<<<<< HEAD
     static toDomain(record: unknown): AuditTrail {
         // Asegurarnos de mapear el campo `occurredAt` que espera la entidad de dominio.
         // Los registros en la base de datos pueden venir con `occurredAt` o `createdAt`
@@ -67,17 +81,36 @@ class AuditMapper {
         } as RehydrateAuditTrailDto;
 
         return AuditTrail.rehydrate(adaptedRecord);
+=======
+    static toDomain(record: any): AuditTrail {
+        const dto: RehydrateAuditTrailDto = {
+            id: record.id,
+            ticketId: record.ticketId,
+            actorId: record.actorId,
+            action: record.action,
+            entityType: record.entityType,
+            entityId: record.entityId,
+            changes: record.changes,
+            metadata: record.metadata,
+            ipAddress: record.ipAddress,
+            userAgent: record.userAgent,
+            occurredAt: record.occurredAt,
+        }
+
+        return AuditTrail.rehydrate(dto)
+>>>>>>> main
     }
+
 }
 
 /**
- * Implementación del repositorio de auditoría (`AuditRepository`)
- * que usa Prisma ORM como infraestructura de persistencia.
+ * Implementation of the audit repository (`AuditRepository`)
+ * that uses Prisma ORM as its persistence infrastructure.
  */
 export class PrismaAuditRepository implements AuditRepository {
     /**
-     * Persiste un registro de auditoría. Cada evento es inmutable,
-     * por lo tanto se utiliza `create` en lugar de `upsert` o `update`.
+     * Persists an audit log. Each event is immutable,
+     * therefore `create` is used instead of `upsert` or `update`.
      */
     async save(audit: AuditTrail): Promise<void> {
         const data = AuditMapper.toPersistence(audit);
@@ -88,8 +121,8 @@ export class PrismaAuditRepository implements AuditRepository {
     }
 
     /**
-     * Obtiene todos los registros de auditoría asociados a un ticket.
-     * Retorna una lista de entidades de dominio `AuditTrail`.
+     * Gets all audit records associated with a ticket.
+     * Returns a list of `AuditTrail` domain entities.
      */
     async findByTicketId(ticketId: string): Promise<AuditTrail[]> {
         const rows = await prismaClient.auditTrail.findMany({
@@ -100,7 +133,7 @@ export class PrismaAuditRepository implements AuditRepository {
     }
 
     /**
-     * Obtiene todos los registros de auditoría asociados a un actor (usuario).
+     * Gets all audit records associated with an actor (user).
      */
     async findByActorId(actorId: string): Promise<AuditTrail[]> {
         const rows = await prismaClient.auditTrail.findMany({
@@ -111,9 +144,9 @@ export class PrismaAuditRepository implements AuditRepository {
     }
 
     /**
-     * Obtiene registros de auditoría relacionados con una entidad específica.
-     * @param entityType Tipo de entidad (por ejemplo: "Ticket", "User", etc.)
-     * @param entityId Identificador único de la entidad.
+     * Gets audit records related to a specific entity.
+     * @param entityType Entity type (e.g., “Ticket,” “User,” etc.)
+     * @param entityId Unique identifier of the entity.
      */
     async findByEntity(entityType: string, entityId: string): Promise<AuditTrail[]> {
         const rows = await prismaClient.auditTrail.findMany({

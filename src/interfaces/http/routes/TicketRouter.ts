@@ -11,12 +11,12 @@ import {
 } from "../../../application/dtos/ticket"
 
 /**
- * Router HTTP encargado de definir las rutas relacionadas con la gestión de tickets.
+ * HTTP router responsible for defining routes related to ticket management.
  * 
- * Sigue los principios de Clean Architecture:
- * - No contiene lógica de negocio.
- * - Delegación completa a controladores de aplicación.
- * - Aplica validaciones, autenticación y autorización a nivel de capa de infraestructura.
+ * Follows the principles of Clean Architecture:
+ * - Does not contain business logic.
+ * - Complete delegation to application controllers.
+ * - Applies validation, authentication, and authorization at the infrastructure layer.
  */
 export class TicketsRouter extends BaseRouter<TicketController, BaseMiddleware> {
     constructor(
@@ -29,8 +29,8 @@ export class TicketsRouter extends BaseRouter<TicketController, BaseMiddleware> 
     }
 
     /**
-     * Define las rutas expuestas por el recurso "tickets".
-     * Incluye validación, autenticación y control de roles.
+     * Defines the routes exposed by the “tickets” resource.
+     * Includes validation, authentication, and role control.
      */
     protected routes(): void {
         const { authenticate, authorize } = this.authMiddleware
@@ -404,8 +404,8 @@ export class TicketsRouter extends BaseRouter<TicketController, BaseMiddleware> 
     }
 
     /**
-     * Envuelve las rutas para manejar errores inesperados sin romper el servidor.
-     * Mantiene un formato de respuesta consistente ante fallos.
+     * Wraps routes to handle unexpected errors without breaking the server.
+     * Maintains a consistent response format in the event of failures.
      */
     private safeHandler(
         handler: (req: Request, res: Response) => Promise<void> | void,

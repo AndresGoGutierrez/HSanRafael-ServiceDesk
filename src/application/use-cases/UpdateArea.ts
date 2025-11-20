@@ -4,8 +4,8 @@ import { UpdateAreaSchema, type UpdateAreaInput } from "../dtos/area"
 import type { Area } from "../../domain/entities/Area"
 
 /**
- * Caso de uso: actualizar los datos de un área existente.
- * Aplica validaciones, actualiza la entidad y publica eventos de dominio.
+ * Use case: update data for an existing area.
+ * Apply validations, update the entity, and publish domain events.
  */
 export class UpdateArea {
   constructor(
@@ -14,34 +14,34 @@ export class UpdateArea {
   ) {}
 
   /**
-   * Ejecuta la actualización de un área.
-   * @param id Identificador de la entidad a actualizar.
-   * @param input Datos validados del área.
-   * @returns La entidad `Area` actualizada.
+   * Executes the update of an area.
+   * @param id Identifier of the entity to be updated.
+   * @param input Validated data for the area.
+   * @returns The updated `Area` entity.
    */
   async execute(id: string, input: UpdateAreaInput): Promise<Area> {
-    // Validar input con Zod
+    // Validate input with Zod
     const validated = UpdateAreaSchema.parse(input)
 
-    // Buscar la entidad existente
+    // Search for existing entity
     const area = await this.repo.findById(id.trim())
     if (!area) {
       throw new Error(`No se encontró un área con el ID "${id}".`)
     }
 
-    // Validar duplicados por nombre (opcional pero recomendado)
+    // Validar duplicados por nombre
     const existingByName = await this.repo.findByName(validated.name.trim())
     if (existingByName && existingByName.id.toString() !== area.id.toString()) {
       throw new Error(`Ya existe un área con el nombre "${validated.name}".`)
     }
 
-    // ✅ Actualizar entidad del dominio
+    // Update domain entity
     area.update(validated.name, validated.description)
 
-    // ✅ Guardar en repositorio
+    // Save to repository
     await this.repo.save(area)
 
-    // ✅ Publicar eventos de dominio si existen
+    // Publish domain events if they exist
     const events = area.pullDomainEvents()
     if (events.length > 0) {
       await this.bus.publishAll(events)

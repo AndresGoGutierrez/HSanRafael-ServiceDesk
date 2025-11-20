@@ -3,16 +3,16 @@ import type { Clock } from "../ports/Clock";
 import { AuditTrail, type CreateAuditTrailInput } from "../../domain/entities/AuditTrail";
 
 /**
- * Caso de uso: Registrar una acción en el sistema de auditoría.
+ * Use case: Log an action in the audit system.
  *
- * Este caso de uso encapsula la lógica de creación y persistencia
- * de un registro de auditoría (`AuditTrail`) cuando ocurre un evento relevante
- * en el dominio (por ejemplo, cambio de estado, actualización o eliminación).
+ * This use case encapsulates the logic for creating and persisting
+ * an audit record (`AuditTrail`) when a relevant event occurs
+ * in the domain (e.g., status change, update, or deletion).
  *
- * Principios de Clean Architecture:
- * - No depende de detalles de infraestructura.
- * - Trabaja únicamente con entidades de dominio y puertos (repositorios).
- * - Se mantiene agnóstico al framework o tecnología de persistencia.
+ * Clean Architecture principles:
+ * - Does not depend on infrastructure details.
+ * - Works only with domain entities and ports (repositories).
+ * - Remains agnostic to the persistence framework or technology.
  */
 export class RecordAudit {
     constructor(
@@ -21,16 +21,16 @@ export class RecordAudit {
     ) { }
 
     /**
-     * Ejecuta el registro de una nueva auditoría.
+     * Executes the registration of a new audit.
      *
-     * @param input Datos necesarios para crear el registro de auditoría.
-     * @throws Error si la creación del registro falla por validación o persistencia.
+     * @param input Data required to create the audit record.
+     * @throws Error if the creation of the record fails due to validation or persistence.
      */
     async execute(input: CreateAuditTrailInput): Promise<void> {
-        // Validar y crear la entidad de dominio
+        // Validate and create the domain entity
         const auditTrail = AuditTrail.create(input, this.clock.now());
 
-        // Persistir el registro en el repositorio
+        // Persist the record in the repository
         await this.auditRepository.save(auditTrail);
     }
 }

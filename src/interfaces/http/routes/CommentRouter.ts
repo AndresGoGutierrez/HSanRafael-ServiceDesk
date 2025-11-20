@@ -6,9 +6,9 @@ import { CreateCommentSchema } from "../../../application/dtos/comment"
 import type { AuthMiddleware } from "../middlewares/auth.middleware"
 
 /**
- * Router HTTP encargado de manejar las rutas relacionadas con los comentarios de tickets.
+ * HTTP router responsible for handling routes related to ticket comments.
  *
- * Forma parte de la capa de infraestructura, actuando como adaptador de transporte.
+ * It is part of the infrastructure layer, acting as a transport adapter.
  */
 export class CommentRouter extends BaseRouter<CommentController, BaseMiddleware> {
     constructor(
@@ -21,8 +21,8 @@ export class CommentRouter extends BaseRouter<CommentController, BaseMiddleware>
     }
 
     /**
-     * Define las rutas del recurso Comment.
-     * Aplica validación y delega la lógica de negocio al controlador.
+     * Defines the Comment resource routes.
+     * Applies validation and delegates business logic to the controller.
      */
     protected routes(): void {
         const { authenticate, authorize } = this.authMiddleware
@@ -132,7 +132,7 @@ export class CommentRouter extends BaseRouter<CommentController, BaseMiddleware>
     }
 
     /**
-     * Envuelve los controladores en un manejador seguro para capturar errores no controlados.
+     * Wraps controllers in a safe handler to catch unhandled errors.
      */
     private safeHandler(
         handler: (req: Request, res: Response) => Promise<void> | void,

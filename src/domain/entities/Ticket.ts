@@ -6,8 +6,8 @@ import type { CreateTicketInput, RehydrateTicketDto } from "../../application/dt
 import type { TicketCreated } from "../events/TicketCreated"
 
 /**
- * Entidad del dominio: Ticket
- * Representa un requerimiento o incidente dentro del sistema de soporte.
+ * Domain entity: Ticket
+ * Represents a request or incident within the support system.
  */
 export class Ticket extends BaseEntity<TicketId> {
     public constructor(
@@ -31,11 +31,12 @@ export class Ticket extends BaseEntity<TicketId> {
     }
 
     /**
-     * Fábrica para crear un nuevo ticket desde una solicitud de usuario.
-     * Calcula el SLA objetivo y registra el evento de creación.
+     * Factory for creating a new ticket from a user request.
+     * Calculates the target SLA and logs the creation event.
      */
     public static create(dto: CreateTicketInput, slaMinutes: number | null, now: Date): Ticket {
         const slaTargetAt = slaMinutes ? new Date(now.getTime() + slaMinutes * 60000) : null
+        const createdAt = dto.createdAt ? new Date(dto.createdAt) : now;
 
         const ticket = new Ticket(
             TicketId.new(),
@@ -43,7 +44,7 @@ export class Ticket extends BaseEntity<TicketId> {
             dto.description.trim(),
             "OPEN",
             dto.priority,
-            UserId.from(dto.userId),
+            UserId.from(dto.userId),    
             null,
             dto.areaId,
             slaTargetAt,
@@ -52,7 +53,7 @@ export class Ticket extends BaseEntity<TicketId> {
             null,
             null,
             null,
-            dto.createdAt ?? now,
+            createdAt,
         )
 
         const event: TicketCreated = {
@@ -71,7 +72,7 @@ export class Ticket extends BaseEntity<TicketId> {
     }
 
     /**
-     * Restaura un ticket desde una fuente persistente (por ejemplo, la base de datos).
+     * Restores a ticket from a persistent source (e.g., the database).
      */
     public static rehydrate(row: RehydrateTicketDto): Ticket {
         return new Ticket(
@@ -94,7 +95,7 @@ export class Ticket extends BaseEntity<TicketId> {
     }
 
     /**
-     * Asigna un técnico o agente al ticket.
+     * Assigns a technician or agent to the ticket.
      */
     public assign(assigneeId: UserId, now: Date): void {
         this.assigneeId = assigneeId
@@ -110,7 +111,7 @@ export class Ticket extends BaseEntity<TicketId> {
     }
 
     /**
-     * Cambia el estado del ticket y registra el evento correspondiente.
+     * Changes the ticket status and logs the corresponding event.
      */
     public transition(newStatus: TicketStatus, now: Date): void {
         const oldStatus = this.status
@@ -127,7 +128,7 @@ export class Ticket extends BaseEntity<TicketId> {
     }
 
     /**
-     * Marca la primera respuesta al ticket (solo la primera vez).
+     * Marks the first response to the ticket (only the first time).
      */
     public markFirstResponse(now: Date): void {
         if (!this.firstResponseAt) {
@@ -136,7 +137,7 @@ export class Ticket extends BaseEntity<TicketId> {
     }
 
     /**
-     * Verifica si el SLA fue incumplido y registra el evento si aplica.
+     * Checks if the SLA was breached and logs the event if applicable.
      */
     public checkSLABreach(now: Date): boolean {
         if (this.slaTargetAt && now > this.slaTargetAt && !this.slaBreached) {

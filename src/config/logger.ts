@@ -8,40 +8,40 @@ export function createLogger(env: EnvVariables): pino.Logger {
             env.NODE_ENV === "production"
                 ? undefined
                 : {
-                      targets: [
-                          {
-                              level: "info",
-                              target: "pino/file",
-                              options: {
-                                  destination: "./logs/actions.log",
-                                  mkdir: true,
-                              },
-                          },
-                          {
-                              level: "info",
-                              target: "pino-pretty",
-                              options: {
-                                  colorize: true,
-                                  translaateTime: "SYS:standard",
-                              },
-                          },
-                          {
-                              level: "error",
-                              target: "pino/file",
-                              options: {
-                                  destination: "./logs/errors.log",
-                                  mkdir: true,
-                              },
-                          },
-                          {
-                              level: "error",
-                              target: "pino-pretty",
-                              options: {
-                                  colorize: true,
-                                  translateTime: "SYS:standard",
-                              },
-                          },
-                      ],
-                  },
+                    targets: [
+                        {
+                            level: "info",
+                            target: "pino/file",
+                            options: {
+                                destination: "./logs/actions.log",
+                                mkdir: true,
+                            },
+                        },
+                        {
+                            level: "info",
+                            target: "pino-pretty",
+                            options: {
+                                colorize: true,
+                                translaateTime: "SYS:standard",
+                            },
+                        },
+                        {
+                            level: "error",
+                            target: "pino/file",
+                            options: {
+                                destination: "./logs/errors.log",
+                                mkdir: true,
+                            },
+                        },
+                        {
+                            level: "error",
+                            target: "pino-pretty",
+                            options: {
+                                colorize: true,
+                                translateTime: "SYS:standard",
+                            },
+                        },
+                    ],
+                },
     });
 }

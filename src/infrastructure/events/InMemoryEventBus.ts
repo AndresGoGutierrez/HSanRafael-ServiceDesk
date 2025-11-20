@@ -2,21 +2,21 @@ import type { EventBus } from "../../application/ports/EventBus"
 import type { DomainEvent } from "../../domain/events/DomainEvent"
 
 /**
- * Implementación en memoria del EventBus.
+ * In-memory implementation of EventBus.
  * 
- * - Se utiliza para pruebas, entornos locales o sistemas pequeños.
- * - No persiste eventos ni garantiza entrega una vez el proceso termina.
- * - Sigue el contrato definido en la capa de aplicación.
+ * - Used for testing, local environments, or small systems.
+ * - Does not persist events or guarantee delivery once the process ends.
+ * - Follows the contract defined in the application layer.
  */
 export class InMemoryEventBus implements EventBus {
     /** 
-     * Mapa que asocia el nombre del tipo de evento con los manejadores suscritos.
+     * Map that associates the name of the event type with the subscribed handlers.
      */
     private readonly handlers: Map<string, Array<(event: DomainEvent) => Promise<void>>> = new Map()
 
     /**
-     * Publica un único evento al bus, ejecutando todos los manejadores suscritos a su tipo.
-     * Si un manejador falla, se captura el error para evitar interrumpir la propagación.
+     * Publishes a single event to the bus, executing all handlers subscribed to its type.
+     * If a handler fails, the error is caught to avoid interrupting propagation.
      */
     async publish(event: DomainEvent): Promise<void> {
         const handlers = this.handlers.get(event.type) ?? []
@@ -33,7 +33,7 @@ export class InMemoryEventBus implements EventBus {
     }
 
     /**
-     * Publica múltiples eventos en paralelo.
+     * Publishes multiple events in parallel.
      */
     async publishAll(events: DomainEvent[]): Promise<void> {
         if (events.length === 0) return
@@ -41,10 +41,10 @@ export class InMemoryEventBus implements EventBus {
     }
 
     /**
-     * Suscribe un manejador a un tipo específico de evento.
+     * Subscribes a handler to a specific type of event.
      * 
-     * @param eventType - Tipo de evento (ej. "ticket.created")
-     * @param handler - Función asíncrona que procesará el evento
+     * @param eventType - Event type (e.g., “ticket.created”)
+     * @param handler - Asynchronous function that will process the event
      */
     subscribe(eventType: string, handler: (event: DomainEvent) => Promise<void>): void {
         const handlers = this.handlers.get(eventType) ?? []
@@ -53,7 +53,7 @@ export class InMemoryEventBus implements EventBus {
     }
 
     /**
-     * Limpia todas las suscripciones (útil para pruebas unitarias).
+     * Clears all subscriptions (useful for unit testing).
      */
     clear(): void {
         this.handlers.clear()

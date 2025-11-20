@@ -2,26 +2,26 @@ import type { PasswordHasher } from "../../application/ports/PasswordHasher"
 import bcrypt from "bcrypt"
 
 /**
- * Implementación de PasswordHasher usando bcrypt.
+ * Implementation of PasswordHasher using bcrypt.
  *
- * Responsable de:
- *  - Generar hashes seguros de contraseñas.
- *  - Comparar contraseñas con sus hashes.
+ * Responsible for:
+ *  - Generating secure password hashes.
+ *  - Comparing passwords with their hashes.
  *
- * Esta clase pertenece a la capa de infraestructura.
+ * This class belongs to the infrastructure layer.
  */
 export class BcryptPasswordHasher implements PasswordHasher {
     private readonly saltRounds: number
 
     constructor(saltRounds = 10) {
-        // Permitir configuración externa (por .env, test, etc.)
+        // Allow external configuration (via .env, test, etc.)
         this.saltRounds = saltRounds
     }
 
     /**
-     * Genera un hash seguro para la contraseña dada.
-     * @param password Contraseña en texto plano.
-     * @returns Hash generado.
+     * Generates a secure hash for the given password.
+     * @param password Password in plain text.
+     * @returns Generated hash.
      */
     async hash(password: string): Promise<string> {
         if (!password || password.trim().length === 0) {
@@ -36,10 +36,10 @@ export class BcryptPasswordHasher implements PasswordHasher {
     }
 
     /**
-     * Compara una contraseña en texto plano con su hash.
-     * @param password Contraseña en texto plano.
-     * @param hash Hash previamente generado.
-     * @returns Verdadero si coinciden, falso en caso contrario.
+     * Compares a plaintext password with its hash.
+     * @param password Plaintext password.
+     * @param hash Previously generated hash.
+     * @returns True if they match, false otherwise.
      */
     async compare(password: string, hash: string): Promise<boolean> {
         if (!password || !hash) return false

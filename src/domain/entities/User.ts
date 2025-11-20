@@ -3,12 +3,12 @@ import { Email } from "../value-objects/Email"
 import { BaseEntity } from "./BaseEntity"
 
 /**
- * Roles permitidos dentro del sistema.
+ * Permitted roles within the system.
  */
 export type UserRole = "REQUESTER" | "AGENT" | "TECH" | "ADMIN"
 
 /**
- * Datos requeridos para crear un nuevo usuario.
+ * Data required to create a new user.
  */
 export interface CreateUserInput {
     name: string
@@ -19,7 +19,7 @@ export interface CreateUserInput {
 }
 
 /**
- * DTO usado para reconstruir un usuario desde una fuente persistente (por ejemplo, la base de datos).
+ * DTO used to reconstruct a user from a persistent source (e.g., the database).
  */
 export interface RehydrateUserDto {
     id: string
@@ -33,8 +33,8 @@ export interface RehydrateUserDto {
 }
 
 /**
- * Entidad del dominio: User
- * Representa un usuario del sistema con su rol, área y estado activo.
+ * Domain entity: User
+ * Represents a system user with their role, area, and active status.
  */
 export class User extends BaseEntity<UserId> {
     private constructor(
@@ -50,7 +50,7 @@ export class User extends BaseEntity<UserId> {
         super(id, createdAt)
     }
 
-    // ==== Getters públicos (inmutables fuera del dominio) ====
+    // ==== Public getters (immutable outside the domain) ====
 
     get name(): string {
         return this._name
@@ -76,11 +76,11 @@ export class User extends BaseEntity<UserId> {
         return this._isActive
     }
 
-    // ==== Fábricas estáticas ====
+    // ==== Static factories ====
 
     /**
-     * Crea un nuevo usuario dentro del dominio.
-     * Se asume que el password ya fue hasheado en la capa de aplicación.
+     * Creates a new user within the domain.
+     * It is assumed that the password has already been hashed in the application layer.
      */
     public static create(dto: CreateUserInput, hashedPassword: string, now: Date): User {
         const trimmedName = dto.name.trim()
@@ -111,7 +111,7 @@ export class User extends BaseEntity<UserId> {
     }
 
     /**
-     * Restaura un usuario desde un registro persistente (por ejemplo, la base de datos).
+     * Restores a user from persistent storage (e.g., the database).
      */
     public static rehydrate(row: RehydrateUserDto): User {
         return new User(
@@ -126,11 +126,11 @@ export class User extends BaseEntity<UserId> {
         )
     }
 
-    // ==== Comportamientos del dominio ====
+    // ==== Domain behaviors ====
 
     /**
-     * Desactiva al usuario en el dominio.
-     * No elimina su registro, solo cambia su estado.
+     * Deactivates the user in the domain.
+     * Does not delete their record, only changes their status.
      */
     public deactivate(now: Date): void {
         if (!this._isActive) return
@@ -144,8 +144,8 @@ export class User extends BaseEntity<UserId> {
     }
 
     /**
-     * Actualiza el perfil del usuario dentro del dominio.
-     * No modifica la contraseña ni el correo.
+     * Updates the user profile within the domain.
+     * Does not change the password or email address.
      */
     public updateProfile(
         name?: string,
@@ -158,7 +158,7 @@ export class User extends BaseEntity<UserId> {
         const hasAreaChange = areaId !== undefined && areaId !== this._areaId
 
         if (!hasNameChange && !hasRoleChange && !hasAreaChange) {
-            return // No hay cambios
+            return 
         }
 
         if (name !== undefined) this._name = name.trim()

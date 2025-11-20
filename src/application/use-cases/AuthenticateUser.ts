@@ -5,9 +5,9 @@ import type { LoginInput, LoginResponse } from "../dtos/auth";
 import { Email } from "../../domain/value-objects/Email";
 
 /**
- * Caso de uso: Autenticación de usuario.
- *
- * Valida las credenciales de un usuario y genera un token JWT.
+ * Use case: User authentication.
+ * 
+ * Validates a user's credentials and generates a JWT token.
  */
 export class AuthenticateUser {
     constructor(
@@ -17,37 +17,37 @@ export class AuthenticateUser {
     ) {}
 
     /**
-     * Ejecuta el flujo de autenticación.
+     * Executes the authentication flow.
      */
     async execute(dto: LoginInput): Promise<LoginResponse> {
-        // 1️⃣ Validar email con value object (si existe en tu dominio)
+        // Validate email with value object (if it exists in your domain)
         const email = Email.from(dto.email);
 
-        // 2️⃣ Buscar el usuario en la base de datos
+        //Search for the user in the database
         const user = await this.userRepository.findByEmail(email.toString());
         if (!user) {
             throw new Error("Invalid credentials");
         }
 
-        // 3️⃣ Verificar estado del usuario
+        // Check user status
         if (!user.isActive) {
             throw new Error("User account is deactivated");
         }
 
-        // 4️⃣ Validar contraseña
+        //  Validate password
         const isPasswordValid = await this.passwordHasher.compare(dto.password, user.password);
         if (!isPasswordValid) {
             throw new Error("Invalid credentials");
         }
 
-        // 5️⃣ Generar token
+        //  Generate token
         const token = this.tokenService.sign({
             userId: user.id.toString(),
             email: user.email.toString(),
             role: user.role,
         });
 
-        // 6️⃣ Retornar respuesta de autenticación
+        // Return authentication response
         return {
             token,
             user: {

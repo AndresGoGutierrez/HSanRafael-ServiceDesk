@@ -2,25 +2,25 @@ import type { AuditRepository } from "../ports/AuditRepository";
 import type { AuditTrail } from "../../domain/entities/AuditTrail";
 
 /**
- * Caso de uso: Obtener el historial (audit trail) de un ticket.
+ * Use case: Obtain the audit trail for a ticket.
  *
- * - Valida el identificador del ticket.
- * - Recupera los eventos auditados desde el repositorio.
- * - Mantiene la independencia del dominio (sin dependencias de infraestructura).
+ * - Validates the ticket identifier.
+ * - Retrieves audited events from the repository.
+ * - Maintains domain independence (no infrastructure dependencies).
  */
 export class GetTicketAuditTrail {
     constructor(private readonly auditRepo: AuditRepository) { }
 
     async execute(ticketId: string): Promise<AuditTrail[]> {
-        // Validar entrada mínima
+        // Validate minimum input
         if (!ticketId || typeof ticketId !== "string") {
             throw new Error("El ID del ticket proporcionado no es válido.");
         }
 
-        //  Obtener los registros del repositorio
+        //  Get the records from the repository
         const auditTrail = await this.auditRepo.findByTicketId(ticketId);
 
-        // Si no se encuentra nada, devuelve un array vacío (no error)
+        // If nothing is found, return an empty array (no error)
         return auditTrail ?? [];
     }
 }

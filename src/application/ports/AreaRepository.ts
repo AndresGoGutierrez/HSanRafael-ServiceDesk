@@ -1,41 +1,41 @@
 import type { Area } from "../../domain/entities/Area";
 
 /**
- * Contrato del repositorio de áreas.
- * Define las operaciones de persistencia que deben implementarse
- * por la capa de infraestructura.
+ * Area repository contract.
+ * Defines the persistence operations that must be implemented
+ * by the infrastructure layer.
  */
 export interface AreaRepository {
     /**
-     * Persiste una entidad `Area` (creación o actualización).
-     * @param area Entidad del dominio a guardar.
+     * Persists an `Area` entity (creation or update).
+     * @param area Domain entity to be saved.
      */
     save(area: Area): Promise<void>;
 
     /**
-     * Busca un área por su identificador único.
-     * @param id Identificador UUID del área.
-     * @returns Instancia de `Area` o `null` si no existe.
+     * Searches for an area by its unique identifier.
+     * @param id UUID identifier of the area.
+     * @returns Instance of `Area` or `null` if it does not exist.
      */
     findById(id: string): Promise<Area | null>;
 
     /**
-     * Busca un área por su nombre.
-     * @param name Nombre del área.
-     * @returns Instancia de `Area` o `null` si no existe.
+     * Searches for an area by name.
+     * @param name Name of the area.
+     * @returns Instance of `Area` or `null` if it does not exist.
      */
     findByName(name: string): Promise<Area | null>;
 
     /**
-     * Lista todas las áreas almacenadas.
-     * @returns Arreglo de entidades `Area`.
+     * Lists all stored areas.
+     * @returns Array of `Area` entities.
      */
     list(): Promise<Area[]>;
 
     /**
-     * Elimina un área por su ID.
-     * Aunque no siempre es necesario en DDD, puede implementarse
-     * como eliminación física o lógica según el caso de uso.
+     * Deletes an area by its ID.
+     * Although not always necessary in DDD, it can be implemented
+     * as physical or logical deletion depending on the use case.
      */
     delete?(id: string): Promise<void>;
 }

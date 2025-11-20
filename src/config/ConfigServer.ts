@@ -6,19 +6,19 @@ export abstract class ConfigServer {
     public readonly env: EnvVariables;
 
     constructor() {
-        // Determina el entorno
+        // Determine the environment
         const nodeEnv = this.nodeEnv;
 
-        // Usa .env por defecto en desarrollo
+        // Use .env by default in development
         const envFile =
             nodeEnv && nodeEnv !== "production"
                 ? path.resolve(process.cwd(), ".env")
                 : path.resolve(process.cwd(), `.${nodeEnv}.env`);
 
-        // Carga las variables de entorno
+        // Load environment variables
         dotenv.config({ path: envFile });
 
-        // Carga tipada de variables
+        // Typed variable load
         this.env = loadEnv();
     }
 

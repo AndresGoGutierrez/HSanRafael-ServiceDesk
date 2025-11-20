@@ -9,9 +9,9 @@ import { TicketMapper } from "../mappers/TicketMapper"
 
 
 /**
- * Controlador HTTP para gestionar las áreas del sistema.
- * Actúa como adaptador entre la capa de infraestructura (Express)
- * y la capa de aplicación (casos de uso).
+ * HTTP controller for managing system areas.
+ * Acts as an adapter between the infrastructure layer (Express)
+ * and the application layer (use cases).
  */
 export class AreaController {
   constructor(
@@ -22,7 +22,7 @@ export class AreaController {
     private readonly listTicketsByAreaUseCase?: ListTicketsByAreaUseCase,
   ) { }
 
-  /** Crea una nueva área. (POST /areas) */
+  /** Create a new area. (POST /areas) */
   async create(req: Request, res: Response): Promise<void> {
     await this.handle(res, async () => {
       const area = await this.createArea.execute(req.body)
@@ -34,7 +34,7 @@ export class AreaController {
     })
   }
 
-  /** Actualiza un área existente. (PUT /areas/:id) */
+  /** Updates an existing area. (PUT /areas/:id) */
   async update(req: Request, res: Response): Promise<void> {
     await this.handle(res, async () => {
       const area = await this.updateArea.execute(req.params.id, req.body)
@@ -47,7 +47,7 @@ export class AreaController {
   }
 
 
-  /** Lista todas las áreas. (GET /areas) */
+  /** Lists all areas. (GET /areas) */
   async list(_: Request, res: Response): Promise<void> {
     await this.handle(res, async () => {
       const areas = await this.listAreas.execute()
@@ -60,12 +60,12 @@ export class AreaController {
   }
 
   /**
-   * Desactiva un área. (PATCH /areas/:id/deactivate)
+   * Deactivates an area. (PATCH /areas/:id/deactivate)
    * 
-   * Este endpoint:
-   * - Verifica que el área no tenga tickets activos.
-   * - Desactiva el área desde el dominio.
-   * - Registra la acción en la auditoría.
+   * This endpoint:
+   * - Verifies that the area has no active tickets.
+   * - Deactivates the area from the domain.
+   * - Logs the action in the audit.
    */
   async deactivate(req: Request, res: Response): Promise<void> {
     try {
@@ -97,7 +97,7 @@ export class AreaController {
   }
 
   /**
-   * Lista los tickets asociados a un área específica. (GET /areas/:id/tickets)
+   * Lists tickets associated with a specific area. (GET /areas/:id/tickets)
    */
   async listByArea(req: Request, res: Response): Promise<void> {
     try {
@@ -131,7 +131,7 @@ export class AreaController {
   }
 
 
-  /** Manejo centralizado de errores. */
+  /** Centralized error handling. */
   private async handle(res: Response, action: () => Promise<void>): Promise<void> {
     try {
       await action()
@@ -144,7 +144,7 @@ export class AreaController {
     }
   }
 
-  /** Manejo directo de errores en métodos no basados en handle(). */
+  /** Direct error handling in methods not based on handle(). */
   private handleError(res: Response, error: unknown, message: string): void {
     console.error("[AreaController] Error:", error)
     res.status(400).json({

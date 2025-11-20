@@ -2,10 +2,10 @@ import { Router, type Request, type Response } from "express"
 import type { AuthController } from "../../controllers/AuthController"
 
 /**
- * Router HTTP encargado de exponer los endpoints de autenticación.
+ * HTTP router responsible for exposing authentication endpoints.
  *
- * Actúa como punto de entrada para operaciones relacionadas con login y autenticación JWT.
- * Su responsabilidad es puramente de transporte (infraestructura).
+ * Acts as an entry point for operations related to login and JWT authentication.
+ * Its responsibility is purely transport (infrastructure).
  */
 export class AuthRouter {
     private readonly router: Router
@@ -16,7 +16,7 @@ export class AuthRouter {
     }
 
     /**
-     * Inicializa las rutas de autenticación.
+     * Initializes authentication paths.
      */
     private initializeRoutes(): void {
         /**
@@ -91,15 +91,15 @@ export class AuthRouter {
     }
 
     /**
-     * Devuelve el router configurado para ser montado en la aplicación.
+     * Returns the router configured to be mounted in the application.
      */
     public getRouter(): Router {
         return this.router
     }
 
     /**
-     * Envoltorio seguro para manejar errores de forma centralizada.
-     * Previene caídas por excepciones no controladas.
+     * Secure wrapper for centralized error handling.
+     * Prevents crashes due to unhandled exceptions.
      */
     private safeHandler(
         handler: (req: Request, res: Response) => Promise<void> | void,

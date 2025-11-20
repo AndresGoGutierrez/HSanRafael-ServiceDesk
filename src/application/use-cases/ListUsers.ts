@@ -2,27 +2,27 @@ import type { UserRepository } from "../ports/UserRepository";
 import type { User } from "../../domain/entities/User";
 
 /**
- * Caso de uso: Listar todos los usuarios del sistema.
+ * Use case: List all users in the system.
  *
- * Este caso de uso se encarga de recuperar todas las entidades
- * `User` persistidas, delegando la obtención al repositorio.
+ * This use case is responsible for retrieving all persisted
+ * `User` entities, delegating the retrieval to the repository.
  *
- * Principio de Clean Architecture:
- * - No depende de detalles de infraestructura.
- * - Devuelve solo entidades del dominio.
+ * Clean Architecture principle:
+ * - Does not depend on infrastructure details.
+ * - Returns only domain entities.
  */
 export class ListUsers {
     constructor(private readonly userRepository: UserRepository) { }
 
     /**
-     * Ejecuta el caso de uso de listado de usuarios.
+     * Executes the user listing use case.
      *
-     * @returns Lista de usuarios o un arreglo vacío si no existen.
+     * @returns List of users or an empty array if none exist.
      */
     async execute(): Promise<User[]> {
         const users = await this.userRepository.list();
 
-        // Garantiza retorno consistente (sin null o undefined)
+        // Guarantees consistent return (no null or undefined)
         return users ?? [];
     }
 }

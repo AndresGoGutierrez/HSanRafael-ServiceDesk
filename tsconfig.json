@@ -13,7 +13,6 @@
     "resolveJsonModule": false,
     "strictPropertyInitialization": true
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"],
+  "exclude": ["tests", "node_modules"]
 }

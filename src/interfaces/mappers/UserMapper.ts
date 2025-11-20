@@ -10,7 +10,6 @@ export class UserMapper {
       isActive: user.isActive, 
       status: user.isActive ? "ACTIVE" : "INACTIVE", 
       createdAt: user.createdAt
-      // no se incluye password ni campos internos
     };
   }
 }

@@ -2,13 +2,13 @@ import jwt, { JwtPayload, SignOptions } from "jsonwebtoken"
 import type { TokenService, TokenPayload } from "../../application/ports/TokenService"
 
 /**
- * Implementación de TokenService usando JWT.
+ * Implementation of TokenService using JWT.
  * 
- * Responsabilidades:
- *  - Firmar tokens con una clave secreta.
- *  - Verificar y decodificar tokens JWT.
+ * Responsibilities:
+ *  - Sign tokens with a secret key.
+ *  - Verify and decode JWT tokens.
  * 
- * Esta clase pertenece a la capa de infraestructura.
+ * This class belongs to the infrastructure layer.
  */
 export class JWTTokenService implements TokenService {
     private readonly secret: string
@@ -23,10 +23,10 @@ export class JWTTokenService implements TokenService {
     }
 
     /**
-     * Firma un nuevo token JWT con los datos proporcionados.
-     * @param payload Datos a incluir en el token.
-     * @param expiresIn Tiempo de expiración (por defecto el configurado).
-     * @returns Token firmado como string.
+     * Signs a new JWT token with the provided data.
+     * @param payload Data to include in the token.
+     * @param expiresIn Expiration time (default is the configured time).
+     * @returns Signed token as a string.
      */
     sign(payload: TokenPayload, expiresIn?: string): string {
         try {
@@ -38,10 +38,10 @@ export class JWTTokenService implements TokenService {
     }
 
     /**
-     * Verifica y decodifica un token JWT.
-     * @param token Token a verificar.
-     * @returns Payload decodificado si el token es válido.
-     * @throws Error si el token es inválido o ha expirado.
+     * Verifies and decodes a JWT token.
+     * @param token Token to verify.
+     * @returns Decoded payload if the token is valid.
+     * @throws Error if the token is invalid or has expired.
      */
     verify(token: string): TokenPayload {
         if (!token || token.trim().length === 0) {
@@ -50,7 +50,7 @@ export class JWTTokenService implements TokenService {
 
         try {
             const decoded = jwt.verify(token, this.secret) as JwtPayload
-            // Validar que el payload tenga la forma esperada
+            // Validate that the payload has the expected form
             if (!decoded || typeof decoded !== "object") {
                 throw new Error("JWTTokenService: token decodificado inválido")
             }

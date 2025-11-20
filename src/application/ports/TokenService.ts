@@ -1,35 +1,35 @@
 /**
- * Representa la información mínima que se incluye en un token de autenticación.
- * Este modelo es agnóstico a la tecnología usada para firmar/verificar (JWT, Paseto, etc.).
+ * Represents the minimum information included in an authentication token.
+ * This model is agnostic to the technology used for signing/verifying (JWT, Paseto, etc.).
  */
 export interface TokenPayload {
     userId: string;
     email: string;
     /**
-     * Rol del usuario dentro del sistema.
-     * Idealmente debe alinearse con el tipo de dominio `UserRole`.
+     * User role within the system.
+     * Ideally, it should align with the `UserRole` domain type.
      */
     role: "REQUESTER" | "AGENT" | "TECH" | "ADMIN";
 }
 
 /**
- * Puerto de servicio para la gestión de tokens de autenticación.
- * Define la interfaz de la capa de aplicación, sin depender de frameworks o librerías.
+ * Service port for managing authentication tokens.
+ * Defines the application layer interface, without relying on frameworks or libraries.
  */
 export interface TokenService {
     /**
-     * Firma digitalmente un payload y retorna un token.
-     * @param payload Datos que se incluirán dentro del token.
-     * @param expiresIn Tiempo de expiración (por ejemplo: "1h", "7d").
-     * @returns Token firmado como string.
+     * Digitally signs a payload and returns a token.
+     * @param payload Data to be included in the token.
+     * @param expiresIn Expiration time (e.g., “1h,” “7d”).
+     * @returns Signed token as a string.
      */
     sign(payload: TokenPayload, expiresIn?: string): string;
 
     /**
-     * Verifica y decodifica un token firmado.
-     * @param token Token a verificar.
-     * @returns El payload original si el token es válido.
-     * @throws Error si el token es inválido o ha expirado.
+     * Verifies and decodes a signed token.
+     * @param token Token to verify.
+     * @returns The original payload if the token is valid.
+     * @throws Error if the token is invalid or has expired.
      */
     verify(token: string): TokenPayload;
 }

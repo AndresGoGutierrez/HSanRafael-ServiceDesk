@@ -3,10 +3,10 @@ import type { ConfigureSLAUseCase } from "../../application/use-cases/ConfigureS
 import { SLAMapper } from "../../infrastructure/repositories/PrismaSLARepository"
 
 /**
- * Controlador HTTP responsable de manejar las operaciones relacionadas con los SLA.
+ * HTTP controller responsible for handling operations related to SLAs.
  *
- * Forma parte de la capa de interfaz (delivery) y se comunica exclusivamente
- * con casos de uso del dominio, sin depender de detalles de infraestructura.
+ * It is part of the interface layer (delivery) and communicates exclusively
+ * with domain use cases, without depending on infrastructure details.
  */
 export class SLAController {
     constructor(
@@ -14,18 +14,18 @@ export class SLAController {
     ) { }
 
     /**
-     * Configura o actualiza el SLA asociado a un área.
+     * Configures or updates the SLA associated with an area.
      * 
      * Endpoint: **POST /areas/:id/sla**
      *
-     * Requiere autenticación. El `actorId` se extrae del token del usuario.
+     * Requires authentication. The `actorId` is extracted from the user token.
      */
     async configureSLA(req: Request, res: Response): Promise<void> {
         try {
             const areaId = req.params.id
             const actorId = (req as any)?.user?.userId as string | undefined
 
-            // Validación de autenticación
+            // Authentication validation
             if (!actorId) {
                 res.status(401).json({
                     success: false,
@@ -34,7 +34,7 @@ export class SLAController {
                 return
             }
 
-            // Validación de parámetros requeridos
+            // Validation of required parameters
             if (!areaId) {
                 res.status(400).json({
                     success: false,
@@ -43,17 +43,16 @@ export class SLAController {
                 return
             }
 
-            // Ejecución del caso de uso
+            // Use case execution
             const sla = await this.configureSLAUseCase.execute(areaId, req.body, actorId)
 
-            // ✅ Respuesta exitosa
             res.status(200).json({
                 success: true,
                 message: "SLA configurado exitosamente.",
                 data: SLAMapper.toResponse(sla),
             })
         } catch (error) {
-            // Logging y manejo de errores controlado
+            // Controlled logging and error handling
             console.error("[SLAController] Error al configurar SLA:", error)
 
             res.status(500).json({

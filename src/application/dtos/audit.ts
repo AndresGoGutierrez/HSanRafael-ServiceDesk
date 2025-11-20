@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 /**
- * Schema para crear un registro de auditoría (AuditTrail).
- * Se valida que los campos requeridos sean coherentes y seguros.
+ * Schema for creating an audit trail.
+ * Required fields are validated for consistency and security.
  */
 export const CreateAuditTrailSchema = z.object({
     ticketId: z.string().uuid().optional().nullable(),
@@ -11,7 +11,6 @@ export const CreateAuditTrailSchema = z.object({
     entityType: z.string().trim().min(1, "Entity type cannot be empty"),
     entityId: z.string().trim().min(1, "Entity ID cannot be empty"),
 
-    // ✅ Cambiado: ahora especificamos keyType y valueType
     changes: z
         .record(z.string(), z.any())
         .optional()
@@ -43,7 +42,7 @@ export const CreateAuditTrailSchema = z.object({
 export type CreateAuditTrailInput = z.infer<typeof CreateAuditTrailSchema>;
 
 /**
- * Schema para rehidratar un registro de auditoría desde la base de datos.
+ * Schema for rehydrating an audit log from the database.
  */
 export const RehydrateAuditTrailSchema = z.object({
     id: z.string().uuid(),
@@ -53,7 +52,6 @@ export const RehydrateAuditTrailSchema = z.object({
     entityType: z.string().trim(),
     entityId: z.string().trim(),
 
-    // ✅ Igual ajuste aquí
     changes: z.record(z.string(), z.any()).optional().nullable(),
     metadata: z.record(z.string(), z.any()).optional().nullable(),
 

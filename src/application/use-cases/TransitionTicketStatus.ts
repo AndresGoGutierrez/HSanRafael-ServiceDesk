@@ -5,18 +5,18 @@ import type { TransitionTicketInput } from "../dtos/ticket";
 import { TicketId } from "../../domain/value-objects/TicketId";
 
 /**
- * Caso de uso: Transicionar el estado de un Ticket.
+ * Use case: Transition the status of a ticket.
  *
- * Este caso de uso se encarga de cambiar el estado de un ticket
- * dentro del dominio, asegurando que:
- *  - El ticket exista.
- *  - La transición de estado sea válida (según las reglas del dominio).
- *  - Los eventos de dominio generados sean publicados.
+ * This use case is responsible for changing the status of a ticket
+ * within the domain, ensuring that:
+ *  - The ticket exists.
+ *  - The status transition is valid (according to the domain rules).
+ *  - The generated domain events are published.
  *
- * Principios aplicados:
- * - Clean Architecture: sin dependencias de infraestructura.
- * - DDD: la lógica de transición pertenece a la entidad Ticket.
- * - SRP: este caso de uso solo orquesta, no valida reglas de negocio.
+ * Principles applied:
+ * - Clean Architecture: no infrastructure dependencies.
+ * - DDD: the transition logic belongs to the Ticket entity.
+ * - SRP: this use case only orchestrates, it does not validate business rules.
  */
 export class TransitionTicketStatus {
     constructor(
@@ -26,29 +26,29 @@ export class TransitionTicketStatus {
     ) { }
 
     /**
-     * Ejecuta la transición de estado de un ticket existente.
+     * Executes the status transition of an existing ticket.
      *
-     * @param ticketIdString - Identificador del ticket como string (UUID).
-     * @param input - Datos con el nuevo estado a transicionar.
-     * @throws Error si el ticket no existe o la transición es inválida.
+     * @param ticketIdString - Ticket identifier as a string (UUID).
+     * @param input - Data with the new status to transition to.
+     * @throws Error if the ticket does not exist or the transition is invalid.
      */
     async execute(ticketIdString: string, input: TransitionTicketInput): Promise<void> {
-        // Convertir el string a un Value Object
+        // Convert the string to a Value Object
         const ticketId = TicketId.from(ticketIdString);
 
-        // Buscar el ticket en el repositorio
+        // Search for the ticket in the repository
         const ticket = await this.ticketRepository.findById(ticketId);
         if (!ticket) {
             throw new Error(`Ticket with id ${ticketIdString} not found`);
         }
 
-        // Ejecutar la transición dentro del dominio
+        // Execute the transition within the domain
         ticket.transition(input.status, this.clock.now());
 
-        // Persistir el cambio
+        // Persist with change
         await this.ticketRepository.save(ticket);
 
-        // Publicar eventos de dominio generados
+        // Publish generated domain events
         const domainEvents = ticket.pullDomainEvents();
         await this.eventBus.publishAll(domainEvents);
     }

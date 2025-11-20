@@ -6,7 +6,7 @@ import type { TicketRepository } from "../../application/ports/TicketRepository"
 import { prismaClient } from "../db/prisma";
 
 /**
- * Mapper para convertir entre entidades de dominio y modelos de Prisma.
+ * Mapper to convert between domain entities and Prisma models.
  */
 class TicketMapper {
     static toPrisma(ticket: Ticket): {
@@ -68,7 +68,7 @@ class TicketMapper {
 }
 
 /**
- * Implementación del repositorio de Tickets usando Prisma.
+ * Implementation of the Ticket repository using Prisma.
  */
 export class PrismaTicketRepository implements TicketRepository {
     async save(ticket: Ticket): Promise<void> {
@@ -95,8 +95,32 @@ export class PrismaTicketRepository implements TicketRepository {
         return records.map(TicketMapper.toDomain);
     }
 
+<<<<<<< HEAD
     async findByFilters(filters: { areaId?: string; from?: Date; to?: Date }): Promise<Ticket[]> {
         const where: any = {};
+=======
+    // Convert raw records into domain entities
+    return records.map((row) =>
+      Ticket.rehydrate({
+        id: row.id,
+        title: row.title,
+        description: row.description ?? null,
+        status: row.status as RehydrateTicketDto["status"],
+        priority: row.priority as RehydrateTicketDto["priority"],
+        userId: row.requesterId,
+        assigneeId: row.assigneeId ?? null,
+        areaId: row.areaId,
+        slaTargetAt: row.slaTargetAt ?? null,
+        slaBreached: row.slaBreached ?? false,
+        firstResponseAt: row.firstResponseAt ?? null,
+        resolvedAt: row.resolvedAt ?? null,
+        closedAt: row.closedAt ?? null,
+        resolutionSummary: row.resolutionSummary ?? null,
+        createdAt: row.createdAt
+      })
+    )
+  }
+>>>>>>> main
 
         if (filters.areaId) {
             where.areaId = filters.areaId;

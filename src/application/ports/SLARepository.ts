@@ -1,43 +1,43 @@
 import type { SLA } from "../../domain/entities/SLA";
 
 /**
- * Contrato del repositorio de SLA.
- * Define las operaciones de persistencia para la entidad SLA.
+ * Vertrag des SLA-Repositorys.
+ * Definiert die Persistenzoperationen für die SLA-Entität.
  *
- * 👉 Este repositorio actúa como puerto (interfaz) dentro de la arquitectura limpia,
- * separando la lógica de dominio de los detalles de infraestructura.
+ * Dieses Repository fungiert als Port (Schnittstelle) innerhalb der sauberen Architektur und
+ * trennt die Domänenlogik von den Infrastrukturdetails.
  */
 export interface SLARepository {
     /**
-     * Persiste una entidad `SLA` (creación o actualización).
-     * Si el SLA ya existe, se actualiza; de lo contrario, se crea uno nuevo.
+     * Persists an `SLA` entity (creation or update).
+     * If the SLA already exists, it is updated; otherwise, a new one is created.
      */
     save(sla: SLA): Promise<void>;
 
     /**
-     * Busca un SLA por su identificador único.
-     * @param id Identificador UUID del SLA.
-     * @returns Instancia de `SLA` o `null` si no existe.
+     * Searches for an SLA by its unique identifier.
+     * @param id UUID identifier of the SLA.
+     * @returns Instance of `SLA` or `null` if it does not exist.
      */
     findById(id: string): Promise<SLA | null>;
 
     /**
-     * Obtiene el SLA asociado a un área específica.
-     * @param areaId Identificador UUID del área.
-     * @returns Instancia de `SLA` o `null` si no existe.
+     * Gets the SLA associated with a specific area.
+     * @param areaId UUID identifier of the area.
+     * @returns Instance of `SLA` or `null` if it does not exist.
      */
     findByAreaId(areaId: string): Promise<SLA | null>;
 
     /**
-     * Lista todos los SLAs almacenados en el sistema.
-     * Ideal para administración o auditoría.
+     * Lists all SLAs stored in the system.
+     * Ideal for administration or auditing.
      */
     listAll(): Promise<SLA[]>;
 
     /**
-     * Elimina un SLA por su identificador único.
-     * Si no existe, la operación debe ser idempotente (no lanzar error).
-     * @param id Identificador UUID del SLA.
+     * Deletes an SLA by its unique identifier.
+     * If it does not exist, the operation must be idempotent (do not throw an error).
+     * @param id UUID identifier of the SLA.
      */
     deleteById(id: string): Promise<void>;
 }

@@ -3,33 +3,33 @@ import type { CommentRepository } from "../ports/CommentRepository";
 import type { Comment } from "../../domain/entities/Comment";
 
 /**
- * Caso de uso: Listar todos los comentarios asociados a un ticket.
+ * Use case: List all comments associated with a ticket.
  *
- * Este caso de uso consulta el repositorio de comentarios para recuperar
- * todos los comentarios vinculados a un ticket específico.
+ * This use case queries the comment repository to retrieve
+ * all comments linked to a specific ticket.
  */
 export class ListCommentsByTicket {
     constructor(private readonly repo: CommentRepository) { }
 
     /**
-     * Ejecuta el caso de uso de listado de comentarios por ticket.
+     * Executes the use case of listing comments by ticket.
      * 
-     * @param ticketId - Identificador del ticket (UUID en string)
-     * @returns Lista de comentarios asociados al ticket.
-     * @throws Error si el ticketId es inválido o no existen comentarios.
+     * @param ticketId - Ticket identifier (UUID in string)
+     * @returns List of comments associated with the ticket.
+     * @throws Error if the ticketId is invalid or there are no comments.
      */
     async execute(ticketId: string): Promise<Comment[]> {
         if (!ticketId?.trim()) {
             throw new Error("El ID del ticket no puede estar vacío.");
         }
 
-        // Validación mediante value object del dominio
+        // Validation using domain value object
         const id = TicketId.from(ticketId);
 
-        // Convertimos a string antes de pasar al repositorio (infraestructura)
+        // We convert to string before passing to the repository (infrastructure)
         const comments = await this.repo.findByTicketId(id.toString());
 
-        // Garantizamos retorno consistente
+        // We guarantee consistent returns
         return comments ?? [];
     }
 }
