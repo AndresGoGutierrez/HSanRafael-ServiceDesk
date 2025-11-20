@@ -6,17 +6,10 @@ import type { EventBus } from "../ports/EventBus";
 import { AssignTicketSchema, type AssignTicketInput } from "../dtos/ticket";
 
 /**
-<<<<<<< HEAD
- * Caso de uso: Asignar un ticket a un usuario.
- *
- * Valida los datos, recupera el ticket, aplica la lógica de negocio
- * y publica los eventos resultantes.
-=======
  * Use case: Assign a ticket to a user.
  * 
  * Validates the data, retrieves the ticket, applies the business logic, 
  * and publishes the resulting events.
->>>>>>> main
  */
 export class AssignTicket {
     constructor(

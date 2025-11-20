@@ -44,19 +44,10 @@ export type UpdateSLADto = z.infer<typeof UpdateSLASchema>;
  * Response DTO (for presentation layer / API)
  */
 export interface SLAResponseDto {
-<<<<<<< HEAD
-    id: string;
-    areaId: string;
-    responseTimeMinutes: number;
-    resolutionTimeMinutes: number;
-    createdAt: string; // mejor que Date para transporte HTTP
-    updatedAt: string;
-=======
     id: string
     areaId: string
     responseTimeMinutes: number
     resolutionTimeMinutes: number
     createdAt: string
     updatedAt: string
->>>>>>> main
 }

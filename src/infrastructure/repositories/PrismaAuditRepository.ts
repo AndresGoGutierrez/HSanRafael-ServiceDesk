@@ -1,16 +1,8 @@
-<<<<<<< HEAD
-import { prismaClient } from "../db/prisma";
-import type { AuditRepository } from "../../application/ports/AuditRepository";
-import type { RehydrateAuditTrailDto } from "../../application/dtos/audit";
-import { AuditTrail } from "../../domain/entities/AuditTrail";
-import type { InputJsonValue } from "@prisma/client/runtime/library";
-=======
 import { prismaClient } from "../db/prisma"
 import type { AuditRepository } from "../../application/ports/AuditRepository"
 import type { RehydrateAuditTrailDto } from "../../application/dtos/audit"
 import { AuditTrail } from "../../domain/entities/AuditTrail"
 import type { InputJsonValue } from "@prisma/client/runtime/library"
->>>>>>> main
 
 /**
  * Mapper responsible for converting between the `AuditTrail` domain entity
@@ -32,14 +24,8 @@ class AuditMapper {
     } {
         const actorIdStr = audit.actorId?.toString();
 
-<<<<<<< HEAD
-        // Validar que sea un UUID válido
-        const uuidRegex =
-            /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
-=======
         // Validate that it is a valid UUID
         const uuidRegex = /^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/;
->>>>>>> main
         if (!actorIdStr || !uuidRegex.test(actorIdStr)) {
             throw new Error(`AuditMapper: actorId inválido o ausente (${actorIdStr})`);
         }
@@ -59,29 +45,6 @@ class AuditMapper {
         };
     }
 
-<<<<<<< HEAD
-    static toDomain(record: unknown): AuditTrail {
-        // Asegurarnos de mapear el campo `occurredAt` que espera la entidad de dominio.
-        // Los registros en la base de datos pueden venir con `occurredAt` o `createdAt`
-        // (dependiendo del esquema), así que preferimos `occurredAt` y hacemos
-        // fallback a `createdAt` si no existe.
-        const r = record as Record<string, unknown>;
-        const adaptedRecord = {
-            id: r.id as string,
-            ticketId: (r.ticketId as string) ?? null,
-            actorId: r.actorId as string,
-            action: r.action as string,
-            entityType: r.entityType as string,
-            entityId: r.entityId as string,
-            changes: (r.changes as Record<string, unknown>) ?? null,
-            metadata: (r.metadata as Record<string, unknown>) ?? null,
-            ipAddress: (r.ipAddress as string) ?? null,
-            userAgent: (r.userAgent as string) ?? null,
-            occurredAt: (r.occurredAt as Date) ?? (r.createdAt as Date) ?? new Date(),
-        } as RehydrateAuditTrailDto;
-
-        return AuditTrail.rehydrate(adaptedRecord);
-=======
     static toDomain(record: any): AuditTrail {
         const dto: RehydrateAuditTrailDto = {
             id: record.id,
@@ -98,7 +61,6 @@ class AuditMapper {
         }
 
         return AuditTrail.rehydrate(dto)
->>>>>>> main
     }
 
 }

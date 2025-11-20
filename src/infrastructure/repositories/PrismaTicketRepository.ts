@@ -95,32 +95,8 @@ export class PrismaTicketRepository implements TicketRepository {
         return records.map(TicketMapper.toDomain);
     }
 
-<<<<<<< HEAD
     async findByFilters(filters: { areaId?: string; from?: Date; to?: Date }): Promise<Ticket[]> {
         const where: any = {};
-=======
-    // Convert raw records into domain entities
-    return records.map((row) =>
-      Ticket.rehydrate({
-        id: row.id,
-        title: row.title,
-        description: row.description ?? null,
-        status: row.status as RehydrateTicketDto["status"],
-        priority: row.priority as RehydrateTicketDto["priority"],
-        userId: row.requesterId,
-        assigneeId: row.assigneeId ?? null,
-        areaId: row.areaId,
-        slaTargetAt: row.slaTargetAt ?? null,
-        slaBreached: row.slaBreached ?? false,
-        firstResponseAt: row.firstResponseAt ?? null,
-        resolvedAt: row.resolvedAt ?? null,
-        closedAt: row.closedAt ?? null,
-        resolutionSummary: row.resolutionSummary ?? null,
-        createdAt: row.createdAt
-      })
-    )
-  }
->>>>>>> main
 
         if (filters.areaId) {
             where.areaId = filters.areaId;

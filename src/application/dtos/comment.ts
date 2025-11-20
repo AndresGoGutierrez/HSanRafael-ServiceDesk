@@ -5,14 +5,6 @@ import { z } from "zod";
  * Defines input validation rules from the infrastructure layer (HTTP, etc.).
  */
 export const CreateCommentSchema = z.object({
-<<<<<<< HEAD
-    body: z.string().trim().min(1, "El comentario no puede estar vacío"),
-    isInternal: z
-        .union([z.boolean(), z.enum(["true", "false"])])
-        .transform((val) => val === true || val === "true") // 🔥 convierte string a boolean
-        .default(false),
-});
-=======
   body: z.string().trim().min(1, "El comentario no puede estar vacío"),
   isInternal: z
     .union([
@@ -22,7 +14,6 @@ export const CreateCommentSchema = z.object({
     .transform(val => val === true || val === "true")
     .default(false)
 })
->>>>>>> main
 
 export type CreateCommentInput = z.infer<typeof CreateCommentSchema>;
 

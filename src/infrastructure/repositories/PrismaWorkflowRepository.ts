@@ -125,13 +125,8 @@ export class PrismaWorkflowRepository implements WorkflowRepository {
         try {
             await prismaClient.workflow.delete({ where: { id } });
         } catch (error: any) {
-<<<<<<< HEAD
-            if (error.code === "P2025") return; // Registro no encontrado
-            throw new Error(`Error eliminando Workflow con id ${id}: ${error.message}`);
-=======
             if (error.code === "P2025") return 
             throw new Error(`Error eliminando Workflow con id ${id}: ${error.message}`)
->>>>>>> main
         }
     }
 }

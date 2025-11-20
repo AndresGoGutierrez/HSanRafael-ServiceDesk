@@ -99,12 +99,7 @@ export class PrismaAttachmentRepository implements AttachmentRepository {
             });
         } catch (error: any) {
             if (error.code === "P2025") {
-<<<<<<< HEAD
-                // Registro no encontrado, se ignora silenciosamente o logueas
-                return;
-=======
                 return
->>>>>>> main
             }
             throw new Error(`Error eliminando Attachment con id ${id}: ${error.message}`);
         }
