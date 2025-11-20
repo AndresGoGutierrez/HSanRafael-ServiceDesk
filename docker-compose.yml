@@ -51,7 +51,7 @@ services:
       context: .                # Carpeta raíz
       dockerfile: Dockerfile    # Dockerfile que crearás
     ports:
-      - "3000:3000"             # Puerto de la API
+      - "443:443"             # Puerto de la API
     env_file:
       - .env                    # Cargar variables de entorno
     depends_on:
