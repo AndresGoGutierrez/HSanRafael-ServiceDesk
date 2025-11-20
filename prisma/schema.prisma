@@ -29,13 +29,13 @@ model User {
 }
 
 model Area {
-  id                   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name                 String   @unique
-  createdAt            DateTime @default(now())
-  description          String?
-  isActive             Boolean  @default(true)
-  tickets              Ticket[] @relation("AreaTickets")
-  users                User[]   @relation("UserArea")
+  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String     @unique
+  createdAt   DateTime   @default(now())
+  description String?
+  isActive    Boolean    @default(true)
+  tickets     Ticket[]   @relation("AreaTickets")
+  users       User[]     @relation("UserArea")
   sla         SLA?       @relation("AreaSLA")
   workflows   Workflow[] @relation("AreaWorkflows")
 
@@ -114,17 +114,17 @@ model Comment {
 }
 
 model Attachment {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  ticketId    String   @db.Uuid
-  uploaderId  String   @db.Uuid
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ticketId    String    @db.Uuid
+  uploaderId  String    @db.Uuid
   filename    String
   contentType String
   size        Int
   url         String
-  createdAt   DateTime @default(now())
+  createdAt   DateTime  @default(now())
   deletedAt   DateTime?
-  ticket      Ticket   @relation("TicketAttachments", fields: [ticketId], references: [id], onDelete: Cascade)
-  uploader    User     @relation("AttachmentUploader", fields: [uploaderId], references: [id])
+  ticket      Ticket    @relation("TicketAttachments", fields: [ticketId], references: [id], onDelete: Cascade)
+  uploader    User      @relation("AttachmentUploader", fields: [uploaderId], references: [id])
 
   @@index([ticketId])
   @@index([uploaderId])
@@ -151,10 +151,4 @@ model AuditTrail {
   @@index([action])
   @@index([entityType])
   @@index([occurredAt])
-}
-
-
-generator erd {
-  provider = "prisma-erd-generator"
-  output   = "./ERD.svg"
 }
