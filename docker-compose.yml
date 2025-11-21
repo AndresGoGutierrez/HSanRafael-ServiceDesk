@@ -11,8 +11,11 @@ services:
       POSTGRES_DB: ${DB_DATABASE}
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
+      PGPORT: 5433
     ports:
-      - ${DB_PORT}:5432
+      - ${DB_PORT}:5433
+   # command: -p 5433
+
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME}"]
       interval: 5s
@@ -23,6 +26,8 @@ services:
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - hospital-net
+    env_file:
+      - .env                    # Cargar variables de entorno
 
   # ==============================
   # Servicio de Administración (pgAdmin4)
@@ -41,6 +46,8 @@ services:
       - pgadmin_data:/var/lib/pgadmin
     networks:
       - hospital-net
+    env_file:
+      - .env                    # Cargar variables de entorno
 
   # ==============================
   # Servicio de la API (Node.js + Express)
@@ -52,12 +59,11 @@ services:
       dockerfile: Dockerfile    # Dockerfile que crearás
     ports:
       - "443:443"             # Puerto de la API
-    env_file:
+    env_file: 
       - .env                    # Cargar variables de entorno
     depends_on:
       db:
         condition: service_healthy
-    command: ["npm", "run", "start:dev"]
     networks:
       - hospital-net
 

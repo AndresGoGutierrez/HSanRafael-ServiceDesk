@@ -96,6 +96,8 @@ export class ServerBootstrap extends ConfigServer {
         this.configureMiddleware()
         this.configureRoutes()
 
+        console.log("Jeronimo")
+
         this.listen()
         this.handleShutdown()
     }

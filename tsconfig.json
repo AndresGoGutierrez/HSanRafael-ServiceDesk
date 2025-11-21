@@ -11,7 +11,8 @@
     "verbatimModuleSyntax": false,
     "forceConsistentCasingInFileNames": true,
     "resolveJsonModule": false,
-    "strictPropertyInitialization": true
+    "strictPropertyInitialization": true,
+    "removeComments": false
   },
   "include": ["src"],
   "exclude": ["tests", "node_modules"]

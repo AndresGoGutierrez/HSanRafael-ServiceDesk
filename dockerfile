@@ -1,33 +1,16 @@
 # =============================
 # Etapa 1: Build (Compilación)
 # =============================
-FROM node:20-alpine AS build
+FROM node:20-alpine
 
-WORKDIR /app
+WORKDIR /code
 
 COPY package*.json ./
-RUN npm ci --silent
+RUN npm install
 
 COPY . .
 
-# Generar cliente Prisma ANTES de compilar
-RUN npx prisma generate
-
-# Compilar el proyecto (TypeScript → JavaScript en /dist)
-RUN npm run build
-
-# =============================
-# Etapa 2: Runtime (Ejecución)
-# =============================
-FROM node:20-alpine AS runtime
-
-WORKDIR /app
-
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/prisma ./prisma
-
-ENV NODE_ENV=production
+ENV NODE_ENV=development
 EXPOSE 443
 
-CMD ["node", "dist/main.js"]
+CMD ["npm", "run", "start:dev"]
