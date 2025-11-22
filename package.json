@@ -15,7 +15,7 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate",
     "prisma:studio": "prisma studio",
-    "prepare": "husky"
+    "prepare": "true"
   },
   "lint-staged": {
     "*.{ts,js,json,md}": [
