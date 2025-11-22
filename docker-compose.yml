@@ -58,9 +58,11 @@ services:
       context: .                # Carpeta raíz
       dockerfile: Dockerfile    # Dockerfile que crearás
     ports:
-      - "443:443"             # Puerto de la API
+      - "8080:8080"             # Puerto de la API
     env_file: 
       - .env                    # Cargar variables de entorno
+    environment:
+     PORT: 8080        # Forzar por si acaso
     depends_on:
       db:
         condition: service_healthy
