@@ -98,6 +98,7 @@ export class ServerBootstrap extends ConfigServer {
 
         console.log("Jeronimo")
 
+
         this.listen()
         this.handleShutdown()
     }
@@ -214,6 +215,7 @@ export class ServerBootstrap extends ConfigServer {
 
     /** Connect Prisma to the database */
     private async dbConnection(): Promise<void> {
+        console.log("DB URL:", process.env.DATABASE_URL);
         try {
             await prismaClient.$connect()
             this._logger.info("✅ Prisma connected to the database")
