@@ -107,8 +107,17 @@ export class ServerBootstrap extends ConfigServer {
     private configureMiddleware(): void {
         this._app.use(express.json())
         this._app.use(express.urlencoded({ extended: true }))
-        this._app.use(cors())
+
+        // Configuración de CORS para Swagger y clientes externos
+        this._app.use(cors({
+            origin: "*", // permite cualquier origen temporalmente (Swagger)
+            methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+            allowedHeaders: ["Content-Type", "Authorization"]
+        }))
+
         this._app.use(morgan("dev"))
+
+        // Swagger UI
         this._app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec))
     }
 
