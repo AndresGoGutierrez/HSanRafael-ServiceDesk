@@ -9,8 +9,8 @@ const envSchema = z.object({
     DB_DATABASE: z.string().optional(),
     DB_USERNAME: z.string().optional(),
     DB_PASSWORD: z.string().optional(),
-    DB_HOST: z.string().default("localhost").optional(),
-    DB_PORT: z.coerce.number().optional(),
+    DB_HOST: z.string().default("localhost"),
+    DB_PORT: z.coerce.number().default(5432),
 
     PGADMIN_DEFAULT_EMAIL: z.email().optional(),
     PGADMIN_DEFAULT_PASSWORD: z.string().min(8).optional(),
