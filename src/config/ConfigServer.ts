@@ -10,10 +10,7 @@ export abstract class ConfigServer {
         const nodeEnv = this.nodeEnv;
 
         // Use .env by default in development
-        const envFile =
-            nodeEnv && nodeEnv !== "production"
-                ? path.resolve(process.cwd(), ".env")
-                : path.resolve(process.cwd(), `.${nodeEnv}.env`);
+        const envFile = path.resolve(process.cwd(), ".env");
 
         // Load environment variables
         dotenv.config({ path: envFile });
