@@ -26,9 +26,16 @@ export abstract class ConfigServer {
         return this.env[key];
     }
 
-    protected getNumberEnv(key: keyof typeof this.env): number | undefined  {
-        return Number(this.env[key]);
+    protected getNumberEnv(key: keyof typeof this.env): number {
+        const value = this.env[key];
+
+        if (value === undefined || value === null || value === "") {
+            throw new Error(`Environment variable ${String(key)} is required but was not provided`);
+        }
+
+        return Number(value);
     }
+
 
     protected get nodeEnv(): string {
         // return env.NODE_ENV?.trim() || "";
