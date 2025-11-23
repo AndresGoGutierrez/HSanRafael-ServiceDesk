@@ -22,11 +22,11 @@ export abstract class ConfigServer {
         this.env = loadEnv();
     }
 
-    protected getEnvironment(key: keyof typeof this.env): string | number {
+    protected getEnvironment(key: keyof typeof this.env): string | number | undefined {
         return this.env[key];
     }
 
-    protected getNumberEnv(key: keyof typeof this.env): number {
+    protected getNumberEnv(key: keyof typeof this.env): number | undefined  {
         return Number(this.env[key]);
     }
 
@@ -36,8 +36,13 @@ export abstract class ConfigServer {
     }
 
     protected get databaseUrl(): string {
-        return this.getEnvironment("DATABASE_URL").toString();
+        const url = this.getEnvironment("DATABASE_URL");
+        if (!url) {
+            throw new Error("DATABASE_URL is required but was not provided");
+        }
+        return url.toString();
     }
+
 
     protected createPathEnv(path: string): string {
         const arrayEnv: string[] = ["env"];
