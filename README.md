@@ -30,6 +30,7 @@ Cada funcionalidad del sistema se organiza como un módulo vertical independient
 Ejemplo: TicketModule, que encapsula toda la lógica referente a tickets en un único paquete cohesivo.
 
 🛠️ Patrones de Diseño Implementados
+
 3. Repository Pattern
 
 Define contratos como TicketRepository para abstraer la lógica de persistencia.
