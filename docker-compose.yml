@@ -69,6 +69,24 @@ services:
     networks:
       - hospital-net
 
+  # ==============================
+  # OWASP ZAP - Escáner de seguridad
+  # ==============================
+  zap:
+    container_name: hospital-desk-zap
+    image: ghcr.io/zaproxy/zaproxy:stable
+    networks:
+      - hospital-net
+    ports:
+      - "8090:8090"        # Puerto para la interfaz web de ZAP (webswing)
+    volumes:
+      - ./zap-reports:/zap/reports:rw
+    depends_on:
+      - api
+    command: zap-webswing.sh
+    environment:
+      - ZAP_PORT=8090
+
 # ==============================
 # Red y Volúmenes persistentes
 # ==============================
